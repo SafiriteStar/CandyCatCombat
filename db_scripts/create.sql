@@ -1,6 +1,6 @@
-create database mygame;
+create database cccdb;
 
-use mygame;
+use cccdb;
 
 create table user (
     usr_id int not null auto_increment,
