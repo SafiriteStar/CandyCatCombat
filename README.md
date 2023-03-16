@@ -12,7 +12,7 @@ Specifications:
 * Node Libraries ([check package.json](package.json))
 
 This template includes:
-* The scripts to create a database with users and matches ([diagram](db_scripts/diagram.png))
+* The scripts to create a database with users, matches and scores ([diagram](db_scripts/diagram.png))
 * The backend that allows user and match management. It has authentication using cookie sessions. Existing endpoints ([API REST documentation](https://docs.google.com/document/d/1jXmBSiNZfqCABMVhvkRcD-qASICUTTjeGytj_wpCCXg/edit?usp=sharing))
     - User endpoints: Register, Login, Logout, Get Profile
     - Match endpoints:
@@ -23,13 +23,19 @@ This template includes:
         * Cancel the game I am playing
     - Game endpoints:
         * End the turn
-* A simplified frontend with pages for login in, register, choose or create a match, wait for other players to join the match, the game page (this page has a score board that shows the state of both players playing the game and a button to end the turn)
+    - Score 
+        * Get the scores of all played games
+        * Get the score of the current game (when the game has ended)
+        * Close the score of the current game (only than the player can play a new game)
+        
 
-# Tipical cenarios for this template:
+* A simplified frontend with pages for login in, score board, register, choose or create a match, wait for other players to join the match, the game page (this page has a board that shows the state of both players playing the game and a button to end the turn)
+
+# Typical scenarios for this template:
 
 ---
- ## Cenario 1: Unregistered user wants to create a game
-1. The user enters the initial page (login page) that shows the username and password text inputs, a button to login, and a link to the register page.
+ ## Scenario 1: Unregistered user wants to create a game
+1. The user enters the initial page (login page) that shows the username and password text inputs, a button to login, a link to see the scores and a link to the register page.
 2. The user presses the link to register. The register page also shows the username and password inputs, a button to register and a link to the login page. 
 3. The user fills the name and password and presses the button to register
 4. The user than presses the link to go back to login page, fills the username and password and presses the login button
@@ -80,4 +86,17 @@ Skips steps 2 and 3, step 4 becomes:
 3. Player One presses the button to end the turn. The button disapears and the score board now says that it is the opponent's turn and that he is waiting.
 4. A moment after Player One finishes the turn Player Two sees that it is now his turn and that the opponent is waiting. The button to end the turn is also made visible in the bottom right.
 
+## Alternative cenario: The players continue until the game ends
+After step 4:
+5. Players continue to alternate until the game reaches the end (currently this is when both players finish turn 10)
+6. Both players will see a window with the final scores (currently both are tied with 1 point each).
+7. Player One closes the score window to finish viewing the game score. A popup is shown saying the player is not in a game and after confirmation the player is sent back to the matches page.
+9. Player Two is still looking at the score window but finally chooses to close the score window and gets the same popup and is sent back to the matches page also.
+
 ---
+
+---
+ ## Cenario 4: See the scores of previous games
+ 
+ 1. The user is at the login page (no need to authenticate or register) and presses the link to see the scores
+ 2. A new page is shown with the score information of every finished game (even if the players themselfs are still looking at the score of that game). For each game it shows the names of both players with the final status (ex: won, lost, tied) and the number of points received.

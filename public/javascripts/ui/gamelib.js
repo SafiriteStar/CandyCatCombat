@@ -46,7 +46,9 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else {
+    } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
+        GameInfo.scoreWindow.draw();
+    } else  {
         GameInfo.scoreBoard.draw();
     }
 }

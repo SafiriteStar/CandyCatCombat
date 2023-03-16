@@ -14,6 +14,7 @@ class GameInfo  {
 
     // rendererers
     static scoreBoard;
+    static scoreWindow;
 
     // buttons
     static endturnButton;
@@ -25,6 +26,9 @@ class GameInfo  {
             GameInfo.endturnButton.show();
         } else if (GameInfo.game.player.state == "Waiting") {
             GameInfo.endturnButton.hide();
-        } 
+        }  else if (GameInfo.game.player.state == "Score") {
+            GameInfo.endturnButton.hide();
+            GameInfo.scoreWindow.open();
+        }
     }
 }

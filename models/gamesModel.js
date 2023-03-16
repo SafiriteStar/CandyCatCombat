@@ -1,35 +1,26 @@
 const pool = require("../config/database");
-
-// For now it is only an auxiliary class to hold data in here 
-// so no need to create a model file for it
-class State {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
-    }
-    export() {
-        return this.name;
-    }
-}
+const State = require("./statesModel");
 
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
 class Player {
-    constructor(id, name, state) {
+    constructor(id,name,state,order) {
         this.id = id;        
         this.name = name;
         this.state= state;
+        this.order = order;
     }
     export() {
         let player = new Player();
         player.name = this.name;
         player.state = this.state.export();
+        player.order = this.order;
         return player;
     }
 }
 
 class Game {
-    constructor(id, turn, state, player, opponents) {
+    constructor(id,turn,state,player,opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
@@ -56,8 +47,15 @@ class Game {
              inner join user_game_state on ugst_id = ug_state_id
             where ug_game_id=?`, [game.id]);
             for (let dbPlayer of dbPlayers) {
-                let player = new Player(dbPlayer.ug_id,dbPlayer.usr_name,
-                            new State(dbPlayer.ugst_id,dbPlayer.ugst_state) );
+                let player = new Player(
+                    dbPlayer.ug_id,
+                    dbPlayer.usr_name,
+                    new State(
+                        dbPlayer.ugst_id,
+                        dbPlayer.ugst_state
+                    ),
+                    dbPlayer.ug_order
+                );
                 if (dbPlayer.usr_id == userId) game.player = player;
                 else game.opponents.push(player);
             }
@@ -73,8 +71,10 @@ class Game {
             let [dbGames] =
                 await pool.query(`Select * from game 
                     inner join user_game on gm_id = ug_game_id 
+                    inner join user_game_state on ug_state_id = ugst_id
                     inner join game_state on gm_state_id = gst_id
-                    where ug_user_id=? and gst_state IN ('Waiting','Started')`, [id]);
+                    where ug_user_id=? and (gst_state IN ('Waiting','Started') 
+                    or (gst_state = 'Finished' and ugst_state = 'Score')) `, [id]);
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
@@ -141,6 +141,7 @@ class Game {
     // - Else, each player would only change his state to cancel
     // - When the last player run the cancel the game would cancel
     // (no need to be this complex since we will only use this to invalidate games)
+    // Cancelled games are not scored
     static async cancel(gameId) {
         try {
             await pool.query(`Update game set gm_state_id=? where gm_id = ?`,

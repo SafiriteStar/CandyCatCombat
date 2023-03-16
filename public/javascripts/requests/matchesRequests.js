@@ -84,4 +84,30 @@ async function requestCancelMatch() {
     }
 }
 
+async function requestScores() {
+    try {
+        const response = await fetch(`/api/scores/`);
+        var result = await response.json();
+        return {successful: response.status == 200, 
+                scores: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
 
+
+async function requestScore() {
+    try {
+        const response = await fetch(`/api/scores/auth`);
+        var result = await response.json();
+        return {successful: response.status == 200, 
+                unauthenticated: response.status == 401,
+                score: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
