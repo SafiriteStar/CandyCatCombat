@@ -8,7 +8,9 @@ insert into game_state (gst_state) values ('Canceled');
 
 # Do not change the order, but you can add more in the end
 insert into user_game_state (ugst_state) values ('Waiting');
-insert into user_game_state (ugst_state) values ('Playing');
+insert into user_game_state (ugst_state) values ('Selecting');
+insert into user_game_state (ugst_state) values ('Moving');
+insert into user_game_state (ugst_state) values ('Attacking');
 insert into user_game_state (ugst_state) values ('End');
 
 

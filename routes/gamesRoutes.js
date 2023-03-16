@@ -34,7 +34,7 @@ router.get('/auth', auth.verifyAuth, async function (req, res, next) {
         console.log("Get game information for the authenticated user");
         // all the information is already on the req.game, we only need to hide irrelevant information
         res.status(200).send(req.game && req.game.export());
-        } catch (err) {
+    } catch (err) {
         console.log(err);
         res.status(500).send(err);
     }

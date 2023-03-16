@@ -15,7 +15,7 @@ class State {
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
 class Player {
-    constructor(id,name,state) {
+    constructor(id, name, state) {
         this.id = id;        
         this.name = name;
         this.state= state;
@@ -29,7 +29,7 @@ class Player {
 }
 
 class Game {
-    constructor(id,turn,state,player,opponents) {
+    constructor(id, turn, state, player, opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
