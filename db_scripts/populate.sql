@@ -106,9 +106,16 @@ insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
 
 -- Fill the board with normal tiles
 
-DECLARE @i int = 0
-WHILE @i < 300 
-BEGIN
-    SET @i = @i + 1
-    /* your code*/
-END
+insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values
+                 (     0,      0,            1,             1),
+                 (     1,      0,            1,             1),
+                 (     2,      0,            1,             1),
+                 (     0,      1,            1,             1),
+                 (     1,      1,            1,             1),
+                 (     2,      1,            1,             1),
+                 (     0,      2,            1,             1),
+                 (     1,      2,            1,             1),
+                 (     2,      2,            1,             1),
+                 (     0,      3,            1,             1),
+                 (     1,      3,            1,             1),
+                 (     2,      3,            1,             1)
