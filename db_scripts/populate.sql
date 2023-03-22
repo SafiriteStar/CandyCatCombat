@@ -103,3 +103,12 @@ insert into game_cat_state (gcs_state) values ('Visible'), ('Stealth');
 # Map Related Stuff
 insert into board () values ();
 insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
+
+-- Fill the board with normal tiles
+
+DECLARE @i int = 0
+WHILE @i < 300 
+BEGIN
+    SET @i = @i + 1
+    /* your code*/
+END
