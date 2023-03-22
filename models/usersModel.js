@@ -36,9 +36,21 @@ class User {
                     }]
                 };
             let encpass = await bcrypt.hash(user.pass,saltRounds);   
-            let [result] =
-                await pool.query(`Insert into user (usr_name, usr_pass)
-                values (?,?)`, [user.name, encpass]);
+            // Make new user
+            let [result] = await pool.query('Insert into user (usr_name, usr_pass) values (?, ?)', [user.name, encpass]);
+            // Get the user ID of the newly made user
+            let [[userData]] = await pool.query('Select * from user where usr_name=?', [user.name]);
+            // Make a new default team for that user
+            let [newDefaultTeam] = await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
+            // Get the team ID of the newly made team
+            let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
+            // Add characters to new default team
+            let fillCharacterData = [];
+            let defaultCharacterType = 1;
+            for (let i = 0; i < 6; i++) {
+                if (i == 3) {defaultCharacterType = 2}
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [defaultCharacterType, teamData.tm_id]);                
+            }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
             console.log(err);
