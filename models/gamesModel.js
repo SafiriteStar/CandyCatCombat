@@ -4,7 +4,7 @@ const State = require("./statesModel");
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
 class Player {
-    constructor(id,name,state,order) {
+    constructor(id, name, state, order) {
         this.id = id;        
         this.name = name;
         this.state= state;
@@ -122,11 +122,12 @@ class Game {
     static async create(userId) {
         try {
             // create the game
-            let [result] = await pool.query(`Insert into game (gm_state_id) values (?)`, [1]);
+            let [result] = await pool.query('Insert into game (gm_state_id) values (?)', [1]);
             let gameId = result.insertId;
             // add the user to the game
-            await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`,
+            await pool.query('Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)',
                  [userId, gameId, 1]);
+
             return {status:200, result: {msg: "You created a new game."}};
         } catch (err) {
             console.log(err);
@@ -170,9 +171,6 @@ class Game {
             let dbGame = dbGames[0];
             if (dbGame.gm_state_id != 1) 
                 return {status:400, result:{msg:"Game not waiting for other players"}};
-            
-            // Randomly determine who starts    
-            let myTurn = (Math.random() < 0.5);
 
             // We join the game but the game still has not started, that will be done outside
             let [result] = await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`,
