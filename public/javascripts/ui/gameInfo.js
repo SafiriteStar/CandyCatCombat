@@ -15,6 +15,7 @@ class GameInfo  {
     // rendererers
     static scoreBoard;
     static scoreWindow;
+    static cat;
 
     // buttons
     static endturnButton;

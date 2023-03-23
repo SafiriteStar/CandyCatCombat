@@ -8,8 +8,22 @@ async function requestEndTurn() {
                 'Content-Type': 'application/json'
             },
           method: "PATCH"
-      });
-      return {successful: response.status == 200};
+        });
+        return {successful: response.status == 200};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestGameBoard() {
+    try {
+        const response = await fetch(`/api/plays/auth`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 game: result};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
@@ -26,8 +40,8 @@ async function requestCloseScore() {
                 'Content-Type': 'application/json'
             },
           method: "PATCH"
-      });
-      return {successful: response.status == 200};
+        });
+        return {successful: response.status == 200};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

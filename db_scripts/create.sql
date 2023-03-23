@@ -13,6 +13,7 @@ create table user (
 
 create table game (
     gm_id int not null auto_increment,
+    gm_board_id int not null default 1,
     gm_turn int not null default 1,
     gm_state_id int not null,
     primary key (gm_id));
@@ -79,7 +80,7 @@ create table game_team_cat (
     gtc_type_id int not null,
     gtc_current_health int not null,
     gtc_stamina int not null,
-    gtc_state_id int not null,
+    gtc_state_id int not null default 1,
     primary key (gtc_id));
 
 create table game_cat_state (
@@ -196,3 +197,8 @@ alter table tile add constraint tile_fk_board
 alter table tile add constraint tile_fk_tile_type
             foreign key (tile_type_id) references tile_type(tty_id)
 			ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Game to Board by gm_board_id
+alter table game add constraint game_fk_board
+            foreign key (gm_board_id) references board(brd_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
