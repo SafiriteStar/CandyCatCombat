@@ -3,14 +3,9 @@ const Game = require("../../../models/gamesModel");
 async function refresh() {
     if (GameInfo.game.player.state == "Waiting") { 
         // Every time we are waiting
-        if (GameInfo.game.opponents.length > 0) {
-            await getBoardInfo();
-            console.log(GameInfo.game);
-        }
-        else {
-            await getGameInfo();
-            console.log(GameInfo.game);
-        }
+        await getGameInfo();
+        await getBoardInfo();
+
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();

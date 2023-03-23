@@ -88,36 +88,45 @@ class Play {
 
     static async getBoard(game) {
         try {
-
+            let board = {};
+            [[board]] = await pool.query('select gm_board_id as "id" from game where gm_id = ?',
+                [game.id]);
+            board.tiles;
             // The game parameter comes with the game id. So lets get the board from the game id.
-            [game.board] = await pool.query('select tile_x, tile_y, tile_type_id, tile_board_id from game, tile where tile_board_id = gm_board_id and gm_id = ?',
+            [board.tiles] = await pool.query('select tile_x, tile_y, tile_type_id, tile_board_id from game, tile where tile_board_id = gm_board_id and gm_id = ?',
                 [game.id]);
 
             // Lets avoid repeated strings shall we?
             let askForCatTeam = 'select gtc_id as "id", gtc_game_team_id as "team_id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
             // Player info
+            board.player = {};
 
             // Get the game_team id made for the player
             let [[playerGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
                 [game.id, game.player.id]);
 
             // Get a list of cats in the player's game team
-            [game.player.team] = await pool.query(askForCatTeam,
+            board.player.team;
+            [board.player.team] = await pool.query(askForCatTeam,
                 [playerGameTeamData.gt_id]);
 
             // Opponents
+            board.opponents = [];
+
             for (let i = 0; i < game.opponents.length; i++) {
                 // Get the game_team id made for the opponent
                 let [[opponentGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
                     [game.id, game.opponents[i].id]);
 
                 // Get a list of cats in the opponent's game team
-                [game.opponents[i].team] = await pool.query(askForCatTeam,
+                board.opponents[i] = {};
+                board.opponents[i].team;
+                [board.opponents[i].team] = await pool.query(askForCatTeam,
                     [opponentGameTeamData.gt_id]);
             }
             
-            return { status: 200, result: game};
+            return { status: 200, result: board};
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
