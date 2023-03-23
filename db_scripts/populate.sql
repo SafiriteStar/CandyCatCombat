@@ -117,5 +117,5 @@ insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values
                  (     1,      2,            1,             1),
                  (     2,      2,            1,             1),
                  (     0,      3,            1,             1),
-                 (     1,      3,            1,             1),
-                 (     2,      3,            1,             1)
+                 (     1,      3,            2,             1),
+                 (     2,      3,            3,             1)
