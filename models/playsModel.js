@@ -67,6 +67,15 @@ class Play {
         }
     }
 
+    static async move(characterId, coord) {
+        try {
+            //await pool.query(``, [);
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
     // Makes all the calculation needed to end and score the game
     static async endGame(game) {
         try {
