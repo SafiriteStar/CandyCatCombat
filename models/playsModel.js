@@ -22,15 +22,15 @@ class Play {
             // Player
             await pool.query(
                 'Insert into game_team (gt_game_id, gt_user_id) values (?,?)',
-                [game.id, p1Id]);
+                [game.id, game.player.id]);
             
             // Get the game_team id made for the player
-            let [[playerGameTeam]] = await pool.query("select gt_id from game_team where gt_game_id = ? and gt_user_id = ?",
+            let [playerGameTeam] = await pool.query("select gt_id from game_team where gt_game_id = ? and gt_user_id = ?",
                 [game.id, game.player.id]
             );
 
             // Get the players default team
-            let [playerDefaultTeam] = await pool.query(
+            let [[playerDefaultTeam]] = await pool.query(
                 "select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
                 [game.player.id]
             );
@@ -38,8 +38,10 @@ class Play {
             console.log(playerGameTeam);
             // Add the cats in the default team to game_team_cat
             for (let i = 0; i < playerDefaultTeam.length; i++) {
+                // Get the data of the current cat
+                let [currentCat] = await pool.query('select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
                 // playerDefaultTeam[i]
-                await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id) values (?, ?)', [playerGameTeam.gt_id])
+                console.log(currentCat);
             }
             
             // // Opponents (can do multiple but you should only have one)
