@@ -17,6 +17,40 @@ class Play {
             let myTurn = (Math.random() < 0.5);
             let p1Id = myTurn ? game.player.id : game.opponents[0].id;
             let p2Id = myTurn ? game.opponents[0].id : game.player.id;
+
+            // Load in a team for the player and all opponents using their default teams
+            // Player
+            await pool.query(
+                'Insert into game_team (gt_game_id, gt_user_id) values (?,?)',
+                [game.id, game.player.id]);
+            
+            // Get the game_team id made for the player
+            let [playerGameTeam] = await pool.query("select gt_id from game_team where gt_game_id = ? and gt_user_id = ?",
+                [game.id, game.player.id]
+            );
+
+            // Get the players default team
+            let [[playerDefaultTeam]] = await pool.query(
+                "select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+                [game.player.id]
+            );
+
+            console.log(playerGameTeam);
+            // Add the cats in the default team to game_team_cat
+            for (let i = 0; i < playerDefaultTeam.length; i++) {
+                // Get the data of the current cat
+                let [currentCat] = await pool.query('select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
+                // playerDefaultTeam[i]
+                console.log(currentCat);
+            }
+            
+            // // Opponents (can do multiple but you should only have one)
+            // for (let i = 0; i < game.opponents.length; i++) {
+            //     await pool.query(
+            //         'Insert into game_team (gt_game_id, gt_user_id) values (?,?)',
+            //         [game.id, game.opponents[i].id]);
+            // }
+
             // Player that start changes to the state Playing and order 1 
             await pool.query(`Update user_game set ug_state_id=?,ug_order=? where ug_id = ?`, [2, 1, p1Id]);
             // Player that is second changes to order 2

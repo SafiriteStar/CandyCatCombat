@@ -74,6 +74,8 @@ create table cat (
 create table game_team_cat (
     gtc_id int not null auto_increment,
     gtc_game_team_id int not null,
+    gtc_x int,
+    gtc_y int,
     gtc_type_id int not null,
     gtc_current_health int not null,
     gtc_stamina int not null,
@@ -87,24 +89,16 @@ create table game_cat_state (
 
 create table game_team (
     gt_id int not null auto_increment,
+    gt_game_id int not null,
     gt_user_id int not null,
-    gt_gtc_id int not null,
     primary key (gt_id));
 
-create table game_tile (
-    gtl_id int not null auto_increment,
-    gtl_game_id int not null,
-    gtl_tile_id int not null,
-    gtl_cat_id int,
-    primary key (gtl_id));
-
 create table tile (
-    tile_id int not null auto_increment,
     tile_x int not null,
     tile_y int not null,
     tile_type_id int not null,
     tile_board_id int not null,
-    primary key (tile_id));
+    primary key (tile_x, tile_y));
 
 -- For now we only have one board
 create table board (
@@ -163,30 +157,35 @@ alter table team_cat add constraint team_cat_fk_cat
             foreign key (tmc_cat_id) references cat(cat_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+-- Link Game Team to Game by gt_game_id
+alter table game_team add constraint game_team_fk_game
+        foreign key (gt_game_id) references game(gm_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Game Team to User by usr_id
+alter table game_team add constraint game_team_fk_user
+        foreign key (gt_user_id) references user(usr_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 -- Link Game Team Cat to Cat by gtc_type_id
-alter table game_team_cat add constraint cat
+alter table game_team_cat add constraint game_team_cat_fk_cat
             foreign key (gtc_type_id) references cat(cat_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Link Game Team Cat to Game Cat State by gtc_state_id
-alter table game_team_cat add constraint game_cat_state
+alter table game_team_cat add constraint game_team_cat_fk_game_team_cat_state
             foreign key (gtc_state_id) references game_cat_state(gcs_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Link Game Team Cat to Game Team by gtc_game_team_id
-alter table game_team_cat add constraint game_team
+alter table game_team_cat add constraint game_team_cat_fk_game_team
             foreign key (gtc_game_team_id) references game_team(gt_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Link Game Tile to Game by gbt_game_id
-alter table game_tile add constraint game_tile_fk_game
-            foreign key (gtl_game_id) references game(gm_id) 
-			ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Link Game Tile to Tile by gbt_game_id
-alter table game_tile add constraint game_tile_fk_tile
-            foreign key (gtl_tile_id) references tile(tile_id) 
-			ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- Link Game Team Cat to Tile by gtc_x
+alter table game_team_cat add constraint game_team_cat_fk_tile_x
+            foreign key (gtc_x, gtc_y) references tile(tile_x, tile_y)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Link Tile to Board by tile_type_id
 alter table tile add constraint tile_fk_board
@@ -197,18 +196,3 @@ alter table tile add constraint tile_fk_board
 alter table tile add constraint tile_fk_tile_type
             foreign key (tile_type_id) references tile_type(tty_id)
 			ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Link Game Tile to Game Team Cat by gtl_game_team_cat_id
-alter table game_tile add constraint game_tile_fk_game_team_cat
-        foreign key (gtl_cat_id) references game_team_cat(gtc_id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Link Game Team to Game by gt_id
-alter table game_team add constraint game_team_fk_game
-        foreign key (gt_id) references game(gm_id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Link Game Team to User by usr_id
-alter table game_team add constraint game_team_fk_user
-        foreign key (gt_user_id) references user(usr_id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION;
