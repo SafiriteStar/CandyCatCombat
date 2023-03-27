@@ -2,7 +2,7 @@ class Cat {
     static width = 300;
     static height = 600;
     static screenX = 100;
-    static screenY = 100;
+    static screenY = 400;
     
     constructor(cat) {
         this.id = cat.id;
@@ -26,7 +26,7 @@ class Cat {
     draw() {
         fill(100, 100, 100);
         stroke(0, 0, 0);
-        rect(Cat.screenX, Cat.screenY, Cat.width, Cat.height, 5, 5, 5, 5);
+        rect(Cat.screenX, 0, Cat.width, Cat.height, 5, 5, 5, 5);
         fill(0, 0, 0);
         textAlign(LEFT, CENTER);
         textSize(16);
@@ -34,8 +34,8 @@ class Cat {
         text("id: " + this.id, Cat.screenX + 10, Cat.screenY * 1/16)
         text("team_id: " + this.team_id, Cat.screenX + 10, Cat.screenY * 2/16)
         text("type: " + this.type, Cat.screenX + 10, Cat.screenY * 3/16)
-        text("x: " + this.x, Cat.screenX + 10, Cat.screenY * 4/16)
-        text("y: " + this.y, Cat.screenX + 10, Cat.screenY * 5/16)
+        text("x: " + 100, Cat.screenX + 10, Cat.screenY * 4/16)
+        text("y: " + 100, Cat.screenX + 10, Cat.screenY * 5/16)
         text("name: " + this.name, Cat.screenX + 10, Cat.screenY * 6/16)
         text("max_health: " + this.max_health, Cat.screenX + 10, Cat.screenY * 7/16)
         text("current_health: " + this.current_health, Cat.screenX + 10, Cat.screenY * 8/16)
