@@ -26,6 +26,7 @@ async function setup() {
     // preload  images
     
     await getGameInfo();
+    await getBoardInfo();
     setInterval(refresh,1000);
 
     //buttons (create a separated function if they are many)
@@ -53,6 +54,7 @@ function draw() {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.scoreBoard.draw();
+        GameInfo.cat.draw();
     }
 }
 
