@@ -30,9 +30,9 @@ async function getBoardInfo() {
         GameInfo.game.board = result.game;
 
         // Is there already a cat? If so, update the cat with the first cat
-        if (GameInfo.cat) GameInfo.cat.update(GameInfo.game.player.team[0]);
+        if (GameInfo.cat) GameInfo.cat.update(GameInfo.game.player.team[0], 0, 400);
         // Else, make a new cat
-        else GameInfo.cat = new Cat(GameInfo.game.board.player.team[0]);
+        else GameInfo.cat = new Cat(GameInfo.game.board.player.team[0], 0, 400);
     }
 }
 

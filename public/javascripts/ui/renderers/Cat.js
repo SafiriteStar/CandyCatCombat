@@ -1,10 +1,10 @@
 class Cat {
     static width = 300;
     static height = 420;
-    static screenX = 100;
-    static screenY = 400;
     
-    constructor(cat) {
+    constructor(cat, screenX, screenY) {
+        this.screenX = screenX;
+        this.screenY = screenY;
         this.id = cat.id;
         this.team_id = cat.team_id;
         this.type = cat.type;
@@ -26,27 +26,27 @@ class Cat {
     draw() {
         fill(100, 100, 100);
         stroke(0, 0, 0);
-        rect(Cat.screenX, 0, Cat.width, Cat.height, 5, 5, 5, 5);
+        rect(this.screenX, 0, Cat.width, Cat.height, 5, 5, 5, 5);
         fill(0, 0, 0);
         textAlign(LEFT, CENTER);
         textSize(16);
         textStyle(NORMAL);
-        text("id: " + this.id, Cat.screenX + 10, Cat.screenY * 1/16)
-        text("team_id: " + this.team_id, Cat.screenX + 10, Cat.screenY * 2/16)
-        text("type: " + this.type, Cat.screenX + 10, Cat.screenY * 3/16)
-        text("x: " + 100, Cat.screenX + 10, Cat.screenY * 4/16)
-        text("y: " + 100, Cat.screenX + 10, Cat.screenY * 5/16)
-        text("name: " + this.name, Cat.screenX + 10, Cat.screenY * 6/16)
-        text("max_health: " + this.max_health, Cat.screenX + 10, Cat.screenY * 7/16)
-        text("current_health: " + this.current_health, Cat.screenX + 10, Cat.screenY * 8/16)
-        text("damage: " + this.damage, Cat.screenX + 10, Cat.screenY * 9/16)
-        text("defense: " + this.defense, Cat.screenX + 10, Cat.screenY * 10/16)
-        text("speed: " + this.speed, Cat.screenX + 10, Cat.screenY * 11/16)
-        text("stamina: " + this.stamina, Cat.screenX + 10, Cat.screenY * 12/16)
-        text("min_range: " + this.min_range, Cat.screenX + 10, Cat.screenY * 13/16)
-        text("max_range: " + this.max_range, Cat.screenX + 10, Cat.screenY * 14/16)
-        text("cost: " + this.cost, Cat.screenX + 10, Cat.screenY * 15/16)
-        text("state: " + this.state, Cat.screenX + 10, Cat.screenY * 16/16)
+        text("id: " + this.id, this.screenX + 10, this.screenY * 1/16)
+        text("team_id: " + this.team_id, this.screenX + 10, this.screenY * 2/16)
+        text("type: " + this.type, this.screenX + 10, this.screenY * 3/16)
+        text("x: " + 100, this.screenX + 10, this.screenY * 4/16)
+        text("y: " + 100, this.screenX + 10, this.screenY * 5/16)
+        text("name: " + this.name, this.screenX + 10, this.screenY * 6/16)
+        text("max_health: " + this.max_health, this.screenX + 10, this.screenY * 7/16)
+        text("current_health: " + this.current_health, this.screenX + 10, this.screenY * 8/16)
+        text("damage: " + this.damage, this.screenX + 10, this.screenY * 9/16)
+        text("defense: " + this.defense, this.screenX + 10, this.screenY * 10/16)
+        text("speed: " + this.speed, this.screenX + 10, this.screenY * 11/16)
+        text("stamina: " + this.stamina, this.screenX + 10, this.screenY * 12/16)
+        text("min_range: " + this.min_range, this.screenX + 10, this.screenY * 13/16)
+        text("max_range: " + this.max_range, this.screenX + 10, this.screenY * 14/16)
+        text("cost: " + this.cost, this.screenX + 10, this.screenY * 15/16)
+        text("state: " + this.state, this.screenX + 10, this.screenY * 16/16)
     }
 
     update(cat) {
