@@ -1,6 +1,6 @@
 class Cat {
     static width = 300;
-    static height = 600;
+    static height = 420;
     static screenX = 100;
     static screenY = 400;
     

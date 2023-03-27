@@ -33,7 +33,6 @@ async function getBoardInfo() {
         if (GameInfo.cat) GameInfo.cat.update(GameInfo.game.player.team[0]);
         // Else, make a new cat
         else GameInfo.cat = new Cat(GameInfo.game.board.player.team[0]);
-        console.log(GameInfo.cat);
     }
 }
 
