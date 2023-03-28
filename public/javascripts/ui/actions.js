@@ -28,20 +28,31 @@ async function getBoardInfo() {
     } else {
         // Yup the server sent us something back
         console.log(result.game);
+
+        // Placement Board
+        if (GameInfo.placementBoard) {
+            // A placement board doesn't exist
+            
+        }
+        else {
+
+        }
+
+        // Actual board
         if (GameInfo.board) {
             // A board already exists
             GameInfo.board.update(result.game);
         }
         else {
             // Create a new board
-            GameInfo.board = new Board(result.game.width, result.game.height, 500, 300, 0.2, result.game.tiles);
+            GameInfo.board = new Board(result.game.width, result.game.height, 500, 300, 0.2, result.game.tiles, result.game.player, result.game.opponents);
         }
         console.log(GameInfo.board);
 
         // Is there already a cat? If so, update the cat with the first cat
-        if (GameInfo.cat) GameInfo.cat.update(result.game.player.team[0], 0, 400);
+        if (GameInfo.cat) GameInfo.cat.update(result.game.player.team.cats[0], 0, 400);
         // Else, make a new cat
-        else GameInfo.cat = new Cat(result.game.player.team[0], 0, 400);
+        else GameInfo.cat = new Cat(result.game.player.team.cats[0], 0, 400);
     }
 }
 

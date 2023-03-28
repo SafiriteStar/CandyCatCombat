@@ -26,6 +26,7 @@ class Cat {
     draw() {
         fill(100, 100, 100);
         stroke(0, 0, 0);
+        strokeWeight(0);
         rect(this.screenX, 0, Cat.width, Cat.height, 5, 5, 5, 5);
         fill(0, 0, 0);
         textAlign(LEFT, CENTER);

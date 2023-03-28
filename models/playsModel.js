@@ -109,7 +109,7 @@ class Play {
 
 
             // Lets avoid repeated strings shall we?
-            let askForCatTeam = 'select gtc_id as "id", gtc_game_team_id as "team_id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+            let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
             // Player info
             board.player = {};
@@ -119,9 +119,14 @@ class Play {
                 [game.id, game.player.id]);
 
             // Get a list of cats in the player's game team
-            board.player.team;
-            [board.player.team] = await pool.query(askForCatTeam,
-                [playerGameTeamData.gt_id]);
+            board.player.team = {};
+            // Save the team id
+            board.player.team.id;
+            board.player.team.id = playerGameTeamData.gt_id;
+            board.player.team.cats;
+
+            [board.player.team.cats] = await pool.query(askForCatTeam,
+                [board.player.team.id]);
 
             // Opponents
             board.opponents = [];
@@ -133,9 +138,15 @@ class Play {
 
                 // Get a list of cats in the opponent's game team
                 board.opponents[i] = {};
-                board.opponents[i].team;
-                [board.opponents[i].team] = await pool.query(askForCatTeam,
-                    [opponentGameTeamData.gt_id]);
+                // Initialize team
+                board.opponents[i].team = {};
+                // Save team id
+                board.opponents[i].team.id;
+                board.opponents[i].team.id = opponentGameTeamData.gt_id;
+                board.opponents[i].team.cats;
+
+                [board.opponents[i].team.cats] = await pool.query(askForCatTeam,
+                    [board.opponents[i].team.id]);
             }
             
             return { status: 200, result: board};
