@@ -14,8 +14,24 @@ class Tile {
     }
 
     draw(translateX, translateY, tileScale) {
-        fill('rgba(255, 255, 100, .25)');
-        stroke(255);
+        // Placement
+        if (this.type == 3) {
+            fill('rgba(186, 251, 255, 1)');
+        }
+        // Wall
+        else if (this.type == 2) {
+            fill('rgba(220, 135, 255, 1)');
+        }
+        // Normal
+        else if (this.type == 1) {
+            fill('rgba(246, 255, 253, 1)');
+        }
+        // If something went wrong, print black
+        else {
+            fill('rgba(0, 0, 0, 1)');
+        }
+        // Outline
+        stroke(0);
         strokeWeight(5);
         push();
             translate(translateX + (Tile.width * 3 * tileScale * this.x), translateY - (Tile.height * 1 * tileScale * this.y));
@@ -29,6 +45,7 @@ class Tile {
                 vertex(-Tile.width, 0);                   // Middle Left
             endShape(CLOSE);
 
+            // Debug Text Inside
             fill(0, 0, 0);
             stroke(0);
             strokeWeight(1);
@@ -45,6 +62,7 @@ class Tile {
 }
 
 class Board {
+
     constructor(width, height, startPosX, startPosY, scale, tileArray, playerTeam, opponentTeams) {
         this.width = width;
         this.height = height;
@@ -52,8 +70,7 @@ class Board {
         this.startPosY = startPosY
         this.scale = scale;
         this.tiles = [];
-        this.player = {};
-        this.player.team = playerTeam;  // Object
+        this.player = playerTeam;       // Object
         this.opponents = opponentTeams; // Array
 
         // Fill the board
@@ -62,6 +79,16 @@ class Board {
             for (let j = 0; j < height; j++) {
                 this.tiles[i][j] = new Tile(tileArray[i][j]);
             }
+        }
+
+        // Fill placement board
+        this.placementTiles = [];
+        for (let k = 0; k < 6; k++) {
+            let tempTile = {};
+            tempTile.x = k;
+            tempTile.y = 0;
+            tempTile.type = 3;
+            this.placementTiles[k] = new Tile(tempTile);
         }
     }
 
@@ -75,6 +102,10 @@ class Board {
                     this.tiles[i][j].draw(this.startPosX + (Tile.width * this.scale * 1.5), this.startPosY, this.scale);
                 }
             }
+        }
+
+        for (let i = 0; i < this.placementTiles.length; i++) {
+            this.placementTiles[i].draw(this.startPosX + (Tile.width * this.scale * 1.5), this.startPosY + (Tile.height * this.scale * 3), this.scale);
         }
     }
 
