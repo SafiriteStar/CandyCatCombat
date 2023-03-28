@@ -54,6 +54,7 @@ function draw() {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.scoreBoard.draw();
+        GameInfo.board.draw();
         GameInfo.cat.draw();
     }
 }
