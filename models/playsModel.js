@@ -89,12 +89,24 @@ class Play {
     static async getBoard(game) {
         try {
             let board = {};
-            [[board]] = await pool.query('select gm_board_id as "id" from game where gm_id = ?',
+            [[board]] = await pool.query('select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height" from game, board, tile where brd_id = gm_board_id and tile_board_id = brd_id and gm_id = ?',
                 [game.id]);
-            board.tiles;
+            
             // The game parameter comes with the game id. So lets get the board from the game id.
-            [board.tiles] = await pool.query('select tile_x, tile_y, tile_type_id, tile_board_id from game, tile where tile_board_id = gm_board_id and gm_id = ?',
+            let [databaseTiles] = await pool.query('select tile_x as "x", tile_y as "y", tile_type_id as "type" from game, tile where tile_board_id = gm_board_id and gm_id = ?',
                 [game.id]);
+
+            board.tiles = [];
+            let tileIndex = 0;
+
+            for (let i = 0; i < board.width; i++) {
+                board.tiles[i] = [];
+                for (let j = 0; j < board.height; j++) {
+                    board.tiles[i][j] = databaseTiles[tileIndex];
+                    tileIndex++;
+                }
+            }
+
 
             // Lets avoid repeated strings shall we?
             let askForCatTeam = 'select gtc_id as "id", gtc_game_team_id as "team_id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'

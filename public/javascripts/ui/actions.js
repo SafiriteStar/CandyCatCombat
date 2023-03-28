@@ -27,12 +27,21 @@ async function getBoardInfo() {
         window.location.pathname = "index.html";
     } else {
         // Yup the server sent us something back
-        GameInfo.game.board = result.game;
+        console.log(result.game);
+        if (GameInfo.board) {
+            // A board already exists
+            GameInfo.board.update(result.game);
+        }
+        else {
+            // Create a new board
+            GameInfo.board = new Board(result.game.width, result.game.height, 500, 300, 0.2, result.game.tiles);
+        }
+        console.log(GameInfo.board);
 
         // Is there already a cat? If so, update the cat with the first cat
-        if (GameInfo.cat) GameInfo.cat.update(GameInfo.game.player.team[0], 0, 400);
+        if (GameInfo.cat) GameInfo.cat.update(result.game.player.team[0], 0, 400);
         // Else, make a new cat
-        else GameInfo.cat = new Cat(GameInfo.game.board.player.team[0], 0, 400);
+        else GameInfo.cat = new Cat(result.game.player.team[0], 0, 400);
     }
 }
 
