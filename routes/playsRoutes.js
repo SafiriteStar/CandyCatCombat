@@ -24,24 +24,26 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
-router.patch('/move', auth.verifyAuth, async function (req, res, next) {
+router.patch('/move', async function (req, res, next) {
     try {
         console.log("Play move");
-        if (!req.characterId) {
+
+        const characterId = req.body.characterId;
+        const coord = req.body.coord;
+
+        if (!characterId) {
             res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
-        } else if (!req.coord) {
+        } else if (!coord) {
             res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(req.characterId, req.coord);
+            let result = await Play.move(0, characterId, coord);
             res.status(result.status).send(result.result);
         }
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
     }
-
 });
-
 
 
 module.exports = router;
