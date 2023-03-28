@@ -45,14 +45,18 @@ class Tile {
 }
 
 class Board {
-    constructor(width, height, startPosX, startPosY, scale, tileArray) {
+    constructor(width, height, startPosX, startPosY, scale, tileArray, playerTeam, opponentTeams) {
         this.width = width;
         this.height = height;
         this.startPosX = startPosX;
         this.startPosY = startPosY
         this.scale = scale;
         this.tiles = [];
+        this.player = {};
+        this.player.team = playerTeam;  // Object
+        this.opponents = opponentTeams; // Array
 
+        // Fill the board
         for (let i = 0; i < width; i++) {
             this.tiles[i] = [];
             for (let j = 0; j < height; j++) {

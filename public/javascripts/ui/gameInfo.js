@@ -16,6 +16,7 @@ class GameInfo  {
     static scoreBoard;
     static scoreWindow;
     static board;
+    static placementBoard;
     static cat;
 
     // buttons
