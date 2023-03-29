@@ -2,86 +2,44 @@ function isEven(n) {
     return n % 2 === 0;
 }
 
-class Tile {
-    static width = 150;
-    static height = 130;
-    static spacing = 75;
-
-    constructor(baseTile) {
-        this.x = baseTile.x;
-        this.y = baseTile.y;
-        this.type = baseTile.type;
-    }
-
-    draw(translateX, translateY, tileScale) {
-        // Placement
-        if (this.type == 3) {
-            fill('rgba(186, 251, 255, 1)');
-        }
-        // Wall
-        else if (this.type == 2) {
-            fill('rgba(220, 135, 255, 1)');
-        }
-        // Normal
-        else if (this.type == 1) {
-            fill('rgba(246, 255, 253, 1)');
-        }
-        // If something went wrong, print black
-        else {
-            fill('rgba(0, 0, 0, 1)');
-        }
-        // Outline
-        stroke(0);
-        strokeWeight(5);
-        push();
-            translate(translateX + (Tile.width * 3 * tileScale * this.x), translateY - (Tile.height * 1 * tileScale * this.y));
-            scale(tileScale);
-            beginShape();
-                vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-                vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-                vertex(Tile.width, 0);                    // Middle Right
-                vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-                vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-                vertex(-Tile.width, 0);                   // Middle Left
-            endShape(CLOSE);
-
-            // Debug Text Inside
-            fill(0, 0, 0);
-            stroke(0);
-            strokeWeight(1);
-            textSize(72)
-            text(this.x + ", " + this.y, -60, 0);
-        pop();
-    }
-
-    update(tile) {
-        this.x = tile.x;
-        this.y = tile.y;
-        this.type = tile.type;
-    }
-}
-
 class Board {
+    static startPosX = 100;
+    static startPosY = 450;
+    static scale = 0.2;
 
-    constructor(width, height, startPosX, startPosY, scale, tileArray, playerTeam, opponentTeams) {
+    // Check for unplaced cats
+    #unplacedCatsCheck() {
+        let catsUnplaced = false;
+        for (let i = 0; i < this.player.cats.length; i++) {
+            // If its null
+            if (this.player.cats[i].x == null || this.player.cats[i].y == null) {
+                catsUnplaced = true;
+                // Set the cat to the placement tile
+                this.player.cats[i].placementX = i;
+                this.player.cats[i].placementY = 0;
+            }
+            else {
+                this.player.cats[i].placementX = null;
+                this.player.cats[i].placementY = null;
+            }
+        }
+        return catsUnplaced;
+    }
+
+    constructor(width, height, tileArray, playerTeam, opponentTeams) {
         this.width = width;
         this.height = height;
-        this.startPosX = startPosX;
-        this.startPosY = startPosY
-        this.scale = scale;
         this.tiles = [];
-        this.player = playerTeam;       // Object
-        this.opponents = opponentTeams; // Array
 
-        // Fill the board
-        for (let i = 0; i < width; i++) {
+        // Create main board
+        for (let i = 0; i < this.width; i++) {
             this.tiles[i] = [];
-            for (let j = 0; j < height; j++) {
+            for (let j = 0; j < this.height; j++) {
                 this.tiles[i][j] = new Tile(tileArray[i][j]);
             }
         }
 
-        // Fill placement board
+        // Create placement board
         this.placementTiles = [];
         for (let k = 0; k < 6; k++) {
             let tempTile = {};
@@ -90,30 +48,44 @@ class Board {
             tempTile.type = 3;
             this.placementTiles[k] = new Tile(tempTile);
         }
+        
+        this.player = new Team(playerTeam.team.id, playerTeam.team.cats, [151, 255, 175]); // Object
+        this.opponents = opponentTeams; // Array
+        this.unplacedCats = this.#unplacedCatsCheck();
     }
 
     draw() {
+
+        // Main Board
         for (let i = 0; i < this.tiles.length; i++) {
             for (let j = 0; j < this.tiles[i].length; j++) {
-                if (isEven(j)) {
-                    this.tiles[i][j].draw(this.startPosX, this.startPosY, this.scale);
-                }
-                else {
-                    this.tiles[i][j].draw(this.startPosX + (Tile.width * this.scale * 1.5), this.startPosY, this.scale);
-                }
+                this.tiles[i][j].draw(0, 0);
             }
         }
 
-        for (let i = 0; i < this.placementTiles.length; i++) {
-            this.placementTiles[i].draw(this.startPosX + (Tile.width * this.scale * 1.5), this.startPosY + (Tile.height * this.scale * 3), this.scale);
+        if (this.unplacedCats) {
+            // Show Placement Tile
+            for (let i = 0; i < this.placementTiles.length; i++) {
+                this.placementTiles[i].draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale);
+            }
+
+            // Show cats in placement tile
+            this.player.draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale)
         }
     }
 
     update(board) {
+        // Update the tiles
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 this.tiles[i][j].update(board[i][j]);
             }
         }
+
+        // Update cat info
+        this.player = board.player;
+        this.opponents = board.opponents;
+
+        this.unplacedCats = this.#unplacedCatsCheck();
     }
 }
