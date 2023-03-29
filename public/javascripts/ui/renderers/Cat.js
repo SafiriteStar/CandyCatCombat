@@ -2,6 +2,16 @@ class Cat {
     static width = 300;
     static height = 420;
     static diameter = 20;
+
+    static catColor = [
+        [255, 0, 0],
+        [9, 0, 255],
+        [120, 0, 255],
+        [0, 255, 102],
+        [255, 239, 0],
+        [255, 145, 0],
+        [247, 0, 255]
+    ];
     
     constructor(cat, showDebug) {
         this.id = cat.id;
@@ -25,17 +35,44 @@ class Cat {
         this.showDebug = showDebug
     }
 
-    draw(xOffset, yOffset) {
-        // Circle for now, make it into an image later
-        fill(100, 100, 100);
-        stroke(0, 0, 0);
-        strokeWeight(0);
+    draw(xOffset, yOffset, teamColor) {
 
-        // Some short circuiting "magic"
         let evenOffset = isEven(this.y || this.placementY) && (Tile.width * Board.scale) * 1.5 || 0;
+        let currentX = (this.x || this.placementX);
+        let currentY = (this.y || this.placementY);
+        
+        // Circle for now, make it into an image later
+        strokeWeight(4);
+        
+        // Outline the hexagon with the team color
+        stroke(teamColor[0], teamColor[1], teamColor[2]);
+        strokeWeight(24);
+        fill(0, 0, 0, 0);
+        push();
+        // Some short circuiting "magic"
+            translate(
+                Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
+                Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset
+            );
+            scale(Board.scale * 0.9);
+            beginShape();
+            vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+            vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+            vertex(Tile.width, 0);                    // Middle Right
+            vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+            vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+            vertex(-Tile.width, 0);                   // Middle Left
+            endShape(CLOSE);
+        pop();
+            
+            
+        stroke(0);
+        strokeWeight(0);
+        fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], 255);
+        // Some short circuiting "magic"
         circle(
-            Board.startPosX + (Tile.width * 3 * Board.scale * (this.x || this.placementX)) + evenOffset + xOffset,
-            Board.startPosY - (Tile.height * 1 * Board.scale * (this.y || this.placementY)) + yOffset,
+            Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
+            Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset,
             Cat.diameter
         );
 
