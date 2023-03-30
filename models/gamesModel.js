@@ -36,15 +36,15 @@ class Game {
             game.player = this.player.export();
         game.opponents = this.opponents.map(o => o.export());
         return game;
-    }    
+    }
 
     // No verifications, we assume they were already made
     // This is mostly an auxiliary method
-    static async fillPlayersOfGame(userId,game) {
+    static async fillPlayersOfGame(userId, game) {
         try {
             let [dbPlayers] = await pool.query(`Select * from user 
             inner join user_game on ug_user_id = usr_id
-             inner join user_game_state on ugst_id = ug_state_id
+            inner join user_game_state on ugst_id = ug_state_id
             where ug_game_id=?`, [game.id]);
             for (let dbPlayer of dbPlayers) {
                 let player = new Player(
