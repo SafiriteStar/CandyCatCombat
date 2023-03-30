@@ -83,9 +83,9 @@ class Board {
         }
 
         // Update cat info
-        this.player = board.player;
+        console.log(board);
+        this.player = new Team (board.player.team.id, board.player.team.cats, [151, 255, 175]);
         this.opponents = board.opponents;
-
         this.unplacedCats = this.#unplacedCatsCheck();
     }
 }

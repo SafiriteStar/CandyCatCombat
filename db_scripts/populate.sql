@@ -105,17 +105,3 @@ insert into board () values ();
 insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
 
 -- Fill the board with normal tiles
-
-insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values
-                 (     0,      0,            1,             1),
-                 (     1,      0,            1,             1),
-                 (     2,      0,            1,             1),
-                 (     0,      1,            1,             1),
-                 (     1,      1,            1,             1),
-                 (     2,      1,            1,             1),
-                 (     0,      2,            1,             1),
-                 (     1,      2,            1,             1),
-                 (     2,      2,            1,             1),
-                 (     0,      3,            1,             1),
-                 (     1,      3,            2,             1),
-                 (     2,      3,            3,             1)
