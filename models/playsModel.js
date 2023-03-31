@@ -25,19 +25,19 @@ class Play {
                 [game.id, game.player.id]);
             
             // Get the game_team id made for the player
-            let [[playerGameTeam]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
+            let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
                 [game.id, game.player.id]
             );
             // Get the players default team
             let [playerDefaultTeam] = await pool.query(
-                "select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+                "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
                 [game.player.id]
             );
             
             // Add the cats in the default team to game_team_cat
             for (let i = 0; i < playerDefaultTeam.length; i++) {
                 // Get the data of the current cat
-                let [[currentCat]] = await pool.query('select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
+                let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
                 // playerDefaultTeam[i]
                 // Add that cat to the game team
                 await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina) values (?, ?, ?, ?)',
@@ -51,12 +51,12 @@ class Play {
                     [game.id, game.opponents[i].id]);
                 
                 // Get the game_team id made for the player
-                let [[opponentGameTeam]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
+                let [[opponentGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
                     [game.id, game.opponents[i].id]
                 );
                 // Get the players default team
                 let [opponentDefaultTeam] = await pool.query(
-                    "select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+                    "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
                     [game.opponents[i].id]
                 );
                 
@@ -89,12 +89,16 @@ class Play {
     static async getBoard(game) {
         try {
             let board = {};
-            [[board]] = await pool.query('select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height" from game, board, tile where brd_id = gm_board_id and tile_board_id = brd_id and gm_id = ?',
+            [[board]] = await pool.query('Select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height" from game, board, tile where brd_id = gm_board_id and tile_board_id = brd_id and gm_id = ?',
                 [game.id]);
             
             // The game parameter comes with the game id. So lets get the board from the game id.
-            let [databaseTiles] = await pool.query('select tile_x as "x", tile_y as "y", tile_type_id as "type" from game, tile where tile_board_id = gm_board_id and gm_id = ?',
-                [game.id]);
+            let [databaseTiles] = await pool.query(
+                'Select tile_x as "x", tile_y as "y", tile_type_id as "type" from game, tile where tile_board_id = gm_board_id and gm_id = ?',
+                    [game.id]
+            );
+
+            let [placementTiles] = await pool.query('Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group" from placement_tile_group')
 
             board.tiles = [];
             let tileIndex = 0;
