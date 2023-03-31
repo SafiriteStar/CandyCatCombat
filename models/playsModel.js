@@ -130,12 +130,16 @@ class Play {
 
     static async move(game, characterId, coord) {
        try {
-            let [[selectedCat]] = await pool.query(
+            let [selectedCats] = await pool.query(
                 `select gtc_x, gtc_y, gtc_stamina from game_team_cat where gtc_id = ?`,
                 [characterId]
             );
-            if (!selectedCat)
+            selectedCats[0]
+            if (selectedCats.length > 1 || selectedCats.length <= 0) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
+            }
+            
+            let selectedCat = selectedCats[0];
 
             if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, coord.x, coord.y))
                 return { status: 400, result: {msg:"You cannot move character since the chosen coordinate is not valid"} };
