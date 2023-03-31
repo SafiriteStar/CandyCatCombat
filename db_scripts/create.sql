@@ -112,10 +112,11 @@ create table tile_type (
     primary key (tty_id));
 
 create table placement_tile_group (
+    ptg_tile_board_id int not null,
     ptg_tile_x int not null,
     ptg_tile_y int not null,
     ptg_group int not null,
-    primary key (ptg_tile_x, ptg_tile_y));
+    primary key (ptg_tile_board_id, ptg_tile_x, ptg_tile_y));
 
 # Foreign Keys
 
@@ -207,6 +208,11 @@ alter table tile add constraint tile_fk_tile_type
 -- Link Game to Board by gm_board_id
 alter table game add constraint game_fk_board
             foreign key (gm_board_id) references board(brd_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Placement Tile Group to Board by ptg_tile_board_id
+alter table placement_tile_group add constraint placement_tile_group_fk_board_id
+            foreign key (ptg_tile_board_id) references board(brd_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Link Placement Tile Group to Tile by tile_x
