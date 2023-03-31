@@ -48,6 +48,8 @@ async function populateMap() {
             
         }
 
+
+
         // Add another group of placement tiles
         for (let i = 1; i <= 3; i++) {
             for (let j = 5; j <= 7; j++) {
@@ -63,6 +65,7 @@ async function populateMap() {
             }
             
         }
+
 
         console.log("Map created!");
     }

@@ -203,32 +203,101 @@ class Play {
         }
     }
 
+    // static async selectTeam(game, characterId, teamId) {
+    //     try {
+    //         let [[row]] = await pool.query(
+    //             `select * from game_team where gtc_id = ?`,
+    //             [teamId]
+    //         );
+    //         if (!row)
+    //             return { status: 400, result: {msg:"You cannot selected that team since the chosen team is not valid"} };
+            
+    //         await pool.query(
+    //             `update game_team_cat set gtc_game_team_id = ? where gtc_id = ?`,
+    //             [teamId, characterId]
+    //         );
+
+    //         return { 
+    //             status: 200, 
+    //             result: {
+    //                 "characterId": characterId
+    //             }
+    //         }
+
+    //     } catch (err) {
+    //         console.log(err);
+    //         return { status: 500, result: err };
+    //     }
+    // }
+
     static async move(game, characterId, coord) {
        try {
-            let [[row]] = await pool.query(
-                `select gtc_x, gtc_y, gtc_stamina from game_team_cat where gtc_type_id = ?`,
+            let [selectedCats] = await pool.query(
+                `select gtc_x, gtc_y, gtc_stamina
+                from game_team_cat
+                where gtc_id = ?`,
                 [characterId]
             );
-            if (!row)
+            if (selectedCats.length > 1 || selectedCats.length <= 0) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
+            }
+            
+            let selectedCat = selectedCats[0];
 
-            if (!this.isNeighbor(row.gtc_x, row.gtc_y, coord.x, coord.y))
+            if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, coord.x, coord.y))
                 return { status: 400, result: {msg:"You cannot move character since the chosen coordinate is not valid"} };
 
-            const stamina = row.gtc_stamina - 1;
+            let [tiles] = await pool.query(
+                `select *
+                from tile
+                where tile_x = ? and tile_y = ?`,
+                [coord.x, coord.y]
+            );
+
+            let tile = tiles[0]
+
+            //if tile is null
+            if (!tile) 
+                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
+
+            //if there's a wall
+            if (tile.type_id == 1)  // 1 = wall
+                return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
+    
+            //if there's already a cat
+            let [cats] = await pool.query(
+                `select gtc_x, gtc_y
+                from game, game_team, game_team_cat
+                where gm_id = ? and gt_game_id = gm_id and gtc_game_team_id = gt_id and gtc_x = ? and gtc_y = ?`,
+                [game.id, coord.x, coord.y]
+            );
+
+            if (cats.length > 1 || cats.gtc_y, coord.x, coord.y) {
+                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character"} };
+            }
+
+            let cat = cats[0];
+     
+
+
+
+
+            const stamina = selectedCat.gtc_stamina - 1;
             await pool.query(
-                `update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_type_id = ?`,
+                `update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_id = ?`,
                 [coord.x, coord.y, stamina, characterId]
             );
 
-            return { status: 200, result: {
-                "stamina": stamina,
-                "coord": {
-                    "x": coord.x, 
-                    "y": coord.y
-                }
-            }     
-        };
+            return {
+                status: 200, 
+                result: {
+                    "stamina": stamina,
+                    "coord": {
+                        "x": coord.x, 
+                        "y": coord.y
+                    }
+                }     
+            };
     
         } catch (err) {
             console.log(err);
@@ -236,22 +305,21 @@ class Play {
         }
     }
 
-    static isNeighbor(fromX, fromY, toX, toY){
-        if (fromX == toX && fromY == toY - 2) return true;
+    static isNeighbor(fromX, fromY, toX, toY) {
+        if (fromX == toX && fromY == toY - 2) return true; //middle down tile
 
-        if (fromX == toX - 1 && fromY == toY - 1) return true;
+        if (fromX == toX - 1 && fromY == toY - 1) return true; //left down diagonal tile
 
-        if (fromX == toX - 1 && fromY == toY + 1) return true;
+        if (fromX == toX - 1 && fromY == toY + 1) return true; //left tile
 
-        if (fromX == toX && fromY == toY + 2) return true;
+        if (fromX == toX && fromY == toY + 2) return true; //left up tile
 
-        if (fromX == toX && fromY == toY + 1) return true;
+        if (fromX == toX && fromY == toY + 1) return true; //middle up tile
 
-        if (fromX == toX && fromY == toY - 1) return true;
+        if (fromX == toX && fromY == toY - 1) return true; //right tile
 
         return false
     }
-
 
     // Makes all the calculation needed to end and score the game
     static async endGame(game) {

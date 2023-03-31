@@ -39,6 +39,24 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+// router.patch('/team/select', async function (req, res, next) {
+//     try{
+//         const characterId = req.body.characterId;
+//         const teamId = req.body.teamId;
+
+//         if (!teamId) {
+//             res.status(400).send({msg:"You cannot selected that team since the chosen team is not valid"});
+//         } else {
+//             let result = await Play.selectTeam(0, characterId, teamId);
+//             res.status(result.status).send(result.result);
+//         }
+
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).send(err);
+//     }
+// })
+
 router.patch('/move', async function (req, res, next) {
     try {
         console.log("Play move");
@@ -59,6 +77,5 @@ router.patch('/move', async function (req, res, next) {
         res.status(500).send(err);
     }
 });
-
 
 module.exports = router;

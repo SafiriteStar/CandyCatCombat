@@ -7,6 +7,7 @@ class Tile {
         this.x = baseTile.x;
         this.y = baseTile.y;
         this.type = baseTile.type;
+
         if (!(baseTile.group == null)) {
             this.group = baseTile.group;
         }
