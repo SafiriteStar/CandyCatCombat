@@ -217,10 +217,5 @@ alter table placement_tile_group add constraint placement_tile_group_fk_board_id
 
 -- Link Placement Tile Group to Tile by tile_x
 alter table placement_tile_group add constraint placement_tile_group_fk_tile_x
-            foreign key (ptg_tile_x) references tile(tile_x)
-            ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Link Placement Tile Group to Tile by tile_y
-alter table placement_tile_group add constraint placement_tile_group_fk_tile_y
-            foreign key (ptg_tile_y) references tile(tile_y)
+            foreign key (ptg_tile_x, ptg_tile_y) references tile(tile_x, tile_y)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
