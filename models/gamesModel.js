@@ -20,10 +20,11 @@ class Player {
 }
 
 class Game {
-    constructor(id,turn,state,player,opponents) {
+    constructor(id, turn, state, board, player, opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
+        this.board = board;
         this.player = player;
         this.opponents = opponents || [];
     }
@@ -35,6 +36,7 @@ class Game {
         if (this.player)
             game.player = this.player.export();
         game.opponents = this.opponents.map(o => o.export());
+        game.board = this.board;
         return game;
     }    
 
@@ -78,7 +80,7 @@ class Game {
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
-            let game = new Game(dbGame.gm_id,dbGame.gm_turn,new State(dbGame.gst_id,dbGame.gst_state));
+            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
             let result = await this.fillPlayersOfGame(id,game);
             if (result.status != 200) {
                 return result;
@@ -99,7 +101,7 @@ class Game {
                     where gst_state = 'Waiting'`);
             let games = [];
             for (let dbGame of dbGames) {
-                let game = new Game(dbGame.gm_id,dbGame.gm_turn,new State(dbGame.gst_id,dbGame.gst_state));
+                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
                 let result = await this.fillPlayersOfGame(userId,game);
                 if (result.status != 200) {
                     return result;
@@ -122,7 +124,7 @@ class Game {
     static async create(userId) {
         try {
             // create the game
-            let [result] = await pool.query('Insert into game (gm_state_id) values (?)', [1]);
+            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 1]);
             let gameId = result.insertId;
             // add the user to the game
             await pool.query('Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)',
