@@ -48,6 +48,22 @@ async function populateMap() {
             
         }
 
+        // Add another group of placement tiles
+        for (let i = 1; i <= 3; i++) {
+            for (let j = 5; j <= 7; j++) {
+                await pool.query(
+                    `Update tile set tile_type_id = 3 where tile_x = ? and tile_y = ?`,
+                        [i, j]
+                );
+                // Each placement tile also needs to know who they are connected to
+                await pool.query(
+                    `Insert into placement_tile_group (ptg_tile_board_id, ptg_tile_x, ptg_tile_y, ptg_group) values (?, ?, ?, ?)`,
+                        [1, i, j, 2]
+                );
+            }
+            
+        }
+
         console.log("Map created!");
     }
     else {
