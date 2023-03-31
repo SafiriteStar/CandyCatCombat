@@ -46,8 +46,10 @@ async function join(mId) {
 async function refresh() {
     try {
         result = await requestWaitingMatches();
+
         if (!result.successful || result.err)
             throw result.err || { err: "Not successfull" }
+
         // remove everything to fill again:
         let parent = document.getElementById("matches");
         while (parent.firstChild) {

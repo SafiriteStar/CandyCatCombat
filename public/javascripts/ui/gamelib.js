@@ -1,8 +1,11 @@
+const Game = require("../../../models/gamesModel");
 
 async function refresh() {
     if (GameInfo.game.player.state == "Waiting") { 
         // Every time we are waiting
-        await  getGameInfo();       
+        await getGameInfo();
+        await getBoardInfo();
+
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
@@ -22,7 +25,8 @@ async function setup() {
     canvas.parent('game');
     // preload  images
     
-    await  getGameInfo();
+    await getGameInfo();
+    await getBoardInfo();
     setInterval(refresh,1000);
 
     //buttons (create a separated function if they are many)
@@ -50,6 +54,7 @@ function draw() {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.scoreBoard.draw();
+        GameInfo.board.draw();
     }
 }
 

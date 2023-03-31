@@ -16,11 +16,38 @@ async function getGameInfo() {
     }
 }
 
+async function getBoardInfo() {
+    // Ask the server for game and board information
+    let result = await requestGameBoard();
+
+    // Did we get it?
+    if (!result.successful) {
+        // Nope, try and login again
+        alert("Something is wrong with the game please login again!");
+        window.location.pathname = "index.html";
+    } else {
+        // Yup the server sent us something back
+        console.log(result.game);
+
+        // Actual board
+        if (GameInfo.board) {
+            // A board already exists
+            GameInfo.board.update(result.game);
+        }
+        else {
+            // Create a new board
+            GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
+        }
+        console.log(GameInfo.board);
+    }
+}
+
 
 async function endturnAction() {
     let result = await requestEndTurn();
     if (result.successful) {
         await  getGameInfo();
+        await getBoardInfo();
         GameInfo.prepareUI();
     } else alert("Something went wrong when ending the turn.")
 }

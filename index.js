@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 var express = require('express');
 var path = require('path');
 var cookieSession = require('cookie-session');
@@ -21,6 +22,7 @@ const usersRouter = require("./routes/usersRoutes");
 const gamesRouter = require("./routes/gamesRoutes");
 const playsRouter = require("./routes/playsRoutes");
 const scoresRouter = require("./routes/scoresRoutes");
+const populateMap = require('./db_scripts/mapPopulate');
 
 app.use("/api/users",usersRouter);
 app.use("/api/games",gamesRouter);
@@ -30,15 +32,20 @@ app.use("/api/scores",scoresRouter);
 // when we don't find anything
 app.use((req, res, next) => {
   res.status(404).send({msg:"No resource or page found."});
-})
+});
 
 // When we find an error (means it was not treated previously)
 app.use((err, req, res, next) => {
   console.error(err)
   res.status(500).send(err);
-})
+});
 
 const port = parseInt(process.env.port || '8080');
 app.listen(port,function() {
   console.log("Server running at http://localhost:"+port);
 });
+
+// After we start the sever, we want to add in the maps to the database if they aren't in there already
+require("./db_scripts/mapPopulate");
+
+populateMap();
