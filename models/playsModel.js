@@ -225,10 +225,11 @@ class Play {
     static async move(game, characterId, coord) {
        try {
             let [selectedCats] = await pool.query(
-                `select gtc_x, gtc_y, gtc_stamina from game_team_cat where gtc_id = ?`,
+                `select gtc_x, gtc_y, gtc_stamina
+                from game_team_cat
+                where gtc_id = ?`,
                 [characterId]
             );
-            selectedCats[0]
             if (selectedCats.length > 1 || selectedCats.length <= 0) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
             }
@@ -238,11 +239,15 @@ class Play {
             if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, coord.x, coord.y))
                 return { status: 400, result: {msg:"You cannot move character since the chosen coordinate is not valid"} };
 
-            let [[tile]] = await pool.query(
-                `select * from tile where tile_x = ? and tile_y = ?`,
+            let [tiles] = await pool.query(
+                `select *
+                from tile
+                where tile_x = ? and tile_y = ?`,
                 [coord.x, coord.y]
             );
-    
+
+            let tile = tiles[0]
+
             //if tile is null
             if (!tile) 
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
@@ -252,13 +257,23 @@ class Play {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
     
             //if there's already a cat
-            let [[cat]] = await pool.query(
-                `select * from game_team_cat where gtc_x = ? and gtc_y = ?`,
-                [coord.x, coord.y]
+            let [cats] = await pool.query(
+                `select gtc_x, gtc_y
+                from game, game_team, game_team_cat
+                where gm_id = ? and gt_game_id = gm_id and gtc_game_team_id = gt_id and gtc_x = ? and gtc_y = ?`,
+                [game.id, coord.x, coord.y]
             );
-            if (cat) 
+
+            if (cats.length > 1 || cats.gtc_y, coord.x, coord.y) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character"} };
-        
+            }
+
+            let cat = cats[0];
+     
+
+
+
+
             const stamina = selectedCat.gtc_stamina - 1;
             await pool.query(
                 `update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_id = ?`,
