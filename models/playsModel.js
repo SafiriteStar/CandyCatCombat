@@ -98,11 +98,15 @@ class Play {
                     [game.id]
             );
 
-            let [placementTiles] = await pool.query('Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group" from placement_tile_group')
+            let [dbPlacementTiles] = await pool.query(
+                'Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group" from placement_tile_group where ptg_tile_board_id = ?',
+                    [game.board]
+            );
 
             board.tiles = [];
             let tileIndex = 0;
 
+            // Add all the tiles
             for (let i = 0; i < board.width; i++) {
                 board.tiles[i] = [];
                 for (let j = 0; j < board.height; j++) {
@@ -111,6 +115,10 @@ class Play {
                 }
             }
 
+            // After adding all the tiles we need to adjust the placement tiles so that they know what group they are in
+            for (let i = 0; i < dbPlacementTiles.length; i++) {
+                board.tiles[dbPlacementTiles[i].x][dbPlacementTiles[i].y].group = dbPlacementTiles[i].group;
+            }
 
             // Lets avoid repeated strings shall we?
             let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
