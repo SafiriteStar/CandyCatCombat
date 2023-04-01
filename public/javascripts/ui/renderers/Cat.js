@@ -3,6 +3,9 @@ class Cat {
     static height = 420;
     static diameter = 100;
 
+    static healthBarLength = 200;
+    static healthBarHeight = 35;
+
     static catColor = [
         [255, 0, 0],
         [9, 0, 255],
@@ -66,11 +69,33 @@ class Cat {
             stroke(0);
             strokeWeight(0);
             fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], 255);
-            // Some short circuiting "magic"
+            
+            // Filler circle to represent cat
             circle(
                 0,
                 0,
                 Cat.diameter
+            );
+            
+            // Health Bar
+            fill(teamColor[0], teamColor[1], teamColor[2], 255);
+            stroke(teamColor[0], teamColor[1], teamColor[2], 255);
+            strokeWeight(1);
+            rect(
+                -Cat.healthBarLength * 0.5,
+                Tile.height - (Cat.healthBarHeight * 2),
+                Cat.healthBarLength * (1 - (this.max_health - this.current_health)),
+                Cat.healthBarHeight
+            );
+            // Health Bar Outline
+            fill(255, 255, 255, 0);
+            stroke(0, 0, 0,  255);
+            strokeWeight(12);
+            rect(
+                -Cat.healthBarLength * 0.5,
+                Tile.height - (Cat.healthBarHeight * 2),
+                Cat.healthBarLength,
+                Cat.healthBarHeight
             );
         pop();
             
