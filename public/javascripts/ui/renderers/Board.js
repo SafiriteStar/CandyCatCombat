@@ -39,7 +39,9 @@ class Board {
         for (let i = 0; i < this.width; i++) {
             this.tiles[i] = [];
             for (let j = 0; j < this.height; j++) {
-                this.tiles[i][j] = new Tile(tileArray[i][j]);
+                if (!(tileArray[i][j] === null)) {
+                    this.tiles[i][j] = new Tile(tileArray[i][j]);
+                }
             }
         }
 
