@@ -3,8 +3,8 @@ function isEven(n) {
 }
 
 class Board {
-    static startPosX = 100;
-    static startPosY = 490;
+    static startPosX = 200;
+    static startPosY = 400;
 
     // Check for unplaced cats
     #unplacedCatsCheck() {
@@ -55,7 +55,7 @@ class Board {
     }
 
     draw() {
-
+        scale(this.scale)
         // Main Board
         for (let i = 0; i < this.tiles.length; i++) {
             for (let j = 0; j < this.tiles[i].length; j++) {
@@ -66,11 +66,11 @@ class Board {
         if (this.unplacedCats) {
             // Show Placement Tile
             for (let i = 0; i < this.placementTiles.length; i++) {
-                this.placementTiles[i].draw(Tile.width * -this.scale * 1.5, Tile.height * 3 * this.scale, this.scale);
+                this.placementTiles[i].draw(Tile.width * 1.5, Tile.height * 3, this.scale);
             }
 
             // Show cats in placement tile
-            this.player.draw(Tile.width * -this.scale * 1.5, Tile.height * 3 * this.scale, this.scale)
+            this.player.draw(Tile.width * 1.5, Tile.height * 3, this.scale)
         }
     }
 
@@ -87,5 +87,22 @@ class Board {
         this.player = new Team (board.player.team.id, board.player.team.cats, [151, 255, 175]);
         this.opponents = board.opponents;
         this.unplacedCats = this.#unplacedCatsCheck();
+    }
+
+    changeScale(event) {
+        if (event.deltaY > 0 && this.scale > 0.11) {
+            this.scale = this.scale - 0.01;
+            
+            if (this.scale < 0.11) {
+                this.scale = 0.11;
+            }
+        }
+        else if (event.deltaY < 0 && this.scale < 0.34) {
+            this.scale = this.scale + 0.01;
+            
+            if (this.scale > 0.34) {
+                this.scale = 0.34;
+            }
+        }
     }
 }

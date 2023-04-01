@@ -64,10 +64,5 @@ async function mouseClicked() {
 }
 
 function changeScale(event) {
-    if (event.deltaY > 0) {
-        GameInfo.board.scale = GameInfo.board.scale - 0.01;
-    }
-    else {
-        GameInfo.board.scale = GameInfo.board.scale + 0.01;
-    }
+    GameInfo.board.changeScale(event);
 }

@@ -35,12 +35,11 @@ class Tile {
         strokeWeight(5);
         push();
             // Some short circuiting "magic"
-            let evenOffset = isEven(this.y) && (Tile.width * boardScale) * 1.5 || 0;
+            let evenOffset = isEven(this.y) && (Tile.width) * 1.5 || 0;
             translate(
-                Board.startPosX + (Tile.width * 3 * boardScale * this.x) + evenOffset + xOffset,
-                Board.startPosY - (Tile.height * 1 * boardScale * this.y) + yOffset
+                (Board.startPosX / boardScale) + (Tile.width * 3 * this.x) + evenOffset + xOffset,
+                (Board.startPosY / boardScale) - (Tile.height * 1 * this.y) + yOffset
             );
-            scale(boardScale);
             beginShape();
                 vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
                 vertex(Tile.width * 0.5, -Tile.height);   // Top Right
