@@ -43,6 +43,7 @@ async function setup() {
 
     GameInfo.loading = false;
 
+    // Prevent right click context menu from appearing when hovering over p5
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
