@@ -35,9 +35,9 @@ class Cat {
         this.showDebug = showDebug
     }
 
-    draw(xOffset, yOffset, teamColor) {
+    draw(xOffset, yOffset, teamColor, boardScale) {
 
-        let evenOffset = isEven(this.y || this.placementY) && (Tile.width * Board.scale) * 1.5 || 0;
+        let evenOffset = isEven(this.y || this.placementY) && (Tile.width * boardScale) * 1.5 || 0;
         let currentX = (this.x || this.placementX);
         let currentY = (this.y || this.placementY);
         
@@ -51,10 +51,10 @@ class Cat {
         push();
         // Some short circuiting "magic"
             translate(
-                Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
-                Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset
+                Board.startPosX + (Tile.width * 3 * boardScale * currentX) + evenOffset + xOffset,
+                Board.startPosY - (Tile.height * 1 * boardScale * currentY) + yOffset
             );
-            scale(Board.scale * 0.9);
+            scale(boardScale);
             beginShape();
             vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
             vertex(Tile.width * 0.5, -Tile.height);   // Top Right
@@ -65,14 +65,14 @@ class Cat {
             endShape(CLOSE);
         pop();
             
-            
+        
         stroke(0);
         strokeWeight(0);
         fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], 255);
         // Some short circuiting "magic"
         circle(
-            Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
-            Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset,
+            Board.startPosX + (Tile.width * 3 * boardScale * currentX) + evenOffset + xOffset,
+            Board.startPosY - (Tile.height * 1 * boardScale * currentY) + yOffset,
             Cat.diameter
         );
 

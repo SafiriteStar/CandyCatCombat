@@ -4,8 +4,7 @@ function isEven(n) {
 
 class Board {
     static startPosX = 100;
-    static startPosY = 450;
-    static scale = 0.2;
+    static startPosY = 490;
 
     // Check for unplaced cats
     #unplacedCatsCheck() {
@@ -29,6 +28,7 @@ class Board {
     constructor(width, height, tileArray, playerTeam, opponentTeams) {
         this.width = width;
         this.height = height;
+        this.scale = 0.2
         this.tiles = [];
 
         // Create main board
@@ -59,18 +59,18 @@ class Board {
         // Main Board
         for (let i = 0; i < this.tiles.length; i++) {
             for (let j = 0; j < this.tiles[i].length; j++) {
-                this.tiles[i][j].draw(0, 0);
+                this.tiles[i][j].draw(0, 0, this.scale);
             }
         }
 
         if (this.unplacedCats) {
             // Show Placement Tile
             for (let i = 0; i < this.placementTiles.length; i++) {
-                this.placementTiles[i].draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale);
+                this.placementTiles[i].draw(Tile.width * -this.scale * 1.5, Tile.height * 3 * this.scale, this.scale);
             }
 
             // Show cats in placement tile
-            this.player.draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale)
+            this.player.draw(Tile.width * -this.scale * 1.5, Tile.height * 3 * this.scale, this.scale)
         }
     }
 
