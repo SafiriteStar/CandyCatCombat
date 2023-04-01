@@ -64,6 +64,14 @@ function draw() {
     }
 }
 
+async function mousePressed() {
+    GameInfo.board.mousePressed();
+}
+
+async function mouseReleased() {
+    
+}
+
 async function mouseClicked() {
   
 }

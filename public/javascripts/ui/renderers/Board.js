@@ -30,6 +30,10 @@ class Board {
         this.height = height;
         this.scale = 0.2
         this.tiles = [];
+        this.cameraX = 0;
+        this.cameraY = 0;
+        this.cameraMouseStartX = 0;
+        this.cameraMouseStartY = 0;
 
         // Create main board
         for (let i = 0; i < this.width; i++) {
@@ -56,22 +60,38 @@ class Board {
 
     draw() {
         scale(this.scale)
-        // Main Board
-        for (let i = 0; i < this.tiles.length; i++) {
-            for (let j = 0; j < this.tiles[i].length; j++) {
-                this.tiles[i][j].draw(0, 0, this.scale);
-            }
+        
+        if (mouseIsPressed === true) {
+            let mouseXDelta = this.cameraMouseStartX - mouseX;
+            let mouseYDelta = this.cameraMouseStartY - mouseY;
+
+            this.cameraX = this.cameraX - (mouseXDelta * 3);
+            this.cameraY = this.cameraY - (mouseYDelta * 3);
+
+            this.cameraMouseStartX = mouseX;
+            this.cameraMouseStartY = mouseY;
         }
 
-        if (this.unplacedCats) {
-            // Show Placement Tile
-            for (let i = 0; i < this.placementTiles.length; i++) {
-                this.placementTiles[i].draw(Tile.width * 1.5, Tile.height * 3, this.scale);
+        push();
+            translate(this.cameraX, this.cameraY)
+            // Main Board
+            for (let i = 0; i < this.tiles.length; i++) {
+                for (let j = 0; j < this.tiles[i].length; j++) {
+                    this.tiles[i][j].draw(0, 0, this.scale);
+                }
             }
 
-            // Show cats in placement tile
-            this.player.draw(Tile.width * 1.5, Tile.height * 3, this.scale)
-        }
+            if (this.unplacedCats) {
+                // Show Placement Tile
+                for (let i = 0; i < this.placementTiles.length; i++) {
+                    this.placementTiles[i].draw(Tile.width * 1.5, Tile.height * 3, this.scale);
+                }
+
+                // Show cats in placement tile
+                this.player.draw(Tile.width * 1.5, Tile.height * 3, this.scale)
+            }
+
+        pop();
     }
 
     update(board) {
@@ -104,5 +124,10 @@ class Board {
                 this.scale = 0.34;
             }
         }
+    }
+
+    mousePressed() {
+        this.cameraMouseStartX = mouseX;
+        this.cameraMouseStartY = mouseY;
     }
 }
