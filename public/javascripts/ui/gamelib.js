@@ -42,6 +42,10 @@ async function setup() {
     
 
     GameInfo.loading = false;
+
+    for (let element of document.getElementsByClassName("p5Canvas")) {
+        element.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
 }
 
 function draw() {
