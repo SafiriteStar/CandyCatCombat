@@ -59,8 +59,8 @@ function draw() {
     } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
         GameInfo.scoreWindow.draw();
     } else  {
-        GameInfo.scoreBoard.draw();
         GameInfo.board.draw();
+        GameInfo.scoreBoard.draw();
     }
 }
 
