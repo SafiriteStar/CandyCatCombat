@@ -23,6 +23,7 @@ function preload() {
 async function setup() {
     let canvas = createCanvas(GameInfo.width, GameInfo.height);
     canvas.parent('game');
+    canvas.mouseWheel(changeScale); // Attach listener for when the mouse wheel is over the canvas 
     // preload  images
     
     await getGameInfo();
@@ -41,6 +42,11 @@ async function setup() {
     
 
     GameInfo.loading = false;
+
+    // Prevent right click context menu from appearing when hovering over p5
+    for (let element of document.getElementsByClassName("p5Canvas")) {
+        element.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
 }
 
 function draw() {
@@ -53,12 +59,23 @@ function draw() {
     } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
         GameInfo.scoreWindow.draw();
     } else  {
-        GameInfo.scoreBoard.draw();
         GameInfo.board.draw();
+        GameInfo.scoreBoard.draw();
     }
+}
+
+async function mousePressed() {
+    GameInfo.board.mousePressed();
+}
+
+async function mouseReleased() {
+    
 }
 
 async function mouseClicked() {
   
 }
 
+function changeScale(event) {
+    GameInfo.board.changeScale(event);
+}

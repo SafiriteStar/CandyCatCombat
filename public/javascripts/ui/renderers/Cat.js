@@ -1,7 +1,10 @@
 class Cat {
     static width = 300;
     static height = 420;
-    static diameter = 20;
+    static diameter = 100;
+
+    static healthBarLength = 200;
+    static healthBarHeight = 35;
 
     static catColor = [
         [255, 0, 0],
@@ -35,9 +38,9 @@ class Cat {
         this.showDebug = showDebug
     }
 
-    draw(xOffset, yOffset, teamColor) {
+    draw(xOffset, yOffset, teamColor, boardScale) {
 
-        let evenOffset = isEven(this.y || this.placementY) && (Tile.width * Board.scale) * 1.5 || 0;
+        let evenOffset = isEven(this.y || this.placementY) && (Tile.width) * 1.5 || 0;
         let currentX = (this.x || this.placementX);
         let currentY = (this.y || this.placementY);
         
@@ -51,10 +54,9 @@ class Cat {
         push();
         // Some short circuiting "magic"
             translate(
-                Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
-                Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset
+                (Board.startPosX / boardScale) + (Tile.width * 3 * currentX) + evenOffset + xOffset,
+                (Board.startPosY / boardScale) - (Tile.height * 1 * currentY) + yOffset
             );
-            scale(Board.scale * 0.9);
             beginShape();
             vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
             vertex(Tile.width * 0.5, -Tile.height);   // Top Right
@@ -63,18 +65,41 @@ class Cat {
             vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
             vertex(-Tile.width, 0);                   // Middle Left
             endShape(CLOSE);
+            
+            stroke(0);
+            strokeWeight(0);
+            fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], 255);
+            
+            // Filler circle to represent cat
+            circle(
+                0,
+                0,
+                Cat.diameter
+            );
+            
+            // Health Bar
+            fill(teamColor[0], teamColor[1], teamColor[2], 255);
+            stroke(teamColor[0], teamColor[1], teamColor[2], 255);
+            strokeWeight(1);
+            rect(
+                -Cat.healthBarLength * 0.5,
+                Tile.height - (Cat.healthBarHeight * 2),
+                Cat.healthBarLength * (1 - (this.max_health - this.current_health)),
+                Cat.healthBarHeight
+            );
+            // Health Bar Outline
+            fill(255, 255, 255, 0);
+            stroke(0, 0, 0,  255);
+            strokeWeight(12);
+            rect(
+                -Cat.healthBarLength * 0.5,
+                Tile.height - (Cat.healthBarHeight * 2),
+                Cat.healthBarLength,
+                Cat.healthBarHeight
+            );
         pop();
             
-            
-        stroke(0);
-        strokeWeight(0);
-        fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], 255);
-        // Some short circuiting "magic"
-        circle(
-            Board.startPosX + (Tile.width * 3 * Board.scale * currentX) + evenOffset + xOffset,
-            Board.startPosY - (Tile.height * 1 * Board.scale * currentY) + yOffset,
-            Cat.diameter
-        );
+        
 
         if (this.showDebug) {
             fill(100, 100, 100);

@@ -20,6 +20,13 @@ async function populateMap() {
                         [j, i, 1, 1]
                 );
             }
+            // Insert one more odd tile at the end to make things symmetrical
+            if (!(i % 2 == 0)) {
+                await pool.query(
+                    `Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values ( ?, ?, ?, ? )`,
+                        [16, i, 1, 1]
+                );
+            }
         }
 
         // Add in some walls
@@ -50,9 +57,9 @@ async function populateMap() {
 
 
 
-        // Add another group of placement tiles
+        // Add another group of placement tiles for player 2
         for (let i = 1; i <= 3; i++) {
-            for (let j = 5; j <= 7; j++) {
+            for (let j = 6; j <= 8; j++) {
                 await pool.query(
                     `Update tile set tile_type_id = 3 where tile_x = ? and tile_y = ?`,
                         [i, j]
