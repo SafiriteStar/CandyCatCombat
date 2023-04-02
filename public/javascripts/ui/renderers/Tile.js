@@ -13,7 +13,7 @@ class Tile {
         }
     }
 
-    draw(xOffset, yOffset) {
+    draw(xOffset, yOffset, boardScale) {
         // Placement
         if (this.type == 3) {
             fill('rgba(186, 251, 255, 1)');
@@ -35,12 +35,11 @@ class Tile {
         strokeWeight(5);
         push();
             // Some short circuiting "magic"
-            let evenOffset = isEven(this.y) && (Tile.width * Board.scale) * 1.5 || 0;
+            let evenOffset = isEven(this.y) && (Tile.width) * 1.5 || 0;
             translate(
-                Board.startPosX + (Tile.width * 3 * Board.scale * this.x) + evenOffset + xOffset,
-                Board.startPosY - (Tile.height * 1 * Board.scale * this.y) + yOffset
+                (Board.startPosX / boardScale) + (Tile.width * 3 * this.x) + evenOffset + xOffset,
+                (Board.startPosY / boardScale) - (Tile.height * 1 * this.y) + yOffset
             );
-            scale(Board.scale);
             beginShape();
                 vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
                 vertex(Tile.width * 0.5, -Tile.height);   // Top Right

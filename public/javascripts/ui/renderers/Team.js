@@ -9,9 +9,9 @@ class Team {
         }
     }
 
-    draw(xOffset, yOffset) {
+    draw(xOffset, yOffset, boardScale) {
         for (let i = 0; i < this.cats.length; i++) {
-            this.cats[i].draw(xOffset, yOffset, this.color);
+            this.cats[i].draw(xOffset, yOffset, this.color, boardScale);
         }
     }
 }

@@ -3,9 +3,8 @@ function isEven(n) {
 }
 
 class Board {
-    static startPosX = 100;
-    static startPosY = 450;
-    static scale = 0.2;
+    static startPosX = 200;
+    static startPosY = 400;
 
     // Check for unplaced cats
     #unplacedCatsCheck() {
@@ -29,13 +28,20 @@ class Board {
     constructor(width, height, tileArray, playerTeam, opponentTeams) {
         this.width = width;
         this.height = height;
+        this.scale = 0.2
         this.tiles = [];
+        this.cameraX = 0;
+        this.cameraY = 0;
+        this.cameraMouseStartX = 0;
+        this.cameraMouseStartY = 0;
 
         // Create main board
         for (let i = 0; i < this.width; i++) {
             this.tiles[i] = [];
             for (let j = 0; j < this.height; j++) {
-                this.tiles[i][j] = new Tile(tileArray[i][j]);
+                if (!(tileArray[i][j] === null)) {
+                    this.tiles[i][j] = new Tile(tileArray[i][j]);
+                }
             }
         }
 
@@ -55,23 +61,39 @@ class Board {
     }
 
     draw() {
+        scale(this.scale)
+        
+        if (mouseIsPressed === true) {
+            let mouseXDelta = this.cameraMouseStartX - mouseX;
+            let mouseYDelta = this.cameraMouseStartY - mouseY;
 
-        // Main Board
-        for (let i = 0; i < this.tiles.length; i++) {
-            for (let j = 0; j < this.tiles[i].length; j++) {
-                this.tiles[i][j].draw(0, 0);
-            }
+            this.cameraX = this.cameraX - (mouseXDelta * 3);
+            this.cameraY = this.cameraY - (mouseYDelta * 3);
+
+            this.cameraMouseStartX = mouseX;
+            this.cameraMouseStartY = mouseY;
         }
 
-        if (this.unplacedCats) {
-            // Show Placement Tile
-            for (let i = 0; i < this.placementTiles.length; i++) {
-                this.placementTiles[i].draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale);
+        push();
+            translate(this.cameraX, this.cameraY)
+            // Main Board
+            for (let i = 0; i < this.tiles.length; i++) {
+                for (let j = 0; j < this.tiles[i].length; j++) {
+                    this.tiles[i][j].draw(0, 0, this.scale);
+                }
             }
 
-            // Show cats in placement tile
-            this.player.draw(Tile.width * -Board.scale * 1.5, Tile.height * 3 * Board.scale)
-        }
+            if (this.unplacedCats) {
+                // Show Placement Tile
+                for (let i = 0; i < this.placementTiles.length; i++) {
+                    this.placementTiles[i].draw(Tile.width * 1.5, Tile.height * 3, this.scale);
+                }
+
+                // Show cats in placement tile
+                this.player.draw(Tile.width * 1.5, Tile.height * 3, this.scale)
+            }
+
+        pop();
     }
 
     update(board) {
@@ -87,5 +109,27 @@ class Board {
         this.player = new Team (board.player.team.id, board.player.team.cats, [151, 255, 175]);
         this.opponents = board.opponents;
         this.unplacedCats = this.#unplacedCatsCheck();
+    }
+
+    changeScale(event) {
+        if (event.deltaY > 0 && this.scale > 0.11) {
+            this.scale = this.scale - 0.01;
+            
+            if (this.scale < 0.11) {
+                this.scale = 0.11;
+            }
+        }
+        else if (event.deltaY < 0 && this.scale < 0.34) {
+            this.scale = this.scale + 0.01;
+            
+            if (this.scale > 0.34) {
+                this.scale = 0.34;
+            }
+        }
+    }
+
+    mousePressed() {
+        this.cameraMouseStartX = mouseX;
+        this.cameraMouseStartY = mouseY;
     }
 }
