@@ -3,17 +3,26 @@ class Tile {
     static height = 130;
     static spacing = this.width * 0.5;
 
-    constructor(baseTile) {
+    constructor(baseTile, xOffset, yOffset) {
         this.x = baseTile.x;
         this.y = baseTile.y;
         this.type = baseTile.type;
+
+        // Some short circuiting "magic"
+        // If its even then displace it by Tile.width * 1.5
+        // If its not even then displace it by 0
+        let evenOffset = isEven(this.y) && (-Tile.width) * 1.5 || 0;
+        // The X and Y in terms of pixels
+        this.screenX = (Tile.width * 3 * this.x) + evenOffset + xOffset;
+        this.screenY = (-Tile.height * 1 * this.y) + yOffset;
 
         if (!(baseTile.group == null)) {
             this.group = baseTile.group;
         }
     }
 
-    draw(xOffset, yOffset, boardScale) {
+    draw() {
+
         // Placement
         if (this.type == 3) {
             fill('rgba(186, 251, 255, 1)');
@@ -35,11 +44,7 @@ class Tile {
         strokeWeight(5);
         push();
             // Some short circuiting "magic"
-            let evenOffset = isEven(this.y) && (Tile.width) * 1.5 || 0;
-            translate(
-                (Board.startPosX / boardScale) + (Tile.width * 3 * this.x) + evenOffset + xOffset,
-                (Board.startPosY / boardScale) - (Tile.height * 1 * this.y) + yOffset
-            );
+            translate(this.screenX, this.screenY);
             beginShape();
                 vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
                 vertex(Tile.width * 0.5, -Tile.height);   // Top Right

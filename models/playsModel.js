@@ -40,8 +40,8 @@ class Play {
                 let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
                 // playerDefaultTeam[i]
                 // Add that cat to the game team
-                await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina) values (?, ?, ?, ?)',
-                    [playerGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed]);
+                await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina, gtc_placement_x, gtc_placement_y) values (?, ?, ?, ?, ?, ?)',
+                    [playerGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed, i, 0]);
             }
             
             // Opponents (can do multiple but you should only have one)
@@ -66,8 +66,8 @@ class Play {
                     let [[currentCat]] = await pool.query('select * from cat where cat_id = ?', [opponentDefaultTeam[j].tmc_cat_id]);
                     // playerDefaultTeam[i]
                     // Add that cat to the game team
-                    await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina) values (?, ?, ?, ?)',
-                        [opponentGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed]);
+                    await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina, gtc_placement_x, gtc_placement_y) values (?, ?, ?, ?, ?, ?)',
+                        [opponentGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed, j, 0]);
                 }
             }
 
@@ -121,7 +121,7 @@ class Play {
             }
 
             // Lets avoid repeated strings shall we?
-            let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+            let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_placement_x as "placementX", gtc_placement_y as "placementY" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
             // Player info
             board.player = {};
@@ -256,15 +256,17 @@ class Play {
 
             let tile = tiles[0]
 
-            //if tile is null
-            if (!tile) 
+            // If tile is null
+            if (!tile) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
+            }
 
-            //if there's a wall
-            if (tile.type_id == 1)  // 1 = wall
+            // If there's a wall
+            if (tile.type_id == 1) { // 1 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
+            }
     
-            //if there's already a cat
+            // If there's already a cat
             let [cats] = await pool.query(
                 `select gtc_x, gtc_y
                 from game, game_team, game_team_cat
@@ -277,9 +279,6 @@ class Play {
             }
 
             let cat = cats[0];
-     
-
-
 
 
             const stamina = selectedCat.gtc_stamina - 1;

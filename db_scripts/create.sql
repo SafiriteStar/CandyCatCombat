@@ -77,6 +77,8 @@ create table game_team_cat (
     gtc_game_team_id int not null,
     gtc_x int,
     gtc_y int,
+    gtc_placement_x int,
+    gtc_placement_y int,
     gtc_type_id int not null,
     gtc_current_health int not null,
     gtc_stamina int not null,

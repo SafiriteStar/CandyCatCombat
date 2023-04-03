@@ -2,9 +2,16 @@ function isEven(n) {
     return n % 2 === 0;
 }
 
+function roundToNumber(n, base) {
+    return Math.round(n/base) * base;
+}
+
 class Board {
-    static startPosX = 200;
-    static startPosY = 400;
+    static startPosX = 0;
+    static startPosY = 0;
+    static placementBoardXOffset = Tile.width * 1.5;
+    static placementBoardYOffset = Tile.height * 3;
+
 
     // Check for unplaced cats
     #unplacedCatsCheck() {
@@ -40,7 +47,7 @@ class Board {
             this.tiles[i] = [];
             for (let j = 0; j < this.height; j++) {
                 if (!(tileArray[i][j] === null)) {
-                    this.tiles[i][j] = new Tile(tileArray[i][j]);
+                    this.tiles[i][j] = new Tile(tileArray[i][j], 0, 0);
                 }
             }
         }
@@ -52,7 +59,7 @@ class Board {
             tempTile.x = k;
             tempTile.y = 0;
             tempTile.type = 3;
-            this.placementTiles[k] = new Tile(tempTile);
+            this.placementTiles[k] = new Tile(tempTile, Board.placementBoardXOffset, Board.placementBoardYOffset);
         }
         
         this.player = new Team(playerTeam.team.id, playerTeam.team.cats, [151, 255, 175]); // Object
@@ -61,37 +68,73 @@ class Board {
     }
 
     draw() {
-        scale(this.scale)
         
         if (mouseIsPressed === true) {
             let mouseXDelta = this.cameraMouseStartX - mouseX;
             let mouseYDelta = this.cameraMouseStartY - mouseY;
-
+            
             this.cameraX = this.cameraX - (mouseXDelta * 3);
             this.cameraY = this.cameraY - (mouseYDelta * 3);
-
+            
             this.cameraMouseStartX = mouseX;
             this.cameraMouseStartY = mouseY;
         }
 
         push();
-            translate(this.cameraX, this.cameraY)
+            scale(this.scale);
+            // Camera Translation
+            translate(this.cameraX, this.cameraY);
+            // Legacy Translation for debugging
+            translate(Board.startPosX / this.scale, Board.startPosY / this.scale);
+            
             // Main Board
             for (let i = 0; i < this.tiles.length; i++) {
                 for (let j = 0; j < this.tiles[i].length; j++) {
-                    this.tiles[i][j].draw(0, 0, this.scale);
+                    this.tiles[i][j].draw();
                 }
             }
 
             if (this.unplacedCats) {
                 // Show Placement Tile
                 for (let i = 0; i < this.placementTiles.length; i++) {
-                    this.placementTiles[i].draw(Tile.width * 1.5, Tile.height * 3, this.scale);
+                    this.placementTiles[i].draw();
                 }
 
                 // Show cats in placement tile
-                this.player.draw(Tile.width * 1.5, Tile.height * 3, this.scale)
             }
+
+            // Draw player cats
+            this.player.draw()
+
+            // TODO:
+            // If there are no unplaced cats
+            // Draw the opponent cats as well
+
+            
+            // Get where the mouse is
+            let mouseTileScreenX = (roundToNumber((mouseX - (this.cameraX * this.scale)) / this.scale, 225));
+            let mouseTileScreenY = (roundToNumber((mouseY - (this.cameraY * this.scale)) / this.scale, 130));
+
+            // Debug circle so we know where we are
+            circle(
+                mouseTileScreenX,
+                mouseTileScreenY,
+                100
+            )
+
+            // Get the Y of where we are
+            let mouseTilePosY = ((mouseTileScreenY / 130) * -1);
+            let mouseTilePosX = 0
+
+            if (isEven(mouseTilePosY)) {
+                mouseTilePosX = Math.floor((mouseTileScreenX / 450) + 0.5);
+            }
+            else {
+                mouseTilePosX = Math.floor((mouseTileScreenX / 450) + 0.5);
+            }
+
+            console.log("X: " + mouseTilePosX);
+            console.log("Y: " + mouseTilePosY);
 
         pop();
     }
@@ -131,5 +174,9 @@ class Board {
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;
+    }
+
+    changeSelectedTile(tile) {
+        this.selectionTile = tile;
     }
 }

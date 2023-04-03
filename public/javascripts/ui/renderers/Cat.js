@@ -21,8 +21,8 @@ class Cat {
         this.type = cat.type;
         this.x = cat.x;
         this.y = cat.y;
-        this.placementX = null;
-        this.placementY = null;
+        this.placementX = cat.placementX;
+        this.placementY = cat.placementY;
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
@@ -38,11 +38,15 @@ class Cat {
         this.showDebug = showDebug
     }
 
-    draw(xOffset, yOffset, teamColor, boardScale) {
+    draw(teamColor) {
 
-        let evenOffset = isEven(this.y || this.placementY) && (Tile.width) * 1.5 || 0;
+        let evenOffset = isEven(this.y || this.placementY) && (-Tile.width) * 1.5 || 0;
         let currentX = (this.x || this.placementX);
         let currentY = (this.y || this.placementY);
+        // More short circuiting "magic"
+        // Be careful with the order of the "||" and the 0
+        let xOffset = !(this.placementX == null) && Board.placementBoardXOffset || 0;
+        let yOffset = !(this.placementY == null) && Board.placementBoardYOffset || 0;
         
         // Circle for now, make it into an image later
         strokeWeight(4);
@@ -52,10 +56,9 @@ class Cat {
         strokeWeight(24);
         fill(0, 0, 0, 0);
         push();
-        // Some short circuiting "magic"
             translate(
-                (Board.startPosX / boardScale) + (Tile.width * 3 * currentX) + evenOffset + xOffset,
-                (Board.startPosY / boardScale) - (Tile.height * 1 * currentY) + yOffset
+                (Tile.width * 3 * currentX) + evenOffset + xOffset,
+                (-Tile.height * 1 * currentY) + yOffset
             );
             beginShape();
             vertex(-Tile.width * 0.5, -Tile.height);  // Top Left

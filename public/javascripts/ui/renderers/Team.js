@@ -4,14 +4,15 @@ class Team {
         this.cats = [];
         this.color = colorArray;
 
+        let unplacedIndex = 0;
         for (let i = 0; i < catList.length; i++) {
             this.cats[i] = new Cat(catList[i], false);
         }
     }
 
-    draw(xOffset, yOffset, boardScale) {
+    draw() {
         for (let i = 0; i < this.cats.length; i++) {
-            this.cats[i].draw(xOffset, yOffset, this.color, boardScale);
+            this.cats[i].draw(this.color);
         }
     }
 }

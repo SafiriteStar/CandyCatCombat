@@ -57,6 +57,10 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
 //     }
 // })
 
+// Body:
+// "characterId": (num),
+// "coord": (2D array)
+
 router.patch('/move', async function (req, res, next) {
     try {
         console.log("Play move");
