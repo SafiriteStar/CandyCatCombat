@@ -61,19 +61,16 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
 // "characterId": (num),
 // "coord": (2D array)
 
-router.patch('/move', async function (req, res, next) {
+router.patch('/move', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Play move");
 
-        const characterId = req.body.characterId;
-        const coord = req.body.coord;
-
-        if (!characterId) {
+        if (req.body.catID === null || req.body.catID < 0) {
             res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
-        } else if (!coord) {
+        } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
             res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(0, characterId, coord);
+            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.placementX, req.body.placementY, req.body.catID);
             res.status(result.status).send(result.result);
         }
     } catch (err) {

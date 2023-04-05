@@ -40,9 +40,9 @@ class Cat {
 
     draw(teamColor) {
 
-        let evenOffset = isEven(this.y || this.placementY) && (-Tile.width) * 1.5 || 0;
         let currentX = (this.x || this.placementX);
         let currentY = (this.y || this.placementY);
+        let evenOffset = isEven(currentX) && (-Tile.height) * 1 || 0;
         // More short circuiting "magic"
         // Be careful with the order of the "||" and the 0
         let xOffset = !(this.placementX == null) && Board.placementBoardXOffset || 0;
@@ -57,8 +57,8 @@ class Cat {
         fill(0, 0, 0, 0);
         push();
             translate(
-                (Tile.width * 3 * currentX) + evenOffset + xOffset,
-                (-Tile.height * 1 * currentY) + yOffset
+                (Tile.width * 1.5 * currentX) + xOffset,
+                (-Tile.height * 2 * currentY) + yOffset + evenOffset
             );
             beginShape();
             vertex(-Tile.width * 0.5, -Tile.height);  // Top Left

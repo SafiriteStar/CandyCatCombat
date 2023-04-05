@@ -42,6 +42,11 @@ async function getBoardInfo() {
     }
 }
 
+async function moveCatAction(x, y, placementX, placementY, catID) {
+    let result = await requestMoveCharacter(x, y, placementX, placementY, catID)
+
+    console.log(result);
+}
 
 async function endturnAction() {
     let result = await requestEndTurn();

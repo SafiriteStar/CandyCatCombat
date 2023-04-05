@@ -9,8 +9,8 @@ function roundToNumber(n, base) {
 class Board {
     static startPosX = 0;
     static startPosY = 0;
-    static placementBoardXOffset = Tile.width * 1.5;
-    static placementBoardYOffset = Tile.height * 3;
+    static placementBoardXOffset = Tile.width * 0;
+    static placementBoardYOffset = Tile.height * 4;
 
 
     // Check for unplaced cats
@@ -37,18 +37,30 @@ class Board {
         this.height = height;
         this.scale = 0.2
         this.tiles = [];
+
+        // Camera
         this.cameraX = 0;
         this.cameraY = 0;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
+
+        // Hover Tile
         this.mouseHoverTilePosX = 0;
         this.mouseHoverTilePosY = 0;
         this.mouseHoverTileCoordX = 0;
         this.mouseHoverTileCoordY = 0;
+
+        // Selection Tile
         this.selectedHexPosX = null;
         this.selectedHexPosY = null;
         this.selectedHexCoordX = null;
         this.selectedHexCoordY = null;
+
+        // Selected Cat
+        this.selectedCat = null;
+
+        // Tile Info UI
+        this.tileInfo = new TileInfo();
 
         // Create main board
         for (let i = 0; i < this.width; i++) {
@@ -80,6 +92,13 @@ class Board {
             if (this.tiles[x][y] !== null && this.tiles[x][y] !== undefined) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    #checkPlacementTileExists(x, y) {
+        if (this.placementTiles[x] !== null && this.placementTiles[x] !== undefined) {
+            return true;
         }
         return false;
     }
@@ -129,6 +148,7 @@ class Board {
             this.mouseHoverTilePosX = (roundToNumber(mouseScreenX, Tile.width * 1.5));
             this.mouseHoverTilePosY = (roundToNumber(mouseScreenY, Tile.height));
             
+            
             // If its odd then 
             if (!(isEven(this.mouseHoverTilePosX))) {
                 this.mouseHoverTilePosY = (roundToNumber(mouseScreenY, Tile.height * 2));
@@ -139,15 +159,14 @@ class Board {
             
             // Get the tile coordinates
             // Adjustments are made here to translate to the correct coordinates
-            this.mouseHoverTileCoordX = -this.mouseHoverTilePosY / (Tile.height);
-            this.mouseHoverTileCoordY = Math.floor((this.mouseHoverTilePosX + (Tile.width * 1.5)) / (Tile.width * 3));
+            this.mouseHoverTileCoordY = Math.ceil((-this.mouseHoverTilePosY - Tile.height) / (Tile.height * 2));
+            this.mouseHoverTileCoordX = Math.floor((this.mouseHoverTilePosX) / (Tile.width * 1.5));
 
             // Hover Hex
             push();
                 stroke(255, 255, 255, 150);
                 Tile.drawSimpleTile(this.mouseHoverTilePosX, this.mouseHoverTilePosY);
             pop();
-
             if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
                 // Selection Hex
                 push();
@@ -155,7 +174,17 @@ class Board {
                     Tile.drawSimpleTile(this.selectedHexPosX, this.selectedHexPosY);
                 pop();
             }
+            else if (this.#checkPlacementTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
+                // Selection Hex at placement board
+                push();
+                    stroke(255, 255, 0, 150);
+                    translate(Board.placementBoardXOffset, Board.placementBoardYOffset);
+                    Tile.drawSimpleTile(this.selectedHexPosX, this.selectedHexPosY);
+                pop();
+            }
         pop();
+
+        this.tileInfo.draw();
     }
 
     update(board) {
@@ -195,14 +224,74 @@ class Board {
         this.cameraMouseStartY = mouseY;
     }
 
+    #getPlayerCatAtCoord(x, y) {
+        for (let i = 0; i < this.player.cats.length; i++) {
+            if (this.player.cats[i].x === x && this.player.cats[i].y === y) {
+                return i;
+            }          
+        }
+
+        return null;
+    }
+
+    #getPlayerCatAtPlacementCoord(x, y) {
+        for (let i = 0; i < this.player.cats.length; i++) {
+            if (this.player.cats[i].placementX === x && this.player.cats[i].placementY === y) {
+                return i;
+            }          
+        }
+
+        return null;
+    }
+
     mouseReleased() {
         // Check if the tile we clicked on exists
         if (this.#checkTileExists(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY)) {
+            this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
             this.selectedHexCoordX = this.mouseHoverTileCoordX;
             this.selectedHexCoordY = this.mouseHoverTileCoordY;
             this.selectedHexPosX = this.mouseHoverTilePosX;
             this.selectedHexPosY = this.mouseHoverTilePosY;
+
+            this.tileInfo.update(this.tiles[this.selectedHexCoordX][this.selectedHexCoordY], this.selectedCat);
         }
+        else {
+            // If it doesn't exist, we should check if its in the placement board
+            let placementCoordY = Math.ceil((-this.mouseHoverTilePosY - Tile.height + Board.placementBoardYOffset) / (Tile.height * 2));
+            let placementCoordX = Math.floor((this.mouseHoverTilePosX + Board.placementBoardXOffset) / (Tile.width * 1.5));
+            if (this.#checkPlacementTileExists(placementCoordX, placementCoordY)) {
+                this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
+
+                this.selectedHexCoordX = placementCoordY;
+                this.selectedHexCoordY = placementCoordX;
+
+                this.selectedHexPosX = this.mouseHoverTilePosX;
+                this.selectedHexPosY = this.mouseHoverTilePosY;
+
+                this.tileInfo.update(this.placementTiles[this.selectedHexCoordX], this.selectedCat);
+            }
+        }
+
+        // Check if we have a cat
+        if (this.tileInfo.cat !== null) {
+            // Check if we clicked on a tile in the board
+            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
+                // Check if the cat is on placement tile
+                // Cat X and Y must be null
+                // Cat must have placement X and Y
+                if (
+                    this.player.cats[this.tileInfo.cat].x === null          && this.player.cats[this.tileInfo.cat].y === null &&
+                    this.player.cats[this.tileInfo.cat].placementX !== null && this.player.cats[this.tileInfo.cat].placementY !== null
+                ) {
+                    console.log("HUH???");
+                    // Check if the tile we are trying to move to is a placement tile and the group matches the player group
+                    if (this.tiles[this.selectedHexCoordX][this.selectedHexCoordY].type == 3 && this.tiles[this.selectedHexCoordX][this.selectedHexCoordY].group == 1) {
+                        moveCatAction(this.selectedHexCoordX, this.selectedHexCoordY, null, null, this.player.cats[this.tileInfo.cat].id);
+                    }
+                }
+            }
+        }
+
     }
 
     changeSelectedTile(tile) {

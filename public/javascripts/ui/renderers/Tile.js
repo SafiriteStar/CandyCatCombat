@@ -3,6 +3,13 @@ class Tile {
     static height = 130;
     static spacing = this.width * 0.5;
 
+    static typeStringArray = [
+        "Err",
+        "Normal",
+        "Wall",
+        "Placement"
+    ]
+
     constructor(baseTile, xOffset, yOffset) {
         this.x = baseTile.x;
         this.y = baseTile.y;
@@ -11,10 +18,10 @@ class Tile {
         // Some short circuiting "magic"
         // If its even then displace it by Tile.width * 1.5
         // If its not even then displace it by 0
-        let evenOffset = isEven(this.y) && (-Tile.width) * 1.5 || 0;
+        let evenOffset = isEven(this.x) && (-Tile.height) * 1 || 0;
         // The X and Y in terms of pixels
-        this.screenX = (Tile.width * 3 * this.x) + evenOffset + xOffset;
-        this.screenY = (-Tile.height * 1 * this.y) + yOffset;
+        this.screenX = (Tile.width * 1.5 * this.x) + xOffset;
+        this.screenY = (-Tile.height * 2 * this.y) + yOffset + evenOffset;
 
         if (!(baseTile.group == null)) {
             this.group = baseTile.group;

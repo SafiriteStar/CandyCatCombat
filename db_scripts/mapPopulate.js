@@ -12,19 +12,12 @@ async function populateMap() {
         console.log("Map not found --- Creating map...");
 
         // First map, 38 by 16
-        for (let i = 0; i < 37; i++) {
-            for (let j = 0; j < 16; j++) {
+        for (let i = 0; i < 20; i++) {
+            for (let j = 0; j < 33; j++) {
                 // Fill with normal tiles for now
                 await pool.query(
                     `Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values ( ?, ?, ?, ? )`,
                         [j, i, 1, 1]
-                );
-            }
-            // Insert one more odd tile at the end to make things symmetrical
-            if (!(i % 2 == 0)) {
-                await pool.query(
-                    `Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values ( ?, ?, ?, ? )`,
-                        [16, i, 1, 1]
                 );
             }
         }

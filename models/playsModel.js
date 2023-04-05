@@ -230,71 +230,77 @@ class Play {
     //     }
     // }
 
-    static async move(game, characterId, coord) {
+    static async move(game, x, y, placementX, placementY, catID) {
        try {
             let [selectedCats] = await pool.query(
-                `select gtc_x, gtc_y, gtc_stamina
+                `Select gtc_x, gtc_y, gtc_stamina
                 from game_team_cat
                 where gtc_id = ?`,
-                [characterId]
+                [catID]
             );
+            // Check if any cats with those ID's exist
             if (selectedCats.length > 1 || selectedCats.length <= 0) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
             }
-            
+
+            // Get the cat that was returned
             let selectedCat = selectedCats[0];
 
-            if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, coord.x, coord.y))
+            // Is the target tile not next to the cat?
+            if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen coordinate is not valid"} };
+            }
 
+            // Ask for the tile data at the coordinates
             let [tiles] = await pool.query(
-                `select *
+                `Select *
                 from tile
                 where tile_x = ? and tile_y = ?`,
-                [coord.x, coord.y]
+                [x, y]
             );
 
+            // Store the data
             let tile = tiles[0]
 
-            // If tile is null
-            if (!tile) {
+            // Does the tile exist?
+            if (tile === null) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
             }
 
-            // If there's a wall
+            // Is the tile a wall?
             if (tile.type_id == 1) { // 1 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
             }
     
-            // If there's already a cat
+            // Is there a cat already at the target tile?
             let [cats] = await pool.query(
-                `select gtc_x, gtc_y
+                `Select gtc_x, gtc_y
                 from game, game_team, game_team_cat
                 where gm_id = ? and gt_game_id = gm_id and gtc_game_team_id = gt_id and gtc_x = ? and gtc_y = ?`,
-                [game.id, coord.x, coord.y]
+                [game.id, x, y]
             );
 
-            if (cats.length > 1 || cats.gtc_y, coord.x, coord.y) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character"} };
+            // Missing health check
+            if (cats.length > 1) {
+                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
             }
 
+            // Store the data of the first cat
             let cat = cats[0];
 
 
-            const stamina = selectedCat.gtc_stamina - 1;
+            let stamina = selectedCat.gtc_stamina - 1;
             await pool.query(
-                `update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_id = ?`,
-                [coord.x, coord.y, stamina, characterId]
+                `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_id = ?`,
+                [x, y, stamina, catID]
             );
 
             return {
                 status: 200, 
                 result: {
                     "stamina": stamina,
-                    "coord": {
-                        "x": coord.x, 
-                        "y": coord.y
-                    }
+                    "x": x,
+                    "y": y
                 }     
             };
     
@@ -304,20 +310,9 @@ class Play {
         }
     }
 
-    static isNeighbor(fromX, fromY, toX, toY) {
-        if (fromX == toX && fromY == toY - 2) return true; //middle down tile
-
-        if (fromX == toX - 1 && fromY == toY - 1) return true; //left down diagonal tile
-
-        if (fromX == toX - 1 && fromY == toY + 1) return true; //left tile
-
-        if (fromX == toX && fromY == toY + 2) return true; //left up tile
-
-        if (fromX == toX && fromY == toY + 1) return true; //middle up tile
-
-        if (fromX == toX && fromY == toY - 1) return true; //right tile
-
-        return false
+    static isNeighbor(originX, originY, targetX, targetY) {
+        // Make proper neighboring checks
+        return true;
     }
 
     // Makes all the calculation needed to end and score the game
