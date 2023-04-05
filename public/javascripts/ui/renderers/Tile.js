@@ -21,6 +21,19 @@ class Tile {
         }
     }
 
+    static drawSimpleTile(x, y) {
+        // Some short circuiting "magic"
+        translate(x, y);
+        beginShape();
+            vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+            vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+            vertex(Tile.width, 0);                    // Middle Right
+            vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+            vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+            vertex(-Tile.width, 0);                   // Middle Left
+        endShape(CLOSE);
+    }
+
     draw() {
 
         // Placement
@@ -43,16 +56,7 @@ class Tile {
         stroke(0);
         strokeWeight(5);
         push();
-            // Some short circuiting "magic"
-            translate(this.screenX, this.screenY);
-            beginShape();
-                vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-                vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-                vertex(Tile.width, 0);                    // Middle Right
-                vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-                vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-                vertex(-Tile.width, 0);                   // Middle Left
-            endShape(CLOSE);
+            Tile.drawSimpleTile(this.screenX, this.screenY);
 
             // Debug Text Inside
             fill(0, 0, 0);

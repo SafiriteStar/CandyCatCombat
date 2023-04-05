@@ -144,35 +144,17 @@ class Board {
 
             // Hover Hex
             push();
-                translate(this.mouseHoverTilePosX, this.mouseHoverTilePosY);
-                stroke(255, 255, 255, 150); 
-                beginShape();
-                vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-                vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-                vertex(Tile.width, 0);                    // Middle Right
-                vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-                vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-                vertex(-Tile.width, 0);                   // Middle Left
-                endShape(CLOSE);
+                stroke(255, 255, 255, 150);
+                Tile.drawSimpleTile(this.mouseHoverTilePosX, this.mouseHoverTilePosY);
             pop();
 
             if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
                 // Selection Hex
                 push();
-                    translate(this.selectedHexPosX, this.selectedHexPosY);
-                    stroke(255, 255, 0, 150); 
-                    beginShape();
-                    vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-                    vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-                    vertex(Tile.width, 0);                    // Middle Right
-                    vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-                    vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-                    vertex(-Tile.width, 0);                   // Middle Left
-                    endShape(CLOSE);
+                    stroke(255, 255, 0, 150);
+                    Tile.drawSimpleTile(this.selectedHexPosX, this.selectedHexPosY);
                 pop();
             }
-
-
         pop();
     }
 
