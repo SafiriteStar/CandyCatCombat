@@ -41,6 +41,14 @@ class Board {
         this.cameraY = 0;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
+        this.mouseHoverTilePosX = 0;
+        this.mouseHoverTilePosY = 0;
+        this.mouseHoverTileCoordX = 0;
+        this.mouseHoverTileCoordY = 0;
+        this.selectedHexPosX = null;
+        this.selectedHexPosY = null;
+        this.selectedHexCoordX = null;
+        this.selectedHexCoordY = null;
 
         // Create main board
         for (let i = 0; i < this.width; i++) {
@@ -67,14 +75,23 @@ class Board {
         this.unplacedCats = this.#unplacedCatsCheck();
     }
 
+    #checkTileExists(x, y) {
+        if (this.tiles[x] !== null && this.tiles[x] !== undefined) {
+            if (this.tiles[x][y] !== null && this.tiles[x][y] !== undefined) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     draw() {
         
         if (mouseIsPressed === true) {
             let mouseXDelta = this.cameraMouseStartX - mouseX;
             let mouseYDelta = this.cameraMouseStartY - mouseY;
             
-            this.cameraX = this.cameraX - (mouseXDelta * 3);
-            this.cameraY = this.cameraY - (mouseYDelta * 3);
+            this.cameraX = this.cameraX - (mouseXDelta / this.scale);
+            this.cameraY = this.cameraY - (mouseYDelta / this.scale);
             
             this.cameraMouseStartX = mouseX;
             this.cameraMouseStartY = mouseY;
@@ -105,36 +122,56 @@ class Board {
 
             // Draw player cats
             this.player.draw()
-
-            // TODO:
-            // If there are no unplaced cats
-            // Draw the opponent cats as well
-
             
             // Get where the mouse is
-            let mouseTileScreenX = (roundToNumber((mouseX - (this.cameraX * this.scale)) / this.scale, 225));
-            let mouseTileScreenY = (roundToNumber((mouseY - (this.cameraY * this.scale)) / this.scale, 130));
-
-            // Debug circle so we know where we are
-            circle(
-                mouseTileScreenX,
-                mouseTileScreenY,
-                100
-            )
-
-            // Get the Y of where we are
-            let mouseTilePosY = ((mouseTileScreenY / 130) * -1);
-            let mouseTilePosX = 0
-
-            if (isEven(mouseTilePosY)) {
-                mouseTilePosX = Math.floor((mouseTileScreenX / 450) + 0.5);
+            let mouseScreenX = ((mouseX - (this.cameraX * this.scale)) / this.scale);
+            let mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
+            this.mouseHoverTilePosX = (roundToNumber(mouseScreenX, Tile.width * 1.5));
+            this.mouseHoverTilePosY = (roundToNumber(mouseScreenY, Tile.height));
+            
+            // If its odd then 
+            if (!(isEven(this.mouseHoverTilePosX))) {
+                this.mouseHoverTilePosY = (roundToNumber(mouseScreenY, Tile.height * 2));
             }
             else {
-                mouseTilePosX = Math.floor((mouseTileScreenX / 450) + 0.5);
+                this.mouseHoverTilePosY = (roundToNumber(mouseScreenY + Tile.height, Tile.height * 2)) - Tile.height;
+            }
+            
+            // Get the tile coordinates
+            // Adjustments are made here to translate to the correct coordinates
+            this.mouseHoverTileCoordX = -this.mouseHoverTilePosY / (Tile.height);
+            this.mouseHoverTileCoordY = Math.floor((this.mouseHoverTilePosX + (Tile.width * 1.5)) / (Tile.width * 3));
+
+            // Hover Hex
+            push();
+                translate(this.mouseHoverTilePosX, this.mouseHoverTilePosY);
+                stroke(255, 255, 255, 150); 
+                beginShape();
+                vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+                vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+                vertex(Tile.width, 0);                    // Middle Right
+                vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+                vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+                vertex(-Tile.width, 0);                   // Middle Left
+                endShape(CLOSE);
+            pop();
+
+            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
+                // Selection Hex
+                push();
+                    translate(this.selectedHexPosX, this.selectedHexPosY);
+                    stroke(255, 255, 0, 150); 
+                    beginShape();
+                    vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+                    vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+                    vertex(Tile.width, 0);                    // Middle Right
+                    vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+                    vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+                    vertex(-Tile.width, 0);                   // Middle Left
+                    endShape(CLOSE);
+                pop();
             }
 
-            console.log("X: " + mouseTilePosX);
-            console.log("Y: " + mouseTilePosY);
 
         pop();
     }
@@ -174,6 +211,16 @@ class Board {
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;
+    }
+
+    mouseReleased() {
+        // Check if the tile we clicked on exists
+        if (this.#checkTileExists(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY)) {
+            this.selectedHexCoordX = this.mouseHoverTileCoordX;
+            this.selectedHexCoordY = this.mouseHoverTileCoordY;
+            this.selectedHexPosX = this.mouseHoverTilePosX;
+            this.selectedHexPosY = this.mouseHoverTilePosY;
+        }
     }
 
     changeSelectedTile(tile) {

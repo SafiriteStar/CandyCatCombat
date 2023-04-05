@@ -69,7 +69,7 @@ async function mousePressed() {
 }
 
 async function mouseReleased() {
-    
+    GameInfo.board.mouseReleased();
 }
 
 async function mouseClicked() {
