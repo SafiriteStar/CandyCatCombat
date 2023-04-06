@@ -247,7 +247,23 @@ class Board {
     mouseReleased() {
         // Check if the tile we clicked on exists
         if (this.#checkTileExists(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY)) {
-            this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
+            // If our current cat is already at this coordinate
+            if (this.selectedCat !== null) {
+                if (this.player.cats[this.selectedCat].x != this.mouseHoverTileCoordX && this.player.cats[this.selectedCat].y != this.mouseHoverTileCoordY) {
+                    // We have a new cat
+                    this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
+                }
+                else {
+                    // We have the same cat
+                    // Deselect is
+                    this.selectedCat = null;
+                }
+            }
+            else {
+                // We had no cat
+                // Get the new one
+                this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
+            }
             this.selectedHexCoordX = this.mouseHoverTileCoordX;
             this.selectedHexCoordY = this.mouseHoverTileCoordY;
             this.selectedHexPosX = this.mouseHoverTilePosX;
@@ -260,7 +276,24 @@ class Board {
             let placementCoordY = Math.ceil((-this.mouseHoverTilePosY - Tile.height + Board.placementBoardYOffset) / (Tile.height * 2));
             let placementCoordX = Math.floor((this.mouseHoverTilePosX + Board.placementBoardXOffset) / (Tile.width * 1.5));
             if (this.#checkPlacementTileExists(placementCoordX, placementCoordY)) {
-                this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
+                // If our current cat is already at this coordinate
+                console.log("HELP");
+                if (this.selectedCat !== null) {
+                    if (this.player.cats[this.selectedCat].x != placementCoordX && this.player.cats[this.selectedCat].y != placementCoordY) {
+                        // We have a new cat
+                        this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
+                    }
+                    else {
+                        // We have the same cat
+                        // Deselect is
+                        this.selectedCat = null;
+                    }
+                }
+                else {
+                    // We had no cat
+                    // Get the new one
+                    this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
+                }
 
                 this.selectedHexCoordX = placementCoordY;
                 this.selectedHexCoordY = placementCoordX;
@@ -275,20 +308,9 @@ class Board {
         // Check if we have a cat
         if (this.tileInfo.cat !== null) {
             // Check if we clicked on a tile in the board
-            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY)) {
-                // Check if the cat is on placement tile
-                // Cat X and Y must be null
-                // Cat must have placement X and Y
-                if (
-                    this.player.cats[this.tileInfo.cat].x === null          && this.player.cats[this.tileInfo.cat].y === null &&
-                    this.player.cats[this.tileInfo.cat].placementX !== null && this.player.cats[this.tileInfo.cat].placementY !== null
-                ) {
-                    console.log("HUH???");
-                    // Check if the tile we are trying to move to is a placement tile and the group matches the player group
-                    if (this.tiles[this.selectedHexCoordX][this.selectedHexCoordY].type == 3 && this.tiles[this.selectedHexCoordX][this.selectedHexCoordY].group == 1) {
-                        moveCatAction(this.selectedHexCoordX, this.selectedHexCoordY, null, null, this.player.cats[this.tileInfo.cat].id);
-                    }
-                }
+            // And that it is not the same tile the cat is on
+            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY) && this.player.cats[this.tileInfo.cat].x != this.selectedHexCoordX && this.player.cats[this.tileInfo.cat].y != this.selectedHexCoordY) {
+                moveCatAction(this.selectedHexCoordX, this.selectedHexCoordY, null, null, this.player.cats[this.tileInfo.cat].id);
             }
         }
 

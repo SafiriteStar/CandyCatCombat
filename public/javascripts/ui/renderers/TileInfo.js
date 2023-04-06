@@ -37,8 +37,6 @@ class TileInfo {
 
     update(tile, cat) {
         this.tile = tile;
-        if (cat !== null && cat !== undefined) {
-            this.cat = cat;
-        }
+        this.cat = cat;
     }
 }

@@ -38,14 +38,20 @@ async function getBoardInfo() {
             // Create a new board
             GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
         }
-        console.log(GameInfo.board);
     }
 }
 
 async function moveCatAction(x, y, placementX, placementY, catID) {
     let result = await requestMoveCharacter(x, y, placementX, placementY, catID)
 
-    console.log(result);
+    if (result.successful) {
+        await getGameInfo();
+        await getBoardInfo();
+        GameInfo.prepareUI();
+    }
+    else {
+        alert("Something went wrong when trying to move the character");
+    }
 }
 
 async function endturnAction() {
@@ -54,7 +60,7 @@ async function endturnAction() {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
-    } else alert("Something went wrong when ending the turn.")
+    } else alert("Something went wrong when ending the turn.");
 }
 
 async function closeScore() {

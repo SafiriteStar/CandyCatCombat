@@ -289,10 +289,11 @@ class Play {
             let cat = cats[0];
 
 
+            // Update the cat info
             let stamina = selectedCat.gtc_stamina - 1;
             await pool.query(
-                `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_stamina = ? where gtc_id = ?`,
-                [x, y, stamina, catID]
+                `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_placement_x = ?, gtc_placement_y = ?, gtc_stamina = ? where gtc_id = ?`,
+                [x, y, null, null, stamina, catID]
             );
 
             return {
