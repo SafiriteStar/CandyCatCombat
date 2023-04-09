@@ -28,11 +28,12 @@ class GameInfo  {
     static prepareUI() {
         if (GameInfo.game.player.state == "Playing") { 
             GameInfo.endturnButton.show();
-        } else if (GameInfo.game.player.state == "Waiting") {
-            GameInfo.endturnButton.hide();
         }  else if (GameInfo.game.player.state == "Score") {
             GameInfo.endturnButton.hide();
             GameInfo.scoreWindow.open();
+        }
+        else {
+            GameInfo.endturnButton.hide();
         }
     }
 }

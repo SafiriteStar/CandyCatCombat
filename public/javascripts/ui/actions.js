@@ -6,8 +6,12 @@ async function getGameInfo() {
         window.location.pathname = "index.html";
     } else {
         GameInfo.game = result.game;
-        if (GameInfo.scoreBoard) GameInfo.scoreBoard.update(GameInfo.game); 
-        else GameInfo.scoreBoard = new ScoreBoard(GameInfo.game);
+        if (GameInfo.scoreBoard) {
+            GameInfo.scoreBoard.update(GameInfo.game);  
+        }
+        else {
+            GameInfo.scoreBoard = new ScoreBoard(GameInfo.game);
+        }
         // if game ended we get the scores and prepare the ScoreWindow
         if (GameInfo.game.state == "Finished") {
             let result = await requestScore();
@@ -44,8 +48,8 @@ async function getBoardInfo() {
     }
 }
 
-async function moveCatAction(x, y, map, catID) {
-    let result = await requestMoveCharacter(x, y, map + 1, catID)
+async function moveCatAction(x, y, map, catID, teamID) {
+    let result = await requestMoveCharacter(x, y, map + 1, catID, teamID)
 
     if (result.successful) {
         await getGameInfo();

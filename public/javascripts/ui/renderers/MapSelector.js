@@ -31,6 +31,7 @@ class MapSelector {
         if (this.map !== null) {
             this.tileInfoBox.draw();
         }
+
         if (this.cat !== null) {
             this.catInfoBox.draw();
         }
@@ -83,7 +84,7 @@ class MapSelector {
                 if (this.team == 0) {
                     // We do
                     // Lets try to move to the tile we just clicked
-                    moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id);
+                    moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                 }
             }
         }

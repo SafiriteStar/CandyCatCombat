@@ -75,8 +75,8 @@ class Play {
                 await Play.#loadCatTeam(game.id, game.opponents[i].id);
             }
 
-            // Player that start changes to the state Playing and order 1 
-            await pool.query(`Update user_game set ug_state_id=?,ug_order=? where ug_id = ?`, [2, 1, p1Id]);
+            // Player that start changes to order 1 
+            await pool.query(`Update user_game set ug_order=? where ug_id = ?`, [1, p1Id]);
             // Player that is second changes to order 2
             await pool.query(`Update user_game set ug_order=? where ug_id = ?`, [2, p2Id]);
 
@@ -178,8 +178,11 @@ class Play {
             // Opponents
             boardData.opponents = [];
 
-            for (let i = 0; i < game.opponents.length; i++) {
-                boardData.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+            // If we are in a state that we are allowed to see our opponents
+            if (game.player.state.name == "Playing" || game.player.state.name == "Waiting" || game.player.state.name == "Score" || game.player.state.name == "End") {
+                for (let i = 0; i < game.opponents.length; i++) {
+                    boardData.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+                }
             }
             
             return { status: 200, result: boardData};
@@ -189,6 +192,10 @@ class Play {
         }
     }
 
+    static async #changePlayerState(stateID, playerID) {
+        await pool.query(`Update user_game set ug_state_id = ? where ug_id = ?`,
+                [stateID, playerID]);
+    }
 
     // This considers that only one player plays at each moment, 
     // so ending my turn starts the other players turn
@@ -198,12 +205,9 @@ class Play {
     // NOTE: This might be the place to check for victory, but it depends on the game
     static async endTurn(game) {
         try {
-            // Change player state to waiting (1)
-            await pool.query(`Update user_game set ug_state_id=? where ug_id = ?`,
-                [1, game.player.id]);
-            // Change opponent state to playing (2)
-            await pool.query(`Update user_game set ug_state_id=? where ug_id = ?`,
-                [2, game.opponents[0].id]);
+            // Change player state to waiting (3)
+            Play.#changePlayerState(3, game.player.id);
+            Play.#changePlayerState(4, game.opponents[0].id);
 
             // Both players played
             if (game.player.order == 2) {
@@ -212,7 +216,7 @@ class Play {
                     return await Play.endGame(game);
                 } else {
                     // Increase the number of turns and continue 
-                    await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
+                    await pool.query(`Update game set gm_turn = gm_turn + 1 where gm_id = ?`,
                         [game.id]);
                 }
             }
@@ -251,7 +255,7 @@ class Play {
     //     }
     // }
 
-    static async move(game, x, y, map, catID) {
+    static async move(game, x, y, map, catID, teamID) {
        try {
             let [selectedCats] = await pool.query(
                 `Select gtc_x, gtc_y, gtc_stamina
@@ -295,16 +299,15 @@ class Play {
             }
     
             // Is there a cat already at the target tile?
-            // TODO: Check if it is a cat for the right game, and a team that the player controls
             let [cats] = await pool.query(
                 `Select gtc_x, gtc_y
                 from game, game_team, game_team_cat
-                where gtc_x = ? and gtc_y = ? and gtc_game_board_id`,
-                [x, y, map]
+                where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ?`,
+                [x, y, map, teamID]
             );
 
             // TODO: Add an above "0" health check
-            if (cats.length > 1) {
+            if (cats.length > 1 && map !== 1) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
             }
 
@@ -338,10 +341,10 @@ class Play {
     // Makes all the calculation needed to end and score the game
     static async endGame(game) {
         try {
-            // Both players go to score phase (id = 3)
+            // Both players go to score phase (id = 5)
             let sqlPlayer = `Update user_game set ug_state_id = ? where ug_id = ?`;
-            await pool.query(sqlPlayer, [3, game.player.id]);
-            await pool.query(sqlPlayer, [3, game.opponents[0].id]);
+            await pool.query(sqlPlayer, [4, game.player.id]);
+            await pool.query(sqlPlayer, [4, game.opponents[0].id]);
             // Set game to finished (id = 3)
             await pool.query(`Update game set gm_state_id=? where gm_id = ?`, [3, game.id]);
 

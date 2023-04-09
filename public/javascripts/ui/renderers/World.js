@@ -36,8 +36,6 @@ class World {
         // Select
         this.mapSelector = new MapSelector();
 
-        this.tileInfo = new TileInfo();
-
         // -- Teams --
         this.teams = [];
         
@@ -115,16 +113,19 @@ class World {
             // We need to reverse the order so that the placement map is
             // always the first being drawn
             for (let i = this.maps.length - 1; i > -1; i--) {
-                this.maps[i].draw();
+                if (i === 0 && this.teams[0].unplacedCatsCheck() || i > 0) {
+                    this.maps[i].draw();
+                }
             }
             
             // Draw the player team
             this.teams[0].draw();
 
             // Draw the opponent team
-            // for (let i = 0; i < this.opponents.length; i++) {
-            //     this.teams[i + 1].draw();
-            // }
+            for (let i = 1; i < this.teams.length; i++) {
+                // The opponent information shouldn't be sent on the wrong state
+                this.teams[i].draw();
+            }
             
             // Draw Hover Tile
             this.hoverTile.updatePos(this.mouseScreenX, this.mouseScreenY);

@@ -4,6 +4,10 @@
 insert into game_state (gst_state) values ('Waiting'), ('Started'), ('Finished'), ('Canceled');
 
 # Do not change the order, but you can add more in the end
+-- Putting cats at placement tiles at the start of the game
+insert into user_game_state (ugst_state) values ('Placement');
+-- Ready to start the game
+insert into user_game_state (ugst_state) values ('PlacementReady');
 -- Waiting for your turn
 insert into user_game_state (ugst_state) values ('Waiting');
 -- Playing during your turn
