@@ -30,19 +30,22 @@ async function getBoardInfo() {
         console.log(result.game);
 
         // Actual board
-        if (GameInfo.board) {
+        if (GameInfo.world) {
             // A board already exists
-            GameInfo.board.update(result.game);
+            GameInfo.world.update(result.game.boards, result.game.player, result.game.opponents);
         }
         else {
             // Create a new board
-            GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
+            //GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
+            GameInfo.world = new World(result.game.boards, result.game.player, result.game.opponents);
         }
+
+        console.log(GameInfo.world);
     }
 }
 
-async function moveCatAction(x, y, placementX, placementY, catID) {
-    let result = await requestMoveCharacter(x, y, placementX, placementY, catID)
+async function moveCatAction(x, y, map, catID) {
+    let result = await requestMoveCharacter(x, y, map + 1, catID)
 
     if (result.successful) {
         await getGameInfo();

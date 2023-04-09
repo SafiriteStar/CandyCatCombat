@@ -9,15 +9,35 @@ async function populateMap() {
     );
 
     if (!(preMapCheck.length > 0)) {
-        console.log("Map not found --- Creating map...");
+        console.log("- Map not found -");
+        console.log("Creating map...");
 
-        // First map, 38 by 16
+        let boardIDIndex = 1;
+
+        // Placement Map, 6 by 1
+        for (let i = 0; i < 6; i++) {
+            // Fill with placement tiles
+            await pool.query(
+                `Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values ( ?, ?, ?, ? )`,
+                    [i, 0, 3, boardIDIndex]
+            );
+            // Each placement tile also needs to know who they are connected to
+            await pool.query(
+                `Insert into placement_tile_group (ptg_tile_board_id, ptg_tile_x, ptg_tile_y, ptg_group) values (?, ?, ?, ?)`,
+                    [boardIDIndex, i, 0, 0]
+            );
+        }
+
+        // Increment for next map
+        boardIDIndex++;
+
+        // First map
         for (let i = 0; i < 20; i++) {
             for (let j = 0; j < 33; j++) {
                 // Fill with normal tiles for now
                 await pool.query(
                     `Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values ( ?, ?, ?, ? )`,
-                        [j, i, 1, 1]
+                        [j, i, 1, boardIDIndex]
                 );
             }
         }
@@ -32,7 +52,7 @@ async function populateMap() {
             }
         }
 
-        // Add in some placement tiles
+        // Add in some placement tiles for player 1
         for (let i = 1; i <= 3; i++) {
             for (let j = 1; j <= 3; j++) {
                 await pool.query(
@@ -42,10 +62,9 @@ async function populateMap() {
                 // Each placement tile also needs to know who they are connected to
                 await pool.query(
                     `Insert into placement_tile_group (ptg_tile_board_id, ptg_tile_x, ptg_tile_y, ptg_group) values (?, ?, ?, ?)`,
-                        [1, i, j, 1]
+                        [boardIDIndex, i, j, 1]
                 );
             }
-            
         }
 
 
@@ -60,7 +79,7 @@ async function populateMap() {
                 // Each placement tile also needs to know who they are connected to
                 await pool.query(
                     `Insert into placement_tile_group (ptg_tile_board_id, ptg_tile_x, ptg_tile_y, ptg_group) values (?, ?, ?, ?)`,
-                        [1, i, j, 2]
+                        [boardIDIndex, i, j, 2]
                 );
             }
             

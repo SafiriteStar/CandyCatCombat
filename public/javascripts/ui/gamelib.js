@@ -59,17 +59,17 @@ function draw() {
     } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
         GameInfo.scoreWindow.draw();
     } else  {
-        GameInfo.board.draw();
+        GameInfo.world.draw();
         GameInfo.scoreBoard.draw();
     }
 }
 
 async function mousePressed() {
-    GameInfo.board.mousePressed();
+    GameInfo.world.mousePressed();
 }
 
 async function mouseReleased() {
-    GameInfo.board.mouseReleased();
+    GameInfo.world.mouseReleased();
 }
 
 async function mouseClicked() {
@@ -77,5 +77,5 @@ async function mouseClicked() {
 }
 
 function changeScale(event) {
-    GameInfo.board.changeScale(event);
+    GameInfo.world.changeScale(event);
 }

@@ -12,7 +12,6 @@ class Board {
     static placementBoardXOffset = Tile.width * 0;
     static placementBoardYOffset = Tile.height * 4;
 
-
     // Check for unplaced cats
     #unplacedCatsCheck() {
         let catsUnplaced = false;
@@ -247,27 +246,39 @@ class Board {
     mouseReleased() {
         // Check if the tile we clicked on exists
         if (this.#checkTileExists(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY)) {
-            // If our current cat is already at this coordinate
+            // Do we have a cat
             if (this.selectedCat !== null) {
-                if (this.player.cats[this.selectedCat].x != this.mouseHoverTileCoordX && this.player.cats[this.selectedCat].y != this.mouseHoverTileCoordY) {
-                    // We have a new cat
-                    this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
-                }
-                else {
-                    // We have the same cat
-                    // Deselect is
-                    this.selectedCat = null;
+                // Yes we do
+                // Is there a player cat at our target location
+                let targetCoordCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
+                if (targetCoordCat !== null) {
+                    // There is a cat at the target
+                    // Is the target cat the same as ours?
+                    if (this.selectedCat == targetCoordCat) {
+                        // It is
+                        // Unselect our current cat
+                        this.selectedCat = null;
+                    }
+                    else {
+                        // Different cat
+                        // Switch which one we are focusing on
+                        this.selectedCat = targetCoordCat;
+                    }
                 }
             }
             else {
                 // We had no cat
-                // Get the new one
+                // Try to get a new one
                 this.selectedCat = this.#getPlayerCatAtCoord(this.mouseHoverTileCoordX, this.mouseHoverTileCoordY);
             }
             this.selectedHexCoordX = this.mouseHoverTileCoordX;
             this.selectedHexCoordY = this.mouseHoverTileCoordY;
             this.selectedHexPosX = this.mouseHoverTilePosX;
             this.selectedHexPosY = this.mouseHoverTilePosY;
+
+            console.log("Selected Cat: " + this.selectedCat);
+            console.log("Tile:");
+            console.log(this.tiles[this.selectedHexCoordX][this.selectedHexCoordY]);
 
             this.tileInfo.update(this.tiles[this.selectedHexCoordX][this.selectedHexCoordY], this.selectedCat);
         }
@@ -276,22 +287,29 @@ class Board {
             let placementCoordY = Math.ceil((-this.mouseHoverTilePosY - Tile.height + Board.placementBoardYOffset) / (Tile.height * 2));
             let placementCoordX = Math.floor((this.mouseHoverTilePosX + Board.placementBoardXOffset) / (Tile.width * 1.5));
             if (this.#checkPlacementTileExists(placementCoordX, placementCoordY)) {
-                // If our current cat is already at this coordinate
-                console.log("HELP");
+                // Do we have a cat
                 if (this.selectedCat !== null) {
-                    if (this.player.cats[this.selectedCat].x != placementCoordX && this.player.cats[this.selectedCat].y != placementCoordY) {
-                        // We have a new cat
-                        this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
-                    }
-                    else {
-                        // We have the same cat
-                        // Deselect is
-                        this.selectedCat = null;
+                    // Yes we do
+                    // Is there a player cat at our target location
+                    let targetCoordCat = this.#checkPlacementTileExists(placementCoordX, placementCoordY);
+                    if (targetCoordCat !== null) {
+                        // There is a cat at the target
+                        // Is the target cat the same as ours?
+                        if (this.selectedCat == targetCoordCat) {
+                            // It is
+                            // Unselect our current cat
+                            this.selectedCat = null;
+                        }
+                        else {
+                            // Different cat
+                            // Switch which one we are focusing on
+                            this.selectedCat = targetCoordCat;
+                        }
                     }
                 }
                 else {
                     // We had no cat
-                    // Get the new one
+                    // Try to get a new one
                     this.selectedCat = this.#getPlayerCatAtPlacementCoord(placementCoordX, placementCoordY);
                 }
 
@@ -309,14 +327,11 @@ class Board {
         if (this.tileInfo.cat !== null) {
             // Check if we clicked on a tile in the board
             // And that it is not the same tile the cat is on
-            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY) && this.player.cats[this.tileInfo.cat].x != this.selectedHexCoordX && this.player.cats[this.tileInfo.cat].y != this.selectedHexCoordY) {
+
+            if (this.#checkTileExists(this.selectedHexCoordX, this.selectedHexCoordY) && (this.player.cats[this.tileInfo.cat].x != this.selectedHexCoordX || this.player.cats[this.tileInfo.cat].y != this.selectedHexCoordY)) {
                 moveCatAction(this.selectedHexCoordX, this.selectedHexCoordY, null, null, this.player.cats[this.tileInfo.cat].id);
             }
         }
 
-    }
-
-    changeSelectedTile(tile) {
-        this.selectionTile = tile;
     }
 }

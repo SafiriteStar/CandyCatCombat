@@ -13,7 +13,7 @@ create table user (
 
 create table game (
     gm_id int not null auto_increment,
-    gm_board_id int not null default 1,
+    gm_board_id int not null default 2,
     gm_turn int not null default 1,
     gm_state_id int not null,
     primary key (gm_id));
@@ -75,10 +75,9 @@ create table cat (
 create table game_team_cat (
     gtc_id int not null auto_increment,
     gtc_game_team_id int not null,
-    gtc_x int,
-    gtc_y int,
-    gtc_placement_x int,
-    gtc_placement_y int,
+    gtc_x int not null,
+    gtc_y int not null,
+    gtc_game_board_id int not null, #Internal board id to determine which board within its own game the cat is in 
     gtc_type_id int not null,
     gtc_current_health int not null,
     gtc_stamina int not null,
@@ -101,7 +100,7 @@ create table tile (
     tile_y int not null,
     tile_type_id int not null,
     tile_board_id int not null,
-    primary key (tile_x, tile_y));
+    primary key (tile_x, tile_y, tile_board_id));
 
 -- For now we only have one board
 create table board (
@@ -192,17 +191,22 @@ alter table game_team_cat add constraint game_team_cat_fk_game_team
             foreign key (gtc_game_team_id) references game_team(gt_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+-- Link Game Team Cat to Board by gtc_game_board_id
+alter table game_team_cat add constraint game_team_cat_fk_board
+            foreign key (gtc_game_board_id) references board(brd_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 -- Link Game Team Cat to Tile by gtc_x
 alter table game_team_cat add constraint game_team_cat_fk_tile_x
             foreign key (gtc_x, gtc_y) references tile(tile_x, tile_y)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Link Tile to Board by tile_type_id
+-- Link Tile to Board by tile_board_id
 alter table tile add constraint tile_fk_board
             foreign key (tile_board_id) references board(brd_id)
 			ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Link Tile to Tile Type by board_brd_id
+-- Link Tile to Tile Type by tile_type_id
 alter table tile add constraint tile_fk_tile_type
             foreign key (tile_type_id) references tile_type(tty_id)
 			ON DELETE NO ACTION ON UPDATE NO ACTION;

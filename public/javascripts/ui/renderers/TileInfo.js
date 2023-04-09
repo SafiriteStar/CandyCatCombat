@@ -6,6 +6,7 @@ class TileInfo {
     static cornerRadius = 5;
 
     constructor() {
+        this.board = null;
         this.tile = null;
         this.cat = null;
     }

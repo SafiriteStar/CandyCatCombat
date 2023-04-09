@@ -1,7 +1,7 @@
 class ScoreBoard {
     static width = 300;
     static height = 100;
-    static x = 10;
+    static x = GameInfo.width - ScoreBoard.width - 10;
     static y = 10;
     constructor(game) {
         this.game = game;

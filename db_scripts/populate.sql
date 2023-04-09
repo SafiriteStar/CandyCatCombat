@@ -101,7 +101,8 @@ values (
 insert into game_cat_state (gcs_state) values ('Visible'), ('Stealth');
 
 # Map Related Stuff
-insert into board () values ();
+insert into board () values (); # Placement Map
+insert into board () values (); # Main Map
 insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
 
 -- Fill the board with normal tiles

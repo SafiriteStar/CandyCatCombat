@@ -11,6 +11,55 @@ class Play {
     // Just a to have a way to determine end of game
     static maxNumberTurns = 10;
     // we consider all verifications were made
+
+    // Load in a team for the player or opponents using their default teams
+    static async #loadCatTeam(gameId, playerId) {
+
+        // ADd in a new game team
+        await pool.query(
+            'Insert into game_team (gt_game_id, gt_user_id) values (?, ?)',
+            [gameId, playerId]);
+        
+        // Get the game_team ID made for the player
+        let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
+            [gameId, playerId]
+        );
+
+        // Get the players default team
+        let [playerDefaultTeam] = await pool.query(
+            "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+            [playerId]
+        );
+        
+        // Add the cats in the default team to game_team_cat
+        for (let i = 0; i < playerDefaultTeam.length; i++) {
+            // Get the data of the current cat
+            let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
+
+            // Add that cat to the game team, default to the placement board (1)
+            await pool.query(
+                `Insert into game_team_cat (
+                    gtc_game_team_id,
+                    gtc_type_id,
+                    gtc_current_health,
+                    gtc_stamina,
+                    gtc_x,
+                    gtc_y,
+                    gtc_game_board_id
+                )
+                values (?, ?, ?, ?, ?, ?, ?)`,
+                    [
+                        playerGameTeam.gt_id,       // gtc_game_team_id
+                        currentCat.cat_id,          // gtc_type_id
+                        currentCat.cat_max_health,  // gtc_current_health
+                        currentCat.cat_speed,       // gtc_stamina
+                        i,                          // gtc_x
+                        0,                          // gtc_y
+                        1                           // gtc_game_board_id
+                    ]);
+        }
+    }
+
     static async startGame(game) {
         try {
             // Randomly determines who starts    
@@ -18,57 +67,12 @@ class Play {
             let p1Id = myTurn ? game.player.id : game.opponents[0].id;
             let p2Id = myTurn ? game.opponents[0].id : game.player.id;
 
-            // Load in a team for the player and all opponents using their default teams
             // Player
-            await pool.query(
-                'Insert into game_team (gt_game_id, gt_user_id) values (?,?)',
-                [game.id, game.player.id]);
-            
-            // Get the game_team id made for the player
-            let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
-                [game.id, game.player.id]
-            );
-            // Get the players default team
-            let [playerDefaultTeam] = await pool.query(
-                "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
-                [game.player.id]
-            );
-            
-            // Add the cats in the default team to game_team_cat
-            for (let i = 0; i < playerDefaultTeam.length; i++) {
-                // Get the data of the current cat
-                let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id]);
-                // playerDefaultTeam[i]
-                // Add that cat to the game team
-                await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina, gtc_placement_x, gtc_placement_y) values (?, ?, ?, ?, ?, ?)',
-                    [playerGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed, i, 0]);
-            }
+            await Play.#loadCatTeam(game.id, game.player.id);
             
             // Opponents (can do multiple but you should only have one)
             for (let i = 0; i < game.opponents.length; i++) {
-                await pool.query(
-                    'Insert into game_team (gt_game_id, gt_user_id) values (?,?)',
-                    [game.id, game.opponents[i].id]);
-                
-                // Get the game_team id made for the player
-                let [[opponentGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
-                    [game.id, game.opponents[i].id]
-                );
-                // Get the players default team
-                let [opponentDefaultTeam] = await pool.query(
-                    "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
-                    [game.opponents[i].id]
-                );
-                
-                // Add the cats in the default team to game_team_cat
-                for (let j = 0; j < opponentDefaultTeam.length; j++) {
-                    // Get the data of the current cat
-                    let [[currentCat]] = await pool.query('select * from cat where cat_id = ?', [opponentDefaultTeam[j].tmc_cat_id]);
-                    // playerDefaultTeam[i]
-                    // Add that cat to the game team
-                    await pool.query('Insert into game_team_cat (gtc_game_team_id, gtc_type_id, gtc_current_health, gtc_stamina, gtc_placement_x, gtc_placement_y) values (?, ?, ?, ?, ?, ?)',
-                        [opponentGameTeam.gt_id, currentCat.cat_id, currentCat.cat_max_health, currentCat.cat_speed, j, 0]);
-                }
+                await Play.#loadCatTeam(game.id, game.opponents[i].id);
             }
 
             // Player that start changes to the state Playing and order 1 
@@ -86,82 +90,99 @@ class Play {
         }
     }
 
+    static async #getBoardData(boardID) {
+        // Get the main map the players are playing on
+        let [[dbBoardData]] = await pool.query(
+            `Select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height"
+            from board, tile
+            where brd_id = ? and tile_board_id = brd_id`,
+                [boardID]);
+    
+        // The game parameter comes with the game id. So lets get the tiles of the board from the game id.
+        let [dbTileData] = await pool.query(
+            `Select tile_x as "x", tile_y as "y", tile_type_id as "type"
+            from tile
+            where tile_board_id = ?`,
+                [boardID]);
+
+        let [dbPlacementTileData] = await pool.query(
+            `Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group"
+            from placement_tile_group
+            where ptg_tile_board_id = ?`,
+                [boardID]);
+        
+        let board = {}
+        board.width = dbBoardData.width;
+        board.height = dbBoardData.height;
+        board.tiles = [];
+
+        // Index for the db array
+        let tileIndex = 0;
+
+        // Add all the tiles
+        for (let i = 0; i < dbBoardData.width; i++) {
+            board.tiles[i] = [];
+            for (let j = 0; j < dbBoardData.height; j++) {
+                board.tiles[i][j] = dbTileData[tileIndex];
+                tileIndex++;
+            }
+        }
+
+        // After adding all the tiles we need to adjust the placement tiles so that they know what group they are in
+        for (let i = 0; i < dbPlacementTileData.length; i++) {
+            board.tiles[dbPlacementTileData[i].x][dbPlacementTileData[i].y].group = dbPlacementTileData[i].group;
+        }
+
+        return board;
+    }
+
+    static async #getGameCatTeam(teamOwnershipType, playerId, gameId) {
+        let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+
+        // Player info
+        let player = {};
+        player.ownership = teamOwnershipType;
+
+        // Get the game_team id made for the player
+        let [[playerGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
+            [gameId, playerId]);
+
+        // Get a list of cats in the player's game team
+        player.team = {};
+        // Save the team id
+        player.team.id;
+        player.team.id = playerGameTeamData.gt_id;
+        player.team.cats;
+
+        [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
+
+        return player
+    }
+
     static async getBoard(game) {
         try {
-            let board = {};
-            [[board]] = await pool.query('Select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height" from game, board, tile where brd_id = gm_board_id and tile_board_id = brd_id and gm_id = ?',
-                [game.id]);
+            let boardData = {}
+            boardData.boards = []
+
+            // -- PLACEMENT BOARD --
+            // Get the placement map
+            boardData.boards[0] = await Play.#getBoardData(1)
             
-            // The game parameter comes with the game id. So lets get the board from the game id.
-            let [databaseTiles] = await pool.query(
-                'Select tile_x as "x", tile_y as "y", tile_type_id as "type" from game, tile where tile_board_id = gm_board_id and gm_id = ?',
-                    [game.id]
-            );
-
-            let [dbPlacementTiles] = await pool.query(
-                'Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group" from placement_tile_group where ptg_tile_board_id = ?',
-                    [game.board]
-            );
-
-            board.tiles = [];
-            let tileIndex = 0;
-
-            // Add all the tiles
-            for (let i = 0; i < board.width; i++) {
-                board.tiles[i] = [];
-                for (let j = 0; j < board.height; j++) {
-                    board.tiles[i][j] = databaseTiles[tileIndex];
-                    tileIndex++;
-                }
-            }
-
-            // After adding all the tiles we need to adjust the placement tiles so that they know what group they are in
-            for (let i = 0; i < dbPlacementTiles.length; i++) {
-                board.tiles[dbPlacementTiles[i].x][dbPlacementTiles[i].y].group = dbPlacementTiles[i].group;
-            }
-
-            // Lets avoid repeated strings shall we?
-            let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_placement_x as "placementX", gtc_placement_y as "placementY" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+            // -- MAIN BOARD --
+            // Get the main map the players are playing on
+            boardData.boards[1] = await Play.#getBoardData(game.board + 1);
 
             // Player info
-            board.player = {};
-
-            // Get the game_team id made for the player
-            let [[playerGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
-                [game.id, game.player.id]);
-
-            // Get a list of cats in the player's game team
-            board.player.team = {};
-            // Save the team id
-            board.player.team.id;
-            board.player.team.id = playerGameTeamData.gt_id;
-            board.player.team.cats;
-
-            [board.player.team.cats] = await pool.query(askForCatTeam,
-                [board.player.team.id]);
+            boardData.player = await Play.#getGameCatTeam("player", game.player.id, game.id);
 
             // Opponents
-            board.opponents = [];
+            boardData.opponents = [];
 
             for (let i = 0; i < game.opponents.length; i++) {
-                // Get the game_team id made for the opponent
-                let [[opponentGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
-                    [game.id, game.opponents[i].id]);
-
-                // Get a list of cats in the opponent's game team
-                board.opponents[i] = {};
-                // Initialize team
-                board.opponents[i].team = {};
-                // Save team id
-                board.opponents[i].team.id;
-                board.opponents[i].team.id = opponentGameTeamData.gt_id;
-                board.opponents[i].team.cats;
-
-                [board.opponents[i].team.cats] = await pool.query(askForCatTeam,
-                    [board.opponents[i].team.id]);
+                boardData.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
             }
             
-            return { status: 200, result: board};
+            return { status: 200, result: boardData};
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
@@ -230,7 +251,7 @@ class Play {
     //     }
     // }
 
-    static async move(game, x, y, placementX, placementY, catID) {
+    static async move(game, x, y, map, catID) {
        try {
             let [selectedCats] = await pool.query(
                 `Select gtc_x, gtc_y, gtc_stamina
@@ -238,9 +259,10 @@ class Play {
                 where gtc_id = ?`,
                 [catID]
             );
+
             // Check if any cats with those ID's exist
             if (selectedCats.length > 1 || selectedCats.length <= 0) {
-                return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
+                return { status: 400, result: {msg:"You cannot move the character since the chosen character is not valid"} };
             }
 
             // Get the cat that was returned
@@ -248,15 +270,15 @@ class Play {
 
             // Is the target tile not next to the cat?
             if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
-                return { status: 400, result: {msg:"You cannot move character since the chosen coordinate is not valid"} };
+                return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
             }
 
             // Ask for the tile data at the coordinates
             let [tiles] = await pool.query(
                 `Select *
                 from tile
-                where tile_x = ? and tile_y = ?`,
-                [x, y]
+                where tile_x = ? and tile_y = ? and tile_board_id = ?`,
+                [x, y, map]
             );
 
             // Store the data
@@ -268,32 +290,29 @@ class Play {
             }
 
             // Is the tile a wall?
-            if (tile.type_id == 1) { // 1 = wall
+            if (tile.type_id == 2) { // 2 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
             }
     
             // Is there a cat already at the target tile?
+            // TODO: Check if it is a cat for the right game, and a team that the player controls
             let [cats] = await pool.query(
                 `Select gtc_x, gtc_y
                 from game, game_team, game_team_cat
-                where gm_id = ? and gt_game_id = gm_id and gtc_game_team_id = gt_id and gtc_x = ? and gtc_y = ?`,
-                [game.id, x, y]
+                where gtc_x = ? and gtc_y = ? and gtc_game_board_id`,
+                [x, y, map]
             );
 
-            // Missing health check
+            // TODO: Add an above "0" health check
             if (cats.length > 1) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
             }
 
-            // Store the data of the first cat
-            let cat = cats[0];
-
-
             // Update the cat info
             let stamina = selectedCat.gtc_stamina - 1;
             await pool.query(
-                `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_placement_x = ?, gtc_placement_y = ?, gtc_stamina = ? where gtc_id = ?`,
-                [x, y, null, null, stamina, catID]
+                `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_game_board_id = ?, gtc_stamina = ? where gtc_id = ?`,
+                [x, y, map, stamina, catID]
             );
 
             return {
