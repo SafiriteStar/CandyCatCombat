@@ -238,7 +238,7 @@ class Play {
                 where gtc_id = ?`,
                 [characterId]
             );
-            if (selectedCats.length > 1 || selectedCats.length <= 0) {
+            if (selectedCats.length > 1) {
                 return { status: 400, result: {msg:"You cannot move character since the chosen character is not valid"} };
             }
             
@@ -266,19 +266,17 @@ class Play {
     
             //if there's already a cat
             let [cats] = await pool.query(
-                `select gtc_x, gtc_y
+                `select gtc_current_health
                 from game, game_team, game_team_cat
                 where gm_id = ? and gt_game_id = gm_id and gtc_game_team_id = gt_id and gtc_x = ? and gtc_y = ?`,
                 [game.id, coord.x, coord.y]
             );
 
-            if (cats.length > 1 || cats.gtc_y, coord.x, coord.y) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character"} };
+            if (cats.length > 1) {
+                let cat = cats[0];
+                if (cat.gtc_current_health > 0)
+                    return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character"} };
             }
-
-            let cat = cats[0];
-     
-
 
 
 
