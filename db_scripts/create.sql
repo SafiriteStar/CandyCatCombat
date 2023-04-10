@@ -105,8 +105,7 @@ create table game_team_cat_condition (
     gcc_gtc_id int not null,
     gcc_ccn_id int not null,
     gcc_duration int,
-    primary key (gcc_id);
-);
+    primary key (gcc_id));
 
 create table tile (
     tile_x int not null,
@@ -114,6 +113,18 @@ create table tile (
     tile_type_id int not null,
     tile_board_id int not null,
     primary key (tile_x, tile_y, tile_board_id));
+
+create table tile_connection (
+    tcn_origin_x int not null,
+    tcn_origin_y int not null,
+    tcn_origin_board_id int not null,
+    tcn_target_x int not null,
+    tcn_target_y int not null,
+    tcn_target_board_id int not null,
+    primary key (
+        tcn_origin_x, tcn_origin_y, tcn_origin_board_id,
+        tcn_target_x, tcn_target_y, tcn_target_board_id
+    ));
 
 -- For now we only have one board
 create table board (
@@ -224,19 +235,26 @@ alter table tile add constraint tile_fk_tile_type
             foreign key (tile_type_id) references tile_type(tty_id)
 			ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+-- Link Tile Connection to Tile by origin
+alter table tile_connection add constraint tile_connection_fk_tile_origin 
+            foreign key (   tcn_origin_x, tcn_origin_y, tcn_origin_board_id )
+            references tile (   tile_x, tile_y, tile_board_id )
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Tile Connection to Tile by target
+alter table tile_connection add constraint tile_connection_fk_tile_target 
+            foreign key (   tcn_target_x, tcn_target_y, tcn_target_board_id )
+            references tile (   tile_x, tile_y, tile_board_id )
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 -- Link Game to Board by gm_board_id
 alter table game add constraint game_fk_board
             foreign key (gm_board_id) references board(brd_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Link Placement Tile Group to Board by ptg_tile_board_id
-alter table placement_tile_group add constraint placement_tile_group_fk_board_id
-            foreign key (ptg_tile_board_id) references board(brd_id)
-            ON DELETE NO ACTION ON UPDATE NO ACTION;
-
 -- Link Placement Tile Group to Tile by tile_x
-alter table placement_tile_group add constraint placement_tile_group_fk_tile_x
-            foreign key (ptg_tile_x, ptg_tile_y) references tile(tile_x, tile_y)
+alter table placement_tile_group add constraint placement_tile_group_fk_tile_x_y_board_id
+            foreign key (ptg_tile_x, ptg_tile_y, ptg_tile_board_id) references tile(tile_x, tile_y, tile_board_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Link Game Team Cat Condition to Game Team Cat by gcc_gtc_id
@@ -248,4 +266,3 @@ alter table game_team_cat_condition add constraint game_team_cat_condition_fk_gt
 alter table game_team_cat_condition add constraint game_team_cat_condition_fk_ccn_id
             foreign key (gcc_ccn_id) references cat_condition(ccn_id)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
-
