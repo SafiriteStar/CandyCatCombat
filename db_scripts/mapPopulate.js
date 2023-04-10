@@ -1,5 +1,65 @@
 const pool = require("../config/database");
 
+class TileTypeGroup {
+    constructor(startX, startY, width, height, type, group) {
+        this.startX = startX;
+        this.startY = startY;
+        this.width = width;
+        this.height = height;
+        this.type = type;
+        this.group = group;
+    }
+}
+
+class DatabaseMap {
+    constructor(width, height, placementGroups, wallGroups) {
+        this.width = width;
+        this.height = height;
+        this.placementGroups = placementGroups; // Array of TileTypeGroups
+        this.wallGroups = wallGroups;           // Array of TileTypeGroups
+    }
+
+    async create(boardIDIndex) {
+        // Initially, fill everything with normal tiles
+        for (let i = 0; i < this.height; i++) {
+            for (let j = 0; j < this.width; j++) {
+                await pool.query(`Insert into tile (tile_x, tile_y, tile_type_id, tile_board_id) values (?, ?, ?, ?)`,
+                    [j, i, 1, boardIDIndex]);
+            }
+        }
+
+        // For every wall group
+        for (let i = 0; i < this.wallGroups.length; i++) {
+            // Add in the walls
+            for (let j = 0; j < this.wallGroups[i].height; j++) {
+                for (let k = 0; k < this.wallGroups[i].width; k++) {
+                    await pool.query(`Update tile set tile_type_id = ? where tile_x = ? and tile_y = ? and tile_board_id = ?`,
+                        [2, j, i, boardIDIndex]);
+                }
+            }
+        }
+
+        // For every placement group
+        for (let i = 0; i < this.placementGroups.length; i++) {
+            // Add in the placement tile
+            for (let j = 0; j < this.placementGroups[i].height; j++) {
+                for (let k = 0; k < this.placementGroups[i].width; k++) {
+                    await pool.query(`Update tile set tile_type_id = ? where tile_x = ? and tile_y = ? and tile_board_id = ?`,
+                        [3, j, i, boardIDIndex]);
+                }
+            }
+
+            // Add in the group connection data to the group table
+            for (let j = 0; j < this.placementGroups[i].height; j++) {
+                for (let k = 0; k < this.placementGroups[i].width; k++) {
+                    await pool.query(`Insert into placement_tile_group (ptg_tile_board_id, ptg_tile_x, ptg_tile_y, ptg_group) values (?, ?, ?, ?)`,
+                        [boardIDIndex, j, i, this.placementGroups[i].group]);
+                }
+            }
+        }
+    }
+}
+
 async function populateMap() {
     console.log("Checking map data");
 
@@ -11,6 +71,22 @@ async function populateMap() {
     if (!(preMapCheck.length > 0)) {
         console.log("- Map not found -");
         console.log("Creating map...");
+
+        /* let boards = [
+            // Placement Map
+            new DatabaseMap(
+                6, 1,
+                [   new TileTypeGroup(0, 0, 2, null)    ],
+                [   new TileTypeGroup(6, 1, 3, 0)       ]),
+            // Map 1
+            new DatabaseMap(
+                20, 33
+                [   new TileTypeGroup(14, 9, 2, null)   ],
+                [   
+                    new TileTypeGroup()
+                ])
+        ] */;
+        
 
         let boardIDIndex = 1;
 
@@ -66,8 +142,6 @@ async function populateMap() {
                 );
             }
         }
-
-
 
         // Add another group of placement tiles for player 2
         for (let i = 1; i <= 3; i++) {
