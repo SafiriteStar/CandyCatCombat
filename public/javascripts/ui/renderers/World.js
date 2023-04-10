@@ -151,7 +151,12 @@ class World {
 
         // Update the opponent teams
         for (let i = 0; i < opponentTeams.length; i++) {
-            this.teams[i + 1].update(opponentTeams[i].team.cats);
+            if (this.teams[i + 1] !== undefined) {
+                this.teams[i + 1].update(opponentTeams[i].team.cats);
+            }
+            else {
+                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, World.teamColors[1]);
+            }
         }
     }
 
