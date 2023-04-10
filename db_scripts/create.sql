@@ -1,5 +1,3 @@
-drop database cccdb;
-
 create database cccdb;
 
 use cccdb;
@@ -77,7 +75,7 @@ create table game_team_cat (
     gtc_game_team_id int not null,
     gtc_x int not null,
     gtc_y int not null,
-    gtc_game_board_id int not null, #Internal board id to determine which board within its own game the cat is in 
+    gtc_game_board_id int not null,
     gtc_type_id int not null,
     gtc_current_health int not null,
     gtc_stamina int not null,

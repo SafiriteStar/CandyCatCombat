@@ -1,4 +1,6 @@
 const pool = require("../config/database");
+const fs = require("fs");
+const { create } = require("../models/gamesModel");
 
 class TileTypeGroup {
     constructor(startX, startY, width, height, type, group) {
@@ -60,8 +62,30 @@ class DatabaseMap {
     }
 }
 
-async function populateMap() {
-    console.log("Checking map data");
+async function runSQLFile(file) {
+    let dbCreateData = fs.readFileSync('./db_scripts/' + file + '.sql', {encoding:'utf8', flag:'r'});
+        // Remove the Unecessary characters
+        let createText = dbCreateData.toString().replace(/\r|\n|\t/g, '');
+        let createQueries = createText.split(';');
+        for (let i = 0; i < createQueries.length; i++) {
+            if (createQueries[i].length > 0) {
+                await pool.query(createQueries[i]);
+            }
+        }
+}
+
+async function populateMap(fullReset, purgeDB) {
+    // If we want to reset everything
+    if (fullReset) {
+        if (purgeDB) {
+            console.log("Purging Database");
+            await pool.query('drop database cccdb');
+        }
+        console.log("Creating tables and foreign keys...");
+        await runSQLFile('create');
+        console.log("Populating...");
+        await runSQLFile('populate');
+    }
 
     let [preMapCheck] = await pool.query(
         `Select *
