@@ -95,6 +95,19 @@ create table game_team (
     gt_user_id int not null,
     primary key (gt_id));
 
+create table cat_condition (
+    ccn_id int not null auto_increment,
+    ccn_name varchar(60) not null,
+    primary key (ccn_id));
+
+create table game_team_cat_condition (
+    gcc_id int not null auto_increment,
+    gcc_gtc_id int not null,
+    gcc_ccn_id int not null,
+    gcc_duration int,
+    primary key (gcc_id);
+);
+
 create table tile (
     tile_x int not null,
     tile_y int not null,
@@ -225,3 +238,14 @@ alter table placement_tile_group add constraint placement_tile_group_fk_board_id
 alter table placement_tile_group add constraint placement_tile_group_fk_tile_x
             foreign key (ptg_tile_x, ptg_tile_y) references tile(tile_x, tile_y)
             ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Game Team Cat Condition to Game Team Cat by gcc_gtc_id
+alter table game_team_cat_condition add constraint game_team_cat_condition_fk_gtc_id
+            foreign key (gcc_gtc_id) references game_team_cat(gtc_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Link Game Team Cat Condition to Cat Condition by gcc_ccn_id
+alter table game_team_cat_condition add constraint game_team_cat_condition_fk_ccn_id
+            foreign key (gcc_ccn_id) references cat_condition(ccn_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION;
+

@@ -102,7 +102,11 @@ values (
     1
 );
 
-insert into game_cat_state (gcs_state) values ('Visible'), ('Stealth');
+# States
+insert into game_cat_state (gcs_state) values ('Standby'), ('Acted'), ('Dead');
+
+# Conditions
+insert into cat_condition (ccn_name) values ('Stealth'), ('Rooted')
 
 # Map Related Stuff
 insert into board () values (); # Placement Map
