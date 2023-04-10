@@ -64,14 +64,18 @@ class DatabaseMap {
 
 async function runSQLFile(file) {
     let dbCreateData = fs.readFileSync('./db_scripts/' + file + '.sql', {encoding:'utf8', flag:'r'});
-        // Remove the Unecessary characters
-        let createText = dbCreateData.toString().replace(/\r|\n|\t/g, '');
-        let createQueries = createText.split(';');
-        for (let i = 0; i < createQueries.length; i++) {
-            if (createQueries[i].length > 0) {
+    // Remove the Unecessary characters
+    let createText = dbCreateData.toString().replace(/^#(.*)$/mg,'').replace(/\r|\n|\t/g, '');
+    let createQueries = createText.split(';');
+    for (let i = 0; i < createQueries.length; i++) {
+        if (createQueries[i].length > 0) {
+            if (createQueries[i].charAt(0) != '#' && createQueries[i].charAt(0) != '-') {
                 await pool.query(createQueries[i]);
             }
         }
+    }
+
+    return true;
 }
 
 async function populateMap(fullReset, purgeDB) {
