@@ -197,6 +197,63 @@ class Play {
                 [stateID, playerID]);
     }
 
+    static async #checkPlayersReady(gameID) {
+        let [dbPlayers] = await pool.query(
+            `select ug_state_id as "state"
+            from user_game
+            where ug_game_id = ?`,
+                [gameID]
+        );
+
+        for (let i = 0; i < dbPlayers.length; i++) {
+            if (dbPlayers[i].state != 2) {
+                // Player isn't ready yet
+                return false
+            }
+        }
+        // We got here if all players were ready
+        return true;
+    }
+
+    static async #changePlayerStateByOrder(order, playerID) {
+        // Is the player the first to go
+        if (order == 1) {
+            // Yup
+            // Change player state to playing (4)
+            await Play.#changePlayerState(4, playerID);
+        }
+        else {
+            // Nope
+            // Change player state to waiting (3)
+            await Play.#changePlayerState(3, playerID);
+        }
+    }
+
+    static async endPlacement(game) {
+        try {
+            // Change the player to be ready
+            await Play.#changePlayerState(2, game.player.id);
+
+            // Check if all players are ready
+            if (await Play.#checkPlayersReady(game.id)) {
+
+                // Set the player's order
+                await Play.#changePlayerStateByOrder(game.player.order, game.player.id);
+                
+                // For each opponent
+                for (let i = 0; i < game.opponents.length; i++) {
+                    // Set their order
+                    await Play.#changePlayerStateByOrder(game.opponents[i].order, game.opponents[i].id);
+                }
+            }
+
+            return { status: 200, result: { msg: "You readied up." } };
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
     // This considers that only one player plays at each moment, 
     // so ending my turn starts the other players turn
     // We consider the following verifications were already made:

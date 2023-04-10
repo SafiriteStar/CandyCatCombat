@@ -117,8 +117,9 @@ class Game {
     }    
 
     static async #addUserToGame(userID, gameID) {
-        return await pool.query('Insert into user_game (ug_user_id,ug_game_id, ug_state_id) values (?, ?, ?)',
-                 [userID, gameID, 1]);
+        let [result] = await pool.query('Insert into user_game (ug_user_id,ug_game_id, ug_state_id) values (?, ?, ?)',
+            [userID, gameID, 1]);
+        return result;
     }
 
     // A game is always created with one user
@@ -178,7 +179,7 @@ class Game {
                 return {status:400, result:{msg:"Game not waiting for other players"}};
 
             // We join the game but the game still has not started, that will be done outside
-            let [result] = Game.#addUserToGame(userId, gameId);
+            let result = Game.#addUserToGame(userId, gameId);
          
             return {status:200, result: {msg: "You joined the game."}};
         } catch (err) {

@@ -1,12 +1,12 @@
 const Game = require("../../../models/gamesModel");
 
 async function refresh() {
-    if (GameInfo.game.player.state == "Waiting") { 
+    if (GameInfo.game.player.state == "Waiting" || GameInfo.game.player.state == "PlacementReady") { 
         // Every time we are waiting
         await getGameInfo();
         await getBoardInfo();
 
-        if (GameInfo.game.player.state != "Waiting") {
+        if (GameInfo.game.player.state != "Waiting" || GameInfo.game.player.state != "PlacementReady") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
         }
@@ -28,7 +28,7 @@ async function setup() {
     
     await getGameInfo();
     await getBoardInfo();
-    setInterval(refresh,1000);
+    setInterval(refresh, 1000);
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
@@ -37,6 +37,11 @@ async function setup() {
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game')
 
+    GameInfo.placementReadyButton = createButton('Ready');
+    GameInfo.placementReadyButton.parent('game');
+    GameInfo.placementReadyButton.position(GameInfo.width-150, GameInfo.height-50);
+    GameInfo.placementReadyButton.mousePressed(placementReadyAction);
+    GameInfo.placementReadyButton.addClass('game')
 
     GameInfo.prepareUI();
     

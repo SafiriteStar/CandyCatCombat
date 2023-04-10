@@ -17,6 +17,24 @@ async function requestEndTurn() {
     }
 }
 
+async function requestPlacementReady() {
+    try {
+        const response = await fetch(`/api/plays/placementready`,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PATCH"
+        });
+        return {successful: response.status == 200};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
 async function requestGameBoard() {
     try {
         const response = await fetch(`/api/plays/auth`);

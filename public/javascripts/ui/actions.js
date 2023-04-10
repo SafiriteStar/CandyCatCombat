@@ -48,6 +48,24 @@ async function getBoardInfo() {
     }
 }
 
+async function endturnAction() {
+    let result = await requestEndTurn();
+    if (result.successful) {
+        await  getGameInfo();
+        await getBoardInfo();
+        GameInfo.prepareUI();
+    } else alert("Something went wrong when ending the turn.");
+}
+
+async function placementReadyAction() {
+    let result = await requestPlacementReady();
+    if (result.successful) {
+        await  getGameInfo();
+        await getBoardInfo();
+        GameInfo.prepareUI();
+    } else alert("Something went wrong when readying up.");
+}
+
 async function moveCatAction(x, y, map, catID, teamID) {
     let result = await requestMoveCharacter(x, y, map + 1, catID, teamID)
 
@@ -59,15 +77,6 @@ async function moveCatAction(x, y, map, catID, teamID) {
     else {
         alert("Something went wrong when trying to move the character");
     }
-}
-
-async function endturnAction() {
-    let result = await requestEndTurn();
-    if (result.successful) {
-        await  getGameInfo();
-        await getBoardInfo();
-        GameInfo.prepareUI();
-    } else alert("Something went wrong when ending the turn.");
 }
 
 async function closeScore() {

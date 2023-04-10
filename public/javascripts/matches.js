@@ -18,16 +18,14 @@ window.onload = async function () {
 function fillMatches(matches) {
     let container = document.getElementById("matches");
     for (let match of matches) {
-        let elem = document.createElement("section");
-        elem.onclick = () => join(match.id);
-        let p = document.createElement("p");
-        if (match.player) // this should not happen
-            p.textContent = `Your game!`
-        else if (match.opponents.length > 0)
-            p.textContent = `Join ${match.opponents[0].name}`;
-        else continue; // Something wrong with this game (no players)
-        elem.appendChild(p);
-        container.appendChild(elem);
+
+        let section = document.createElement("section");
+        let joinButton = document.createElement("BUTTON");
+        let joinText = document.createTextNode(`Join ${match.opponents[0].name}`);
+        joinButton.onclick = () => join(match.id);
+        joinButton.appendChild(joinText);
+        section.appendChild(joinButton);
+        container.appendChild(section);
     }
 }
 
