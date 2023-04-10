@@ -21,8 +21,7 @@ class Cat {
         this.type = cat.type;
         this.x = cat.x;
         this.y = cat.y;
-        this.placementX = null;
-        this.placementY = null;
+        this.map = cat.boardID - 1; // For easier handling of arrays.
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
@@ -38,11 +37,15 @@ class Cat {
         this.showDebug = showDebug
     }
 
-    draw(xOffset, yOffset, teamColor, boardScale) {
+    draw(teamColor) {
 
-        let evenOffset = isEven(this.y || this.placementY) && (Tile.width) * 1.5 || 0;
-        let currentX = (this.x || this.placementX);
-        let currentY = (this.y || this.placementY);
+        let currentX = (this.x);
+        let currentY = (this.y);
+        let evenOffset = isEven(currentX) && (-Tile.height) * 1 || 0;
+        // More short circuiting "magic"
+        // Be careful with the order of the "||" and the 0
+        let xOffset = GameInfo.world.maps[this.map].drawStartX;
+        let yOffset = GameInfo.world.maps[this.map].drawStartY;
         
         // Circle for now, make it into an image later
         strokeWeight(4);
@@ -52,10 +55,9 @@ class Cat {
         strokeWeight(24);
         fill(0, 0, 0, 0);
         push();
-        // Some short circuiting "magic"
             translate(
-                (Board.startPosX / boardScale) + (Tile.width * 3 * currentX) + evenOffset + xOffset,
-                (Board.startPosY / boardScale) - (Tile.height * 1 * currentY) + yOffset
+                (Tile.width * 1.5 * currentX) + xOffset,
+                (-Tile.height * 2 * currentY) + yOffset + evenOffset
             );
             beginShape();
             vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
@@ -128,12 +130,12 @@ class Cat {
         }
     }
 
-    update(cat) {
+    update(cat, showDebug) {
         this.id = cat.id;
-        this.team_id = cat.team_id;
         this.type = cat.type;
         this.x = cat.x;
         this.y = cat.y;
+        this.map = cat.boardID - 1; // For easier handling of arrays.
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
@@ -145,5 +147,7 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+
+        this.showDebug = showDebug
     }
 }

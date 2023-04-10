@@ -4,6 +4,10 @@
 insert into game_state (gst_state) values ('Waiting'), ('Started'), ('Finished'), ('Canceled');
 
 # Do not change the order, but you can add more in the end
+-- Putting cats at placement tiles at the start of the game
+insert into user_game_state (ugst_state) values ('Placement');
+-- Ready to start the game
+insert into user_game_state (ugst_state) values ('PlacementReady');
 -- Waiting for your turn
 insert into user_game_state (ugst_state) values ('Waiting');
 -- Playing during your turn
@@ -98,10 +102,15 @@ values (
     1
 );
 
-insert into game_cat_state (gcs_state) values ('Visible'), ('Stealth');
+# States
+insert into game_cat_state (gcs_state) values ('Standby'), ('Acted'), ('Dead');
+
+# Conditions
+insert into cat_condition (ccn_name) values ('Stealth'), ('Rooted');
 
 # Map Related Stuff
-insert into board () values ();
+insert into board () values (); # Placement Map
+insert into board () values (); # Main Map
 insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
 
 -- Fill the board with normal tiles

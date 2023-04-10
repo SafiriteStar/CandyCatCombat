@@ -1,13 +1,13 @@
 class ScoreBoard {
     static width = 300;
     static height = 100;
-    static x = 10;
+    static x = GameInfo.width - ScoreBoard.width - 10;
     static y = 10;
     constructor(game) {
         this.game = game;
     }
     draw() {
-        scale(5);
+        scale(1);
         fill(100,200,100);
         stroke(0,0,0);
         rect (ScoreBoard.x,ScoreBoard.y,ScoreBoard.width,ScoreBoard.height,5,5,5,5);

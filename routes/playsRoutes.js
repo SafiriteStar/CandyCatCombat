@@ -39,6 +39,26 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+router.patch('/placementready', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Play Placement Ready");
+        if (!req.game) {
+            res.status(400).send({msg:"You are not at a game, please create or join a game"});
+        } else if (req.game.player.state.name != "Placement") {
+            // Do not need to check if there are two players since in that case
+            // the player will not be on Playing state
+            res.status(400).send({msg: 
+                "You cannot ready since you are not currently in placement mode"});
+        } else {
+            let result = await Play.endPlacement(req.game);
+            res.status(result.status).send(result.result);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 // router.patch('/team/select', async function (req, res, next) {
 //     try{
 //         const characterId = req.body.characterId;
@@ -57,19 +77,20 @@ router.patch('/endturn', auth.verifyAuth, async function (req, res, next) {
 //     }
 // })
 
-router.patch('/move', async function (req, res, next) {
+// Body:
+// "characterId": (num),
+// "coord": (2D array)
+
+router.patch('/move', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Play move");
 
-        const characterId = req.body.characterId;
-        const coord = req.body.coord;
-
-        if (!characterId) {
+        if (req.body.catID === null || req.body.catID < 0) {
             res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
-        } else if (!coord) {
+        } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
             res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(0, characterId, coord);
+            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.placementX, req.body.placementY, req.body.catID, req.body.teamID);
             res.status(result.status).send(result.result);
         }
     } catch (err) {
