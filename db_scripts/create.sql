@@ -235,14 +235,14 @@ alter table tile add constraint tile_fk_tile_type
 
 # Link Tile Connection to Tile by origin
 alter table tile_connection add constraint tile_connection_fk_tile_origin 
-            foreign key (   tcn_origin_x, tcn_origin_y, tcn_origin_board_id )
-            references tile (   tile_x, tile_y, tile_board_id )
+            foreign key (tcn_origin_x, tcn_origin_y, tcn_origin_board_id )
+            references tile (tile_x, tile_y, tile_board_id )
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 # Link Tile Connection to Tile by target
 alter table tile_connection add constraint tile_connection_fk_tile_target 
-            foreign key (   tcn_target_x, tcn_target_y, tcn_target_board_id )
-            references tile (   tile_x, tile_y, tile_board_id )
+            foreign key (tcn_target_x, tcn_target_y, tcn_target_board_id )
+            references tile (tile_x, tile_y, tile_board_id )
             ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 # Link Game to Board by gm_board_id

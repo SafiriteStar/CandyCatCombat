@@ -267,7 +267,7 @@ class Play {
             Play.#changePlayerState(4, game.opponents[0].id);
 
             // Both players played
-            if (game.player.order == 2) {
+            if (game.player.order == 4) {
                 // Criteria to check if game ended
                 if (await checkEndGame(game)) {
                     return await Play.endGame(game);
