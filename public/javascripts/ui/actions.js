@@ -36,12 +36,12 @@ async function getBoardInfo() {
         // Actual board
         if (GameInfo.world) {
             // A board already exists
-            GameInfo.world.update(result.game.boards, result.game.player, result.game.opponents);
+            GameInfo.world.update(result.game.maps, result.game.player, result.game.opponents);
         }
         else {
             // Create a new board
             //GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
-            GameInfo.world = new World(result.game.boards, result.game.player, result.game.opponents);
+            GameInfo.world = new World(result.game.maps, result.game.player, result.game.opponents);
         }
 
         console.log(GameInfo.world);

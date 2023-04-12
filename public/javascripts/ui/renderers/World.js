@@ -12,7 +12,7 @@ class World {
         [0, 0]
     ]
 
-    constructor(boards, playerTeam, opponentTeam) {
+    constructor(maps, playerTeam, opponentTeam) {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
@@ -57,11 +57,11 @@ class World {
         // Create maps
         this.maps = [];
         // Note: First map is always placement map
-        for (let i = 0; i < boards.length; i++) {
+        for (let i = 0; i < maps.length; i++) {
             this.maps[i] = new Map (
-                boards[i].width,
-                boards[i].height,
-                boards[i].tiles,
+                maps[i].width,
+                maps[i].height,
+                maps[i].tiles,
                 World.mapDrawOffsets[i][0],
                 World.mapDrawOffsets[i][1]
             );

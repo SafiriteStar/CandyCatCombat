@@ -23,7 +23,8 @@ const usersRouter = require("./routes/usersRoutes");
 const gamesRouter = require("./routes/gamesRoutes");
 const playsRouter = require("./routes/playsRoutes");
 const scoresRouter = require("./routes/scoresRoutes");
-const populateMap = require('./db_scripts/mapPopulate');
+const World = require('./db_scripts/mapPopulate');
+const Play = require('./models/playsModel');
 
 app.use("/api/users",usersRouter);
 app.use("/api/games",gamesRouter);
@@ -69,4 +70,4 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-populateMap(validArguments[0].execute, validArguments[1].execute);
+Play.setWorldData(World.createWorld, validArguments[0].execute, validArguments[1].execute);

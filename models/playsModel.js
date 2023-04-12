@@ -1,4 +1,5 @@
 const pool = require("../config/database");
+const World = require("../db_scripts/mapPopulate");
 
 // auxiliary function to check if the game ended 
 async function checkEndGame(game) {
@@ -7,7 +8,7 @@ async function checkEndGame(game) {
 
 class Play {
     // At this moment I do not need to store information so we have no constructor
-
+    static worldData;
     // Just a to have a way to determine end of game
     static maxNumberTurns = 10;
     // we consider all verifications were made
@@ -15,7 +16,7 @@ class Play {
     // Load in a team for the player or opponents using their default teams
     static async #loadCatTeam(gameId, playerId) {
 
-        // ADd in a new game team
+        // Add in a new game team
         await pool.query(
             'Insert into game_team (gt_game_id, gt_user_id) values (?, ?)',
             [gameId, playerId]);
@@ -90,52 +91,6 @@ class Play {
         }
     }
 
-    static async #getBoardData(boardID) {
-        // Get the main map the players are playing on
-        let [[dbBoardData]] = await pool.query(
-            `Select brd_id, max(tile_x) + 1 as "width", max(tile_y) + 1 as "height"
-            from board, tile
-            where brd_id = ? and tile_board_id = brd_id`,
-                [boardID]);
-    
-        // The game parameter comes with the game id. So lets get the tiles of the board from the game id.
-        let [dbTileData] = await pool.query(
-            `Select tile_x as "x", tile_y as "y", tile_type_id as "type"
-            from tile
-            where tile_board_id = ?`,
-                [boardID]);
-
-        let [dbPlacementTileData] = await pool.query(
-            `Select ptg_tile_x as "x", ptg_tile_y as "y", ptg_group as "group"
-            from placement_tile_group
-            where ptg_tile_board_id = ?`,
-                [boardID]);
-        
-        let board = {}
-        board.width = dbBoardData.width;
-        board.height = dbBoardData.height;
-        board.tiles = [];
-
-        // Index for the db array
-        let tileIndex = 0;
-
-        // Add all the tiles
-        for (let i = 0; i < dbBoardData.width; i++) {
-            board.tiles[i] = [];
-            for (let j = 0; j < dbBoardData.height; j++) {
-                board.tiles[i][j] = dbTileData[tileIndex];
-                tileIndex++;
-            }
-        }
-
-        // After adding all the tiles we need to adjust the placement tiles so that they know what group they are in
-        for (let i = 0; i < dbPlacementTileData.length; i++) {
-            board.tiles[dbPlacementTileData[i].x][dbPlacementTileData[i].y].group = dbPlacementTileData[i].group;
-        }
-
-        return board;
-    }
-
     static async #getGameCatTeam(teamOwnershipType, playerId, gameId) {
         let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
@@ -159,33 +114,32 @@ class Play {
         return player
     }
 
+    static async setWorldData(worldCreator, argv1, argv2) {
+        console.log("We got here");
+        Play.worldData = await worldCreator(argv1, argv2);
+        console.log("We ran the function, here is what we have");
+        console.log(Play.worldData);
+    }
+
     static async getBoard(game) {
         try {
-            let boardData = {}
-            boardData.boards = []
-
-            // -- PLACEMENT BOARD --
-            // Get the placement map
-            boardData.boards[0] = await Play.#getBoardData(1)
-            
-            // -- MAIN BOARD --
-            // Get the main map the players are playing on
-            boardData.boards[1] = await Play.#getBoardData(game.board + 1);
+            // Get a copy of the world
+            let world = Play.worldData;
 
             // Player info
-            boardData.player = await Play.#getGameCatTeam("player", game.player.id, game.id);
+            world.player = await Play.#getGameCatTeam("player", game.player.id, game.id);
 
             // Opponents
-            boardData.opponents = [];
+            world.opponents = [];
 
             // If we are in a state that we are allowed to see our opponents
             if (game.player.state.name == "Playing" || game.player.state.name == "Waiting" || game.player.state.name == "Score" || game.player.state.name == "End") {
                 for (let i = 0; i < game.opponents.length; i++) {
-                    boardData.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+                    world.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
                 }
             }
             
-            return { status: 200, result: boardData};
+            return { status: 200, result: world};
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
@@ -354,7 +308,7 @@ class Play {
             if (tile.type_id == 2) { // 2 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
             }
-    
+
             // Is there a cat already at the target tile?
             let [cats] = await pool.query(
                 `Select gtc_x, gtc_y

@@ -6,4 +6,3 @@ module.exports.genToken = function genToken(length) {
    }
    return token;
 }
-
