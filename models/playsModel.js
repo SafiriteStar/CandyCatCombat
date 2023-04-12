@@ -241,7 +241,7 @@ class Play {
                 return true;
             }
             // We even?
-            else if (x % 2 == 0) {
+            else if (originX % 2 == 0) {
                 // Yes
                 // It it above?
                 if (translationY === 1) {
@@ -249,7 +249,7 @@ class Play {
                 }
             }
             // We odd?
-            else if (Math.abs(n % 2) == 1) {
+            else if (Math.abs(originX % 2) === 1) {
                 // Yes
                 // Is it below?
                 if (translationY === -1) {
@@ -263,32 +263,97 @@ class Play {
     }
 
     // Returns the an array of indexes for neighbors at the given x and y
-    static async #catNeighbors(x, y, potentialNeighbors) {
+    static #getCatNeighbors(x, y, potentialNeighborCats) {
         let neighbors = []
 
-        for (let i = 0; i < potentialNeighbors.length; i++) {
-            
-            
+        // For each potential neighbor
+        for (let cat = 0; cat < potentialNeighborCats.length; cat++) {
+            // If they are a neighbor
+            if (Play.#neighborCheck(x, y, potentialNeighborCats[cat].x, potentialNeighborCats[cat].y)) {
+                // Add the index to the list
+                neighbors[neighbors.length] = cat;
+            }
         }
 
+        // Return the list of index neighbors
         return neighbors;
+    }
+
+    // Assumes we have at least 1 team to attack
+    // With at least 1 cat in each team
+    static async #attackTargets(attackCatData, opponents, targetTeams) {
+        // Get a random team
+        let targetTeam = Math.floor(Math.random() * targetTeams.length);
+
+        // Get a random cat in that team
+        let targetCat = Math.floor(Math.random() * targetTeams[targetTeam].catIndexes)
+
+        let targetCatData = opponents[targetTeams[targetTeam].teamIndex].team.cats[targetCat]
+
+        let damageDealt = targetCatData.defense - attackCatData.damage;
+        console.log("Attacking Cat: " + attackCatData.name + " GTC ID: " + attackCatData.id);
+        console.log("Attack: " + attackCatData.damage);
+        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
+        console.log("Defense: " + targetCatData.defense);
+        console.log("Damage Dealt: " + damageDealt);
+
+        // For each target team
+        targetTeams.forEach(targetTeam => {
+            // For each cat in target team
+            targetTeam.catIndexes.forEach(targetCatIndex => {
+                // Calculate the damage (minimum of 0)
+                let damageDone = Math.min(opponents[targetTeam.teamIndex].team.cats[targetCatIndex].defense - attackCatData.damage, 0);
+                // Print it out for now
+                console.log("Cat: " + attackCatData.name);
+                console.log("Attack: " + attackCatData.damage);
+                console.log("Cat: " + opponents[targetTeam.teamIndex].team.cats[targetCatIndex].name);
+                console.log("Defense: " + opponents[targetTeam.teamIndex].team.cats[targetCatIndex].defense);
+                console.log("Damage Done: " + damageDone);
+            });
+        });
     }
     
     static async #resolveAttacks(game) {
         // Get the player team
-        let player = Play.#getGameCatTeam("player", game.player.id, game.id);
+        let player = await Play.#getGameCatTeam("player", game.player.id, game.id);
 
         // Get the opponents team
-        let opponents = [];
+        let opponentsTeams = [];
         for (let i = 0; i < game.opponents.length; i++) {
-            opponents[i] = Play.#getGameCatTeam("opponent", game.opponents[i].id, game.id);
+            opponentsTeams[i] = await Play.#getGameCatTeam("opponent", game.opponents[i].id, game.id);
         }
-
         // For every player cat
-        for (let cat = 0; cat < player.length; cat++) {
-            // Check for cat neighbors
+        player.team.cats.forEach(playerCat => {
+            // The list of teams we will attack with this cat
+            let targetTeams = [];
             
-        }
+            // For every opponent team
+            for (let team = 0; team < opponentsTeams.length; team++) {
+                // Get all valid neighbors
+                let targetCatIndexes = Play.#getCatNeighbors(playerCat.x, playerCat.y, opponentsTeams[team].team.cats)
+                // If we have target cats
+                if (targetCatIndexes.length > 0) {
+                    // Add a new list of targets for this team
+                    targetTeams.push({
+                        // Save the database id
+                        teamID:opponentsTeams[team].team.id,
+                        // Save which team index we are looking at
+                        teamIndex:team,
+                        // Save all the indexes of the cats we can hit in that team
+                        catIndexes:targetCatIndexes
+                    });
+                }
+            }
+
+            // After looking at every opponent team for who we can attack
+            // Do we have targets to attack?
+            if (targetTeams.length > 0) {
+                // Yes
+                // Attack all those cats
+                Play.#attackTargets(playerCat, opponentsTeams, targetTeams);
+            }
+            
+        });
     }
 
 
