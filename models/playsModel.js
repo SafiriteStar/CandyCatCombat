@@ -285,33 +285,6 @@ class Play {
         }
     }
 
-    // static async selectTeam(game, characterId, teamId) {
-    //     try {
-    //         let [[row]] = await pool.query(
-    //             `select * from game_team where gtc_id = ?`,
-    //             [teamId]
-    //         );
-    //         if (!row)
-    //             return { status: 400, result: {msg:"You cannot selected that team since the chosen team is not valid"} };
-            
-    //         await pool.query(
-    //             `update game_team_cat set gtc_game_team_id = ? where gtc_id = ?`,
-    //             [teamId, characterId]
-    //         );
-
-    //         return { 
-    //             status: 200, 
-    //             result: {
-    //                 "characterId": characterId
-    //             }
-    //         }
-
-    //     } catch (err) {
-    //         console.log(err);
-    //         return { status: 500, result: err };
-    //     }
-    // }
-
     static async move(game, x, y, map, catID, teamID) {
        try {
             let [selectedCats] = await pool.query(
@@ -322,7 +295,7 @@ class Play {
             );
 
             // Check if any cats with those ID's exist
-            if (selectedCats.length > 1 || selectedCats.length <= 0) {
+            if (selectedCats.length > 1) {
                 return { status: 400, result: {msg:"You cannot move the character since the chosen character is not valid"} };
             }
 
@@ -342,16 +315,16 @@ class Play {
                 [x, y, map]
             );
 
-            // Store the data
-            let tile = tiles[0]
-
             // Does the tile exist?
-            if (tile === null) {
+            if (tiles.length === 0) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
             }
 
+            // Store the data
+            let tile = tiles[0]
+
             // Is the tile a wall?
-            if (tile.type_id == 2) { // 2 = wall
+            if (tile.tile_type_id === 2) { // 2 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
             }
     
@@ -365,7 +338,7 @@ class Play {
 
             // TODO: Add an above "0" health check
             if (cats.length > 1 && map !== 1) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
+                return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that tile"} };
             }
 
             // Update the cat info
@@ -391,8 +364,46 @@ class Play {
     }
 
     static isNeighbor(originX, originY, targetX, targetY) {
-        // Make proper neighboring checks
-        return true;
+
+        if (originX == targetX && originY == targetY + 1) { // middle up tile
+            return true;
+        }
+    
+        if (originX == targetX && originY == targetY - 1) { // middle down tile
+            return true;
+        }
+
+        if (originX == targetX - 1 && originY == targetY) { // left tile
+            return true;
+        }
+
+        if (originX == targetX + 1 && originY == targetY) { // right tile
+            return true;
+        }
+
+        // If the originX is an even number
+        if (originX % 2 === 0 && originY === targetY - 1) { // right up tile
+            if (originX === targetX + 1) {
+                return true;
+            }
+    
+            if (originX === targetX - 1) { // left up tile
+                return true;
+            }
+        }
+
+        // If the originX is an odd number
+        else if(Math.abs(originX % 2) === 1 && originY === targetY + 1) { // right down tile
+            if (originX === targetX + 1) {
+                return true;
+            }
+    
+            if (originX === targetX - 1) { // left down tile
+                return true;
+            }
+        }
+    
+        return false;
     }
 
     // Makes all the calculation needed to end and score the game
