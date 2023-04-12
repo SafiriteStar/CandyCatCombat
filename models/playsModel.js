@@ -92,6 +92,24 @@ class Play {
         }
     }
 
+    // Returns a game cat team of the given player (if any)
+    // Cat stats are:
+    // id
+    // type
+    // x
+    // y
+    // name
+    // max_health
+    // current_health
+    // damage
+    // defense
+    // speed
+    // stamina
+    // min_range
+    // max_range
+    // cost
+    // state
+    // boardID
     static async #getGameCatTeam(teamOwnershipType, playerId, gameId) {
         let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
@@ -108,7 +126,7 @@ class Play {
         // Save the team id
         player.team.id;
         player.team.id = playerGameTeamData.gt_id;
-        player.team.cats;
+        player.team.cats = [];
 
         [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
 
@@ -184,14 +202,15 @@ class Play {
         }
     }
 
+    
     static async endPlacement(game) {
         try {
             // Change the player to be ready
             await Play.#changePlayerState(2, game.player.id);
-
+            
             // Check if all players are ready
             if (await Play.#checkPlayersReady(game.id)) {
-
+                
                 // Set the player's order
                 await Play.#changePlayerStateByOrder(game.player.order, game.player.id);
                 
@@ -201,13 +220,80 @@ class Play {
                     await Play.#changePlayerStateByOrder(game.opponents[i].order, game.opponents[i].id);
                 }
             }
-
+            
             return { status: 200, result: { msg: "You readied up." } };
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
         }
     }
+
+    static #neighborCheck(originX, originY, targetX, targetY) {
+        let translationX = targetX - originX;
+        let translationY = targetY - originY;
+
+        // Is it right above or below? Or
+        // Directly to our right or left?
+        if (translationX === 0 && Math.abs(translationY) === 1) {
+            return true;
+        }
+        // Is it to our right or left?
+        else if (Math.abs(translationX) === 1) {
+            // Directly right or left?
+            if (translationY === 0) {
+                return true;
+            }
+            // We even?
+            else if (x % 2 == 0) {
+                // Yes
+                // It it above?
+                if (translationY === 1) {
+                    return true;
+                }
+            }
+            // We odd?
+            else if (Math.abs(n % 2) == 1) {
+                // Yes
+                // Is it below?
+                if (translationY === -1) {
+                    return true;
+                }
+            }
+        }
+
+        // Nothing was true, its not a neighbor
+        return false;
+    }
+
+    // Returns the an array of indexes for neighbors at the given x and y
+    static async #catNeighbors(x, y, potentialNeighbors) {
+        let neighbors = []
+
+        for (let i = 0; i < potentialNeighbors.length; i++) {
+            
+            
+        }
+
+        return neighbors;
+    }
+    
+    static async #resolveAttacks(game) {
+        // Get the player team
+        let player = Play.#getGameCatTeam("player", game.player.id, game.id);
+
+        // Get the opponents team
+        let opponents = [];
+        for (let i = 0; i < game.opponents.length; i++) {
+            opponents[i] = Play.#getGameCatTeam("opponent", game.opponents[i].id, game.id);
+        }
+
+        // For every player cat
+        for (let cat = 0; cat < player.length; cat++) {
+            // Check for cat neighbors
+            
+        }
+    }
+
 
     // This considers that only one player plays at each moment, 
     // so ending my turn starts the other players turn
@@ -217,9 +303,12 @@ class Play {
     // NOTE: This might be the place to check for victory, but it depends on the game
     static async endTurn(game) {
         try {
+            // Resolve attacks (if any)
+            await Play.#resolveAttacks(game);
+
             // Change player state to waiting (3)
-            Play.#changePlayerState(3, game.player.id);
-            Play.#changePlayerState(4, game.opponents[0].id);
+            await Play.#changePlayerState(3, game.player.id);
+            await Play.#changePlayerState(4, game.opponents[0].id);
 
             // Both players played
             if (game.player.order == 4) {
