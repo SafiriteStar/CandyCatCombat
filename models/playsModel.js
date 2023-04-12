@@ -134,10 +134,7 @@ class Play {
     }
 
     static async setWorldData(worldCreator, argv1, argv2) {
-        console.log("We got here");
         Play.worldData = await worldCreator(argv1, argv2);
-        console.log("We ran the function, here is what we have");
-        console.log(Play.worldData);
     }
 
     static async getBoard(game) {
