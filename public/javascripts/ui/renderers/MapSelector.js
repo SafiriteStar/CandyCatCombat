@@ -20,14 +20,21 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter();
+        this.rangeIndicator = new RangeHighlighter([230, 30, 30]);
+        this.moveIndicator = new RangeHighlighter([164, 149, 255])
     }
-    
-    drawMapTile() {
+
+    drawIndicators() {
+        this.rangeIndicator.draw();
+        this.moveIndicator.draw();
+    }
+
+    draw() {
         push();
             stroke(255, 255, 0, 150);
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();
+        this.drawIndicators();  
     }
 
     drawInfoBoxes() {
@@ -58,6 +65,12 @@ class MapSelector {
         }
         return [team, cat]
     }
+
+    updateRangeIndicators(selectedCatData) {
+        this.rangeIndicator.newSource(selectedCatData, selectedCatData.min_range, selectedCatData.max_range);
+        // CHANGE TO SPEED AFTER
+        this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.speed);
+    }
     
     update(posX, posY, coordX, coordY, map) {
         this.posX = posX;
@@ -81,7 +94,7 @@ class MapSelector {
                 this.cat = newCat;
                 // Update our indicators
                 this.catInfoBox.update(this.cat, this.team);
-                this.rangeIndicator.newSource(GameInfo.world.teams[this.team].cats[this.cat])
+                this.updateRangeIndicators(GameInfo.world.teams[this.team].cats[this.cat]);
             }
             else {
                 // There was no cat in that tile

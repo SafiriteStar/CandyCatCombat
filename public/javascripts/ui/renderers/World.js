@@ -134,7 +134,7 @@ class World {
 
             // Draw Map Tile Select Indicator
             if (this.mapSelector.map !== null) {
-                this.mapSelector.drawMapTile();
+                this.mapSelector.draw();
             }
         pop();
 
@@ -143,7 +143,7 @@ class World {
     }
 
     getTileInMap(x, y, map) {
-        return this.maps[map - 1].getTile(x, y);
+        return this.maps[map].getTile(x, y);
     }
 
     update(boards, playerTeam, opponentTeams) {
@@ -163,6 +163,10 @@ class World {
             else {
                 this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, World.teamColors[1]);
             }
+        }
+
+        if (this.mapSelector.rangeIndicator.sourceCat !== null) {
+            this.mapSelector.updateRangeIndicators(this.teams[this.mapSelector.team].cats[this.mapSelector.cat]);
         }
     }
 
