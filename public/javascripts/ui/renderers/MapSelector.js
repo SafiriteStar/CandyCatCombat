@@ -18,12 +18,15 @@ class MapSelector {
     
         // Cat Info Box
         this.catInfoBox = new CatInfoBox();
+
+        // Range indicator
+        this.rangeIndicator = new RangeHighlighter();
     }
     
     drawMapTile() {
         push();
-        stroke(255, 255, 0, 150);
-        Tile.drawSimpleTile(this.posX, this.posY);
+            stroke(255, 255, 0, 150);
+            Tile.drawSimpleTile(this.posX, this.posY);
         pop();
     }
 
@@ -76,7 +79,9 @@ class MapSelector {
                 // Set the current cat to the new one
                 this.team = newTeam;
                 this.cat = newCat;
+                // Update our indicators
                 this.catInfoBox.update(this.cat, this.team);
+                this.rangeIndicator.newSource(GameInfo.world.teams[this.team].cats[this.cat])
             }
             else {
                 // There was no cat in that tile
@@ -85,6 +90,12 @@ class MapSelector {
                     // We do
                     // Lets try to move to the tile we just clicked
                     moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
+                }
+                // Do we have *a* cat?
+                else if (this.team) {
+                    // We do, lets set it to null
+                    this.cat = null;
+                    this.team = null;
                 }
             }
         }

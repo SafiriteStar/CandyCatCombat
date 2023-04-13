@@ -21,6 +21,8 @@ class World {
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
 
+        this.canDrag = true;
+
         // Mouse World Position
         this.mouseScreenX = 0;
         this.mouseScreenY = 0;
@@ -75,7 +77,7 @@ class World {
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
         
         // Calculate the camera translation if we are dragging with the cursor
-        if (mouseIsPressed === true) { // Do this to avoid JS shenanigans
+        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag) { // Do this to avoid JS shenanigans
             // TODO: Potentially add arrow key support?
             this.mouseXDragDelta = this.cameraMouseStartX - mouseX;
             this.mouseYDragDelta = this.cameraMouseStartY - mouseY;
@@ -140,6 +142,10 @@ class World {
         this.mapSelector.drawInfoBoxes();
     }
 
+    getTileInMap(x, y, map) {
+        return this.maps[map - 1].getTile(x, y);
+    }
+
     update(boards, playerTeam, opponentTeams) {
         // Update the maps
         for (let i = 0; i < this.maps.length; i++) {
@@ -163,6 +169,13 @@ class World {
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;
+
+        if (this.hoverTile.coordX !== this.mapSelector.coordX || this.hoverTile.coordY !== this.mapSelector.coordY || this.hoverTile.map !== this.mapSelector.map) {
+            this.canDrag = true;
+        }
+        else {
+            this.canDrag = false;
+        }
     }
 
     mouseReleased() {
@@ -171,7 +184,9 @@ class World {
         if (!this.mouseCameraDrag) {
             // We were hovering over a valid tile
             // and not the same tile we were before
-            if (this.hoverTile.map !== null && (this.hoverTile.coordX != this.mapSelector.coordX || this.hoverTile.coordY != this.mapSelector.coordY || this.hoverTile.map != this.mapSelector.map)) {
+            if (this.hoverTile.map !== null
+                && (this.hoverTile.coordX != this.mapSelector.coordX || this.hoverTile.coordY != this.mapSelector.coordY || this.hoverTile.map != this.mapSelector.map)
+                && mouseButton === LEFT) {
                 this.mapSelector.update(
                     this.hoverTile.posX,
                     this.hoverTile.posY,
@@ -189,6 +204,7 @@ class World {
         // If we release the mouse we definitely aren't moving the camera anymore
         this.mouseCameraDrag = false;
         this.mouseDragDelta = 0;
+        this.canDrag = true;
     }
 
     mouseClicked() {

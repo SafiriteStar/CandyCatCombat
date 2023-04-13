@@ -15,6 +15,7 @@ class Tile {
         this.y = baseTile.y;
         this.type = baseTile.type;
         this.group = null;
+        this.connections = baseTile.connections;
 
         // Some short circuiting "magic"
         // If its even then displace it by Tile.width * 1.5
