@@ -362,6 +362,7 @@ class Play {
             return { status: 500, result: err };
         }
     }
+    //coment
 
     static isNeighbor(originX, originY, targetX, targetY) {
 
