@@ -1,9 +1,10 @@
 class RangeHighlighter {
 
-    constructor(color) {
+    constructor(ignoreWalls, color) {
         this.sourceCat = null; // An object with x and y
         this.tiles = []; // We will store the tiles to highlight here
         this.tilesToHighlight = [];
+        this.ignoreWalls = ignoreWalls;
         this.color = color
     }
 
@@ -30,8 +31,10 @@ class RangeHighlighter {
             tile.connections.forEach(neighbor => {
                 // Get the actual tile data
                 let currentTile = GameInfo.world.getTileInMap(neighbor.x, neighbor.y, this.map)
-                // If its not in tiles already (or our new neighbor list)
-                if (!this.tiles.includes(currentTile) && !newNeighbors.includes(currentTile)) {
+                // If its not in tiles already
+                // and not on our new neighbor list
+                // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
+                if (!this.tiles.includes(currentTile) && !newNeighbors.includes(currentTile) && (this.ignoreWalls || (!this.ignoreWalls  && currentTile.type != 2))) {
                     // Add that neighbor
                     newNeighbors.push(currentTile);
                 }
