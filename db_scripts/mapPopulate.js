@@ -182,7 +182,7 @@ async function getMapData(mapID) {
     
     // Get all the tiles
     [dbTileData] = await pool.query(
-        `Select tile_x as "x", tile_y as "y", tile_type_id as "type", null as "connections"
+        `Select tile_x as "x", tile_y as "y", tile_type_id as "type", tile_board_id as "map", null as "connections"
         from tile
         where tile_board_id = ?`,
             [mapID]);
@@ -225,7 +225,8 @@ async function getMapData(mapID) {
         // At the tile at originX and originY, add a new connection to the array
         map.tiles[dbTileConnections[i].originX][dbTileConnections[i].originY].connections[map.tiles[dbTileConnections[i].originX][dbTileConnections[i].originY].connections.length] = {
             x:dbTileConnections[i].targetX,
-            y:dbTileConnections[i].targetY
+            y:dbTileConnections[i].targetY,
+            map:mapID
         }
     }
 
@@ -250,6 +251,10 @@ class World {
         }
     
         return world;
+    }
+
+    static getTile(x, y, map) {
+        return world.maps[map].tiles[x][y]
     }
 
     static async createWorld(fullReset, purgeDB) {

@@ -14,6 +14,14 @@ class Play {
     static worldData;
     // we consider all verifications were made
 
+    static async setWorldData(worldCreator, argv1, argv2) {
+        Play.worldData = await worldCreator(argv1, argv2);
+    }
+
+    static getWorld() {
+        return Play.worldData;
+    }
+
     // Load in a team for the player or opponents using their default teams
     static async #loadCatTeam(gameId, playerId) {
 
@@ -133,10 +141,6 @@ class Play {
         return player
     }
 
-    static async setWorldData(worldCreator, argv1, argv2) {
-        Play.worldData = await worldCreator(argv1, argv2);
-    }
-
     static async getBoard(game) {
         try {
             // Get a copy of the world
@@ -144,6 +148,7 @@ class Play {
 
             // Player info
             world.player = await Play.#getGameCatTeam("player", game.player.id, game.id);
+            world.player.state = game.player.state;
 
             // Opponents
             world.opponents = [];
@@ -152,6 +157,7 @@ class Play {
             if (game.player.state.name == "Playing" || game.player.state.name == "Waiting" || game.player.state.name == "Score" || game.player.state.name == "End") {
                 for (let i = 0; i < game.opponents.length; i++) {
                     world.opponents[i] = await Play.#getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+                    world.opponents[i].state = game.opponents[i].state;
                 }
             }
             
@@ -225,63 +231,73 @@ class Play {
         }
     }
 
-    static #neighborCheck(originX, originY, originMap, targetX, targetY, targetMap) {
-        let translationX = targetX - originX;
-        let translationY = targetY - originY;
+    static getTile(x, y, map) {
+        return Play.worldData.maps[map].tiles[x][y];
+    }
 
-        // If we aren't on the same board then we know we aren't neighbors
-        if (originMap !== targetMap) {
-            return false;
-        }
+    static getNeighborTiles(tilesToCheck, ignoreWalls) {
+        let newNeighbors = [];
 
-        // Is it right above or below? Or
-        // Directly to our right or left?
-        if (translationX === 0 && Math.abs(translationY) === 1) {
-            return true;
-        }
-        // Is it to our right or left?
-        else if (Math.abs(translationX) === 1) {
-            // Directly right or left?
-            if (translationY === 0) {
-                return true;
-            }
-            // We even?
-            else if (originX % 2 == 0) {
-                // Yes
-                // It it above?
-                if (translationY === 1) {
-                    return true;
+        // For each tile
+        tilesToCheck.forEach(tile => {
+            // For each connection of that tile
+            tile.connections.forEach(neighbor => {
+                // Get the actual tile data
+                let currentTile = Play.getTile(neighbor.x, neighbor.y, neighbor.map - 1);
+                
+                // If its not in tiles already
+                // and not on our new neighbor list
+                // and we are either ignoring walls OR aren't ignoring walls and the tile we are looking at isn't a wall
+                if (!tilesToCheck.includes(currentTile) && !newNeighbors.includes(currentTile) && (ignoreWalls || (!ignoreWalls && currentTile.type != 2))) {
+                    // Add that neighbor
+                    newNeighbors.push(currentTile);
                 }
-            }
-            // We odd?
-            else if (Math.abs(originX % 2) === 1) {
-                // Yes
-                // Is it below?
-                if (translationY === -1) {
-                    return true;
-                }
+            });
+        });
+
+        return newNeighbors
+    }
+
+    static getNeighborsOfRange(sourceTile, maxRange, minRange) {
+        let tiles = [];
+        let neighbors = [];
+
+        // Add in the first tile
+        tiles.push(sourceTile);
+
+        // For however many layers we want to search
+        for (let i = 0; i < maxRange; i++) {
+            // Find some neighbors
+            let newNeighbors = Play.getNeighborTiles(tiles);
+            // Add them
+            tiles = tiles.concat(newNeighbors);
+            // And if we are at or above our minimum range, add them to the highlighted tiles as well
+            if (minRange - 2 < i) {
+                neighbors = neighbors.concat(newNeighbors);
             }
         }
 
-        // Nothing was true, its not a neighbor
-        return false;
+        return neighbors;
     }
 
     // Returns the an array of indexes for neighbors at the given x and y
-    static #getCatNeighbors(x, y, map, potentialNeighborCats) {
-        let neighbors = []
+    static #getCatNeighbors(potentialNeighborCats, neighborTiles) {
+        let neighborCats = []
 
-        // For each potential neighbor
-        for (let cat = 0; cat < potentialNeighborCats.length; cat++) {
-            // If they are a neighbor
-            if (Play.#neighborCheck(x, y, map, potentialNeighborCats[cat].x, potentialNeighborCats[cat].y, potentialNeighborCats[cat].boardID)) {
-                // Add the index to the list
-                neighbors[neighbors.length] = cat;
+        function checkCatIsNeighbor(cat, index) {
+            // Check if the tile the cat is on is a neighbor
+            if (neighborTiles.includes(Play.getTile(cat.x, cat.y, cat.boardID - 1))) {
+                // Tile is a neighbor!
+                // Add the cat to the list
+                neighborCats.push(index);
             }
         }
+        
+        // For each potential neighbor
+        potentialNeighborCats.forEach(checkCatIsNeighbor);
 
         // Return the list of index neighbors
-        return neighbors;
+        return neighborCats;
     }
 
     // Assumes we have at least 1 team to attack
@@ -304,13 +320,15 @@ class Play {
     }
 
     static async #generateAttackList(playerCat, opponentsTeams) {
+        let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(playerCat.x, playerCat.y, playerCat.boardID - 1), playerCat.max_range, playerCat.min_range);
+
         // The list of teams we will attack with this cat
         let targetTeams = [];
             
         // For every opponent team
         for (let team = 0; team < opponentsTeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.#getCatNeighbors(playerCat.x, playerCat.y, playerCat.boardID, opponentsTeams[team].team.cats)
+            let targetCatIndexes = Play.#getCatNeighbors(opponentsTeams[team].team.cats, attackRangeTiles);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team
@@ -329,7 +347,7 @@ class Play {
         // Do we have targets to attack?
         if (targetTeams.length > 0) {
             // Yes
-            // Attack all those cats
+            // Attack those cats
             Play.#attackTargets(playerCat, opponentsTeams, targetTeams);
         }
     }
@@ -346,7 +364,7 @@ class Play {
         // For every player cat
         player.team.cats.forEach(playerCat => {
             // If we aren't in the placement map
-            if (playerCat.boardID !== 0) {
+            if (playerCat.boardID !== 1) {
                 Play.#generateAttackList(playerCat, opponentsTeams);
             }
         });

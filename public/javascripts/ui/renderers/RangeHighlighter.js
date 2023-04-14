@@ -25,7 +25,7 @@ class RangeHighlighter {
     getNeighborTiles() {
         // Get a list of unvisited neighbor tiles
         // For each tile in tiles
-        let newNeighbors = []
+        let newNeighbors = [];
         this.tiles.forEach(tile => {
             // For each neighbor that tile has
             tile.connections.forEach(neighbor => {
@@ -50,12 +50,13 @@ class RangeHighlighter {
         this.sourceCat = sourceCat;
         // Clear the array
         this.tiles.length = 0;
+        // Lets also reset what tiles we are highlighting
+        this.tilesToHighlight.length = 0;
 
         // Wait did we just wipe who our cat was?
         if (this.sourceCat === null) {
             // Alright, erase everything
             this.map = null;
-            this.tilesToHighlight.length = 0;
             // And get out
             return
         }
@@ -64,8 +65,6 @@ class RangeHighlighter {
         this.map = sourceCat.map;
         // Add in the source tile to it
         this.tiles.push(GameInfo.world.getTileInMap(sourceCat.x, sourceCat.y, this.map));
-        // Lets also reset what tiles we are highlighting
-        this.tilesToHighlight.length = 0;
 
         // For the max range of our cat
         for (let i = 0; i < maxRange; i++) {

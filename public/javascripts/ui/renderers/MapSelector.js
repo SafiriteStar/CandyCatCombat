@@ -34,7 +34,7 @@ class MapSelector {
             stroke(255, 255, 0, 150);
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();
-        this.drawIndicators();  
+        this.drawIndicators();
     }
 
     drawInfoBoxes() {

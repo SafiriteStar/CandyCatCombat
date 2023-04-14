@@ -12,7 +12,7 @@ class World {
         [0, 0]
     ]
 
-    constructor(maps, playerTeam, opponentTeam) {
+    constructor(maps, player, opponents) {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
@@ -43,15 +43,17 @@ class World {
         
         // -- Player --
         // Create team for the player
-        this.teams[0] = new Team(playerTeam.team.id, GameInfo.game.player.name, playerTeam.team.cats, World.teamColors[0]);
+        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, World.teamColors[0]);
+        this.teams[0].state = player.state.name;
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();
         
         // -- Opponents --
         // Create teams for the opponent
-        for (let i = 0; i < opponentTeam.length; i++) {
-            this.teams[i + 1] = new Team(opponentTeam[i].team.id, GameInfo.game.opponents[i].name, opponentTeam[i].team.cats, World.teamColors[1]);
+        for (let i = 0; i < opponents.length; i++) {
+            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, World.teamColors[1]);
+            this.teams[i].state = player.state.name;
         }
 
         // -- Maps --
