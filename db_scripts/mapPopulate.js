@@ -253,10 +253,6 @@ class World {
         return world;
     }
 
-    static getTile(x, y, map) {
-        return world.maps[map].tiles[x][y]
-    }
-
     static async createWorld(fullReset, purgeDB) {
         // If we want to reset everything
         if (fullReset) {
@@ -309,8 +305,5 @@ class World {
         return await World.getWorld();
     }
 }
-
-
-
 
 module.exports = World;
