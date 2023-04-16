@@ -156,3 +156,12 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
 
     return neighbors;
 }
+
+Play.distanceBetweenPoints = function(tile1, tile2) {
+    let x1 = tile1.x;
+    let y1 = tile1.y;
+    let x2 = tile2.x;
+    let y2 = tile2.y;
+
+    
+}

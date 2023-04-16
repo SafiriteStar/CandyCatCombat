@@ -4,6 +4,7 @@ const Play = require("../playsFunctionality/playsInit");
 // Assumes we have at least 1 team to attack
 // With at least 1 cat in each team
 Play.attackTargets = async function(attackCatData, opponents, targetTeams) {
+    // TODO: Instead of attacking a random cat in range, attack the closest cat to us
     // Get a random team
     let targetTeam = Math.floor(Math.random() * targetTeams.length);
 

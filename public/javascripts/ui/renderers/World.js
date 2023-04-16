@@ -167,7 +167,7 @@ class World {
             }
         }
 
-        if (this.mapSelector.rangeIndicator.sourceCat !== null) {
+        if (this.mapSelector.rangeIndicator.sourceCat !== null && this.teams[this.mapSelector.team] !== undefined) {
             this.mapSelector.updateRangeIndicators(this.teams[this.mapSelector.team].cats[this.mapSelector.cat]);
         }
     }
