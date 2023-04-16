@@ -18,6 +18,12 @@ Play.attackTargets = async function(attackCatData, opponents, targetTeams) {
     console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
     console.log("Defense: " + targetCatData.defense);
     console.log("Damage Dealt: " + damageDealt);
+    console.log("Updating database...");
+    await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
+        [damageDealt, targetCatData.id]);
+
+    // In case we need it, give back who we hit and for how much
+    return targetCatData.id, damageDealt;
 }
 
 Play.generateAttackList = async function(playerCat, opponentsTeams) {

@@ -86,7 +86,7 @@ class Cat {
             rect(
                 -Cat.healthBarLength * 0.5,
                 Tile.height - (Cat.healthBarHeight * 2),
-                Cat.healthBarLength * (1 - (this.max_health - this.current_health)),
+                Cat.healthBarLength * (1 - (this.max_health - this.current_health) / this.max_health),
                 Cat.healthBarHeight
             );
             // Health Bar Outline
