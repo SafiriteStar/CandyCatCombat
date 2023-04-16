@@ -175,13 +175,7 @@ class World {
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;
-
-        if (this.hoverTile.coordX !== this.mapSelector.coordX || this.hoverTile.coordY !== this.mapSelector.coordY || this.hoverTile.map !== this.mapSelector.map) {
-            this.canDrag = true;
-        }
-        else {
-            this.canDrag = false;
-        }
+        this.canDrag = true;
     }
 
     mouseReleased() {
