@@ -5,7 +5,8 @@ const Play = require("../playsFunctionality/playsInit");
 // With at least 1 cat in each team
 Play.attackTargets = async function(attackCatData, opponents, targetTeams) {
     // TODO: Instead of attacking a random cat in range, attack the closest cat to us
-    // Get a random team
+    console.log(targetTeams);
+/*     // Get a random team
     let targetTeam = Math.floor(Math.random() * targetTeams.length);
 
     // Get a random cat in that team
@@ -24,7 +25,7 @@ Play.attackTargets = async function(attackCatData, opponents, targetTeams) {
         [damageDealt, targetCatData.id]);
 
     // In case we need it, give back who we hit and for how much
-    return targetCatData.id, damageDealt;
+    return targetCatData.id, damageDealt; */
 }
 
 Play.generateAttackList = async function(playerCat, opponentsTeams) {
@@ -41,7 +42,7 @@ Play.generateAttackList = async function(playerCat, opponentsTeams) {
         if (targetCatIndexes.length > 0) {
             // Add a new list of targets for this team
             targetTeams.push({
-                // Save the database id
+                // Save the database game team cat id
                 teamID:opponentsTeams[team].team.id,
                 // Save which team index we are looking at
                 teamIndex:team,

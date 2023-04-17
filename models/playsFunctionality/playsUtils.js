@@ -115,26 +115,7 @@ Play.getNeighborTiles = function(tilesToCheck, ignoreWalls) {
     return newNeighbors
 }
 
-// Returns the an array of indexes for neighbors at the given x and y
-Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles) {
-    let neighborCats = []
-
-    function checkCatIsNeighbor(cat, index) {
-        // Check if the tile the cat is on is a neighbor
-        if (neighborTiles.includes(Play.getTile(cat.x, cat.y, cat.boardID - 1))) {
-            // Tile is a neighbor!
-            // Add the cat to the list
-            neighborCats.push(index);
-        }
-    }
-    
-    // For each potential neighbor
-    potentialNeighborCats.forEach(checkCatIsNeighbor);
-
-    // Return the list of index neighbors
-    return neighborCats;
-}
-
+// Returns an array of layers, each layer containing its neighbors
 Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
     let tiles = [];
     let neighbors = [];
@@ -150,6 +131,7 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
         tiles = tiles.concat(newNeighbors);
         // And if we are at or above our minimum range, add them to the highlighted tiles as well
         if (minRange - 2 < i) {
+            neighbors[i] = newNeighbors;
             neighbors = neighbors.concat(newNeighbors);
         }
     }
@@ -157,11 +139,24 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
     return neighbors;
 }
 
-Play.distanceBetweenPoints = function(tile1, tile2) {
-    let x1 = tile1.x;
-    let y1 = tile1.y;
-    let x2 = tile2.x;
-    let y2 = tile2.y;
+// Returns the an array of indexes for neighbors at the given x and y
+Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles) {
+    let neighborCats = []
 
+    // For each cat
+    potentialNeighborCats.forEach(function(cat, catIndex) {
+        // We want to check if they are in any of our neighbor tiles
+        neighborTiles.forEach(function(layer, layerIndex) {
+            // Does that layer have our cat?
+            if (layer.includes(Play.getTile(cat.x, cat.y, cat.boardID - 1))) {
+                // Yes
+                // Add the cat and layer into the list
+                neighborCats.push([catIndex, layerIndex]);
+            }
+        });
+    });
     
+
+    // Return the list of index neighbors
+    return neighborCats;
 }
