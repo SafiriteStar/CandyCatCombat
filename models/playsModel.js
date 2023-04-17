@@ -288,7 +288,7 @@ class Play {
     static async move(game, x, y, map, catID, teamID) {
        try {
             let [selectedCats] = await pool.query(
-                `Select gtc_x, gtc_y, gtc_stamina
+                `Select *
                 from game_team_cat
                 where gtc_id = ?`,
                 [catID]
@@ -302,10 +302,13 @@ class Play {
             // Get the cat that was returned
             let selectedCat = selectedCats[0];
 
-            // Is the target tile not next to the cat?
-            if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
-                return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
+            // Dead cats can't be moved
+            if (selectedCat.gtc_state_id === 3) {
+                return { status: 400, result: {msg:"You cannot move the character since it is dead"} };
             }
+
+
+
 
             // Ask for the tile data at the coordinates
             let [tiles] = await pool.query(
@@ -323,11 +326,31 @@ class Play {
             // Store the data
             let tile = tiles[0]
 
+            if (selectedCat.gtc_game_board_id === 1) {
+                if (tile.tile_type_id != 3) {
+                    return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid position"} };
+                }
+
+                await pool.query(
+                    `Update game_team_cat set gtc_game_board_id = 2 where gtc_id = ?`,
+                    [catID]
+                );
+            }
+            else {
+                if (selectedCat.gtc_game_board_id !== 2) {
+                    return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
+                }
+                // Is the target tile not next to the cat?
+                if (!this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
+                    return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
+                }
+            }
+
             // Is the tile a wall?
             if (tile.tile_type_id === 2) { // 2 = wall
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
             }
-    
+
             // Is there a cat already at the target tile?
             let [cats] = await pool.query(
                 `Select gtc_x, gtc_y
@@ -362,14 +385,20 @@ class Play {
             return { status: 500, result: err };
         }
     }
-    //coment
 
     static isNeighbor(originX, originY, targetX, targetY) {
+
+        // if (game.ugst_state === "Placement") {
+        //     if (tile.tile_type_id !== 3) {
+        //         return { status: 400, result: {msg: "You cannot move characters outside the placement tiles while on the placement fase"}}
+        //     }
+        // }
+
 
         if (originX == targetX && originY == targetY + 1) { // middle up tile
             return true;
         }
-    
+
         if (originX == targetX && originY == targetY - 1) { // middle down tile
             return true;
         }
@@ -403,7 +432,7 @@ class Play {
                 return true;
             }
         }
-    
+
         return false;
     }
 
