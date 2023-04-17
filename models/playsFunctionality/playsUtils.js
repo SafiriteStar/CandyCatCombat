@@ -132,7 +132,6 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
         // And if we are at or above our minimum range, add them to the highlighted tiles as well
         if (minRange - 2 < i) {
             neighbors[i] = newNeighbors;
-            neighbors = neighbors.concat(newNeighbors);
         }
     }
 
@@ -151,7 +150,7 @@ Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles) {
             if (layer.includes(Play.getTile(cat.x, cat.y, cat.boardID - 1))) {
                 // Yes
                 // Add the cat and layer into the list
-                neighborCats.push([catIndex, layerIndex]);
+                neighborCats.push({index:catIndex, distance:layerIndex});
             }
         });
     });

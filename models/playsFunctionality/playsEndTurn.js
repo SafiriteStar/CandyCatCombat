@@ -1,31 +1,71 @@
 const pool = require("../../config/database");
 const Play = require("../playsFunctionality/playsInit");
 
+Play.getRandomAttackTarget = function(targetTeams) {
+    // Array of arrays that holds: teamIndex and CatIndex
+    let closestCats = [];
+    let shortestDistance = Infinity;
+    
+    let targetCat; // Return cat
+    
+    // For each team
+    targetTeams.forEach(team => {
+        // Go through all available cats
+        team.catIndexes.forEach(cat => {
+            // Is this cat closer or equal distance than our current one?
+            if (cat.distance <= shortestDistance) {
+                // Is it shorter
+                if (cat.distance < shortestDistance) {
+                    console.log("New shortest distance");
+                    // Set a new shortest distance
+                    shortestDistance = cat.distance;
+                    // Override the current array
+                    closestCats = [];
+                    console.log("Closest cat array: ");
+                    console.log(closestCats);
+                }
+                // Add a new cat in
+                closestCats.push({teamIndex: team.teamIndex, catIndex:cat.index, distance:cat.distance});
+            }
+        });
+    });
+
+    // If we have more than one cat
+    if (closestCats.length > 1) {
+        // Randomly choose one
+        targetCat = closestCats[Math.floor(Math.random() * closestCats.length)];
+    }
+    else {
+        // We only have one cat so save that
+        targetCat = closestCats[0];
+    }
+
+    return targetCat;
+}
+
 // Assumes we have at least 1 team to attack
 // With at least 1 cat in each team
 Play.attackTargets = async function(attackCatData, opponents, targetTeams) {
-    // TODO: Instead of attacking a random cat in range, attack the closest cat to us
-    console.log(targetTeams);
-/*     // Get a random team
-    let targetTeam = Math.floor(Math.random() * targetTeams.length);
-
-    // Get a random cat in that team
-    let targetCat = targetTeams[targetTeam].catIndexes[Math.floor(Math.random() * targetTeams[targetTeam].catIndexes.length)];
-
-    let targetCatData = opponents[targetTeams[targetTeam].teamIndex].team.cats[targetCat]
-
+    let targetCat = Play.getRandomAttackTarget(targetTeams);
+    let targetCatData = opponents[targetCat.teamIndex].team.cats[targetCat.catIndex]
+    
     let damageDealt = targetCatData.defense - attackCatData.damage;
+    console.log("TargetCat Distance: " + targetCat.distance);
     console.log("Attacking Cat: " + attackCatData.name + " GTC ID: " + attackCatData.id);
     console.log("Attack: " + attackCatData.damage);
     console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
     console.log("Defense: " + targetCatData.defense);
     console.log("Damage Dealt: " + damageDealt);
     console.log("Updating database...");
+
+    // APPLY DAMAGE
+
     await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
         [damageDealt, targetCatData.id]);
 
+    
     // In case we need it, give back who we hit and for how much
-    return targetCatData.id, damageDealt; */
+    return targetCatData.id, damageDealt;
 }
 
 Play.generateAttackList = async function(playerCat, opponentsTeams) {
@@ -74,6 +114,7 @@ Play.resolveAttacks = async function(game) {
     player.team.cats.forEach(playerCat => {
         // If we aren't in the placement map
         if (playerCat.boardID !== 1) {
+            // Try to find targets
             Play.generateAttackList(playerCat, opponentsTeams);
         }
     });
