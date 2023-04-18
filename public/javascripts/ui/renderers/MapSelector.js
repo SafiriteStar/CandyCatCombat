@@ -18,13 +18,23 @@ class MapSelector {
     
         // Cat Info Box
         this.catInfoBox = new CatInfoBox();
+
+        // Range indicator
+        this.rangeIndicator = new RangeHighlighter(true, [230, 30, 30]);
+        this.moveIndicator = new RangeHighlighter(false, [164, 149, 255]);
     }
-    
-    drawMapTile() {
+
+    drawIndicators() {
+        this.rangeIndicator.draw();
+        this.moveIndicator.draw();
+    }
+
+    draw() {
         push();
-        stroke(255, 255, 0, 150);
-        Tile.drawSimpleTile(this.posX, this.posY);
+            stroke(255, 255, 0, 150);
+            Tile.drawSimpleTile(this.posX, this.posY);
         pop();
+        this.drawIndicators();
     }
 
     drawInfoBoxes() {
@@ -55,6 +65,12 @@ class MapSelector {
         }
         return [team, cat]
     }
+
+    updateRangeIndicators(selectedCatData) {
+        this.rangeIndicator.newSource(selectedCatData, selectedCatData.min_range, selectedCatData.max_range);
+        // CHANGE TO SPEED AFTER
+        this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.speed);
+    }
     
     update(posX, posY, coordX, coordY, map) {
         this.posX = posX;
@@ -76,7 +92,9 @@ class MapSelector {
                 // Set the current cat to the new one
                 this.team = newTeam;
                 this.cat = newCat;
+                // Update our indicators
                 this.catInfoBox.update(this.cat, this.team);
+                this.updateRangeIndicators(GameInfo.world.teams[this.team].cats[this.cat]);
             }
             else {
                 // There was no cat in that tile
@@ -85,6 +103,12 @@ class MapSelector {
                     // We do
                     // Lets try to move to the tile we just clicked
                     moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
+                }
+                // Do we have *a* cat?
+                else if (this.team) {
+                    // We do, lets set it to null
+                    this.cat = null;
+                    this.team = null;
                 }
             }
         }

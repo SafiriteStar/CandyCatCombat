@@ -12,7 +12,7 @@ class World {
         [0, 0]
     ]
 
-    constructor(boards, playerTeam, opponentTeam) {
+    constructor(maps, player, opponents) {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
@@ -20,6 +20,8 @@ class World {
         this.cameraY = 0;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
+
+        this.canDrag = true;
 
         // Mouse World Position
         this.mouseScreenX = 0;
@@ -41,15 +43,17 @@ class World {
         
         // -- Player --
         // Create team for the player
-        this.teams[0] = new Team(playerTeam.team.id, GameInfo.game.player.name, playerTeam.team.cats, World.teamColors[0]);
+        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, World.teamColors[0]);
+        this.teams[0].state = player.state.name;
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();
         
         // -- Opponents --
         // Create teams for the opponent
-        for (let i = 0; i < opponentTeam.length; i++) {
-            this.teams[i + 1] = new Team(opponentTeam[i].team.id, GameInfo.game.opponents[i].name, opponentTeam[i].team.cats, World.teamColors[1]);
+        for (let i = 0; i < opponents.length; i++) {
+            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, World.teamColors[1]);
+            this.teams[i].state = player.state.name;
         }
 
         // -- Maps --
@@ -57,11 +61,11 @@ class World {
         // Create maps
         this.maps = [];
         // Note: First map is always placement map
-        for (let i = 0; i < boards.length; i++) {
+        for (let i = 0; i < maps.length; i++) {
             this.maps[i] = new Map (
-                boards[i].width,
-                boards[i].height,
-                boards[i].tiles,
+                maps[i].width,
+                maps[i].height,
+                maps[i].tiles,
                 World.mapDrawOffsets[i][0],
                 World.mapDrawOffsets[i][1]
             );
@@ -75,7 +79,7 @@ class World {
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
         
         // Calculate the camera translation if we are dragging with the cursor
-        if (mouseIsPressed === true) { // Do this to avoid JS shenanigans
+        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag) { // Do this to avoid JS shenanigans
             // TODO: Potentially add arrow key support?
             this.mouseXDragDelta = this.cameraMouseStartX - mouseX;
             this.mouseYDragDelta = this.cameraMouseStartY - mouseY;
@@ -132,12 +136,16 @@ class World {
 
             // Draw Map Tile Select Indicator
             if (this.mapSelector.map !== null) {
-                this.mapSelector.drawMapTile();
+                this.mapSelector.draw();
             }
         pop();
 
         // Draw the Select Info Boxes
         this.mapSelector.drawInfoBoxes();
+    }
+
+    getTileInMap(x, y, map) {
+        return this.maps[map].getTile(x, y);
     }
 
     update(boards, playerTeam, opponentTeams) {
@@ -151,13 +159,23 @@ class World {
 
         // Update the opponent teams
         for (let i = 0; i < opponentTeams.length; i++) {
-            this.teams[i + 1].update(opponentTeams[i].team.cats);
+            if (this.teams[i + 1] !== undefined) {
+                this.teams[i + 1].update(opponentTeams[i].team.cats);
+            }
+            else {
+                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, World.teamColors[1]);
+            }
+        }
+
+        if (this.mapSelector.rangeIndicator.sourceCat !== null && this.teams[this.mapSelector.team] !== undefined) {
+            this.mapSelector.updateRangeIndicators(this.teams[this.mapSelector.team].cats[this.mapSelector.cat]);
         }
     }
 
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;
+        this.canDrag = true;
     }
 
     mouseReleased() {
@@ -166,7 +184,9 @@ class World {
         if (!this.mouseCameraDrag) {
             // We were hovering over a valid tile
             // and not the same tile we were before
-            if (this.hoverTile.map !== null && (this.hoverTile.coordX != this.mapSelector.coordX || this.hoverTile.coordY != this.mapSelector.coordY || this.hoverTile.map != this.mapSelector.map)) {
+            if (this.hoverTile.map !== null
+                && (this.hoverTile.coordX != this.mapSelector.coordX || this.hoverTile.coordY != this.mapSelector.coordY || this.hoverTile.map != this.mapSelector.map)
+                && mouseButton === LEFT) {
                 this.mapSelector.update(
                     this.hoverTile.posX,
                     this.hoverTile.posY,
@@ -184,6 +204,7 @@ class World {
         // If we release the mouse we definitely aren't moving the camera anymore
         this.mouseCameraDrag = false;
         this.mouseDragDelta = 0;
+        this.canDrag = true;
     }
 
     mouseClicked() {
