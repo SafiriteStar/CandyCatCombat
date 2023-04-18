@@ -2,10 +2,11 @@ const pool = require("../../../config/database");
 const Play = require("../playsInit");
 
 class CatStandardAttack {
-    constructor(playerCat, targetSearchTeams) {
+    constructor(playerCat, targetSearchTeams, playerSearchTeams) {
         this.playerCat = playerCat;
         this.targetSearchTeams = targetSearchTeams;
         this.validTargetTeams = [];
+        this.playerSearchTeams;
     }
 
     generateAttackTargetList() {
