@@ -25,12 +25,12 @@ Play.resolveAttacks = async function(game) {
     });
 }
 
-// auxiliary function to check if the game ended 
+// auxiliary function to check if the game ended
 async function checkEndGame(game) {
     return game.turn >= Play.maxNumberTurns;
 }
 
-// This considers that only one player plays at each moment, 
+// This considers that only one player plays at each moment,
 // so ending my turn starts the other players turn
 // We consider the following verifications were already made:
 // - The user is authenticated
