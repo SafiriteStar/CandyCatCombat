@@ -22,6 +22,10 @@ class Map {
         return this.tiles[x][y];
     }
 
+    getTileNeighbors(x, y) {
+        return this.tiles[x][y].connections;
+    }
+
     // Checks if X, Y tile exists within the map
     checkTileExists(x, y) {
         if (this.tiles[x] !== null && this.tiles[x] !== undefined) {
