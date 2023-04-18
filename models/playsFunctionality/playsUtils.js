@@ -92,7 +92,7 @@ Play.changePlayerStateByOrder = async function(order, playerID) {
 }
 
 // Returns a list of neighboring tiles
-Play.getNeighborTiles = function(tilesToCheck, ignoreWalls) {
+Play.getNeighborTiles = function(tilesToCheck, ignoreWalls) { //CALL THIS FUNCTION ON MOVE
     let newNeighbors = [];
 
     // For each tile
