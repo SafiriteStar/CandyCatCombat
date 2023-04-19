@@ -1,12 +1,10 @@
 const pool = require("../../../config/database");
 const Play = require("../playsInit");
+const CatStandardAttack = require("./standardAttack");
 
-class CatStandardAttack {
+class ChocoDairyMilkHeal extends CatStandardAttack {
     constructor(playerCat, targetSearchTeams, playerSearchTeams) {
-        this.playerCat = playerCat;
-        this.playerSearchTeams = targetSearchTeams;
-        this.validTargetTeams = [];
-        this.playerSearchTeams;
+        super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
     generateAttackTargetList() {
@@ -32,19 +30,18 @@ class CatStandardAttack {
     }
 
     async attack(targetCatData) {
-        let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
+        let healingDealt = -this.playerCat.damage;
+        console.log("Healing Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
+        console.log("Healing Power: " + this.playerCat.damage);
         console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
+        console.log("Healing Done: " + healingDealt);
         console.log("Updating database...");
 
         // APPLY DAMAGE
-        await Play.applyDamage(damageDealt, targetCatData.id);
+        await Play.applyDamage(healingDealt, targetCatData.id);
 
         // In case we need it, give back who we hit and for how much
-        return [targetCatData.id, damageDealt];
+        return [targetCatData.id, healingDealt];
     }
 
     getRandomAttackTarget() {
@@ -99,19 +96,6 @@ class CatStandardAttack {
         // In case we need it, give back who we hit and for how much
         return targetHit, damageDealt;
     }
-
-    async executeAttackSequence() {
-        // Get the cats we can attack
-        this.generateAttackTargetList();
-        // Attack a random target
-        await this.attackRandomTarget();
-    }
-
-    setNewSearchTeam(targetSearchTeams) {
-        this.playerSearchTeams = targetSearchTeams;
-        this.validTargetTeams = [];
-    }
-
 }
 
-module.exports = CatStandardAttack;
+module.exports = ChocoDairyMilkHeal;
