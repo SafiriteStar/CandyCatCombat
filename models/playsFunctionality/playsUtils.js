@@ -13,6 +13,44 @@ Play.getTile = function(x, y, map) {
     return Play.worldData.maps[map].tiles[x][y];
 }
 
+Play.addCondition = async function(catID, conditionID, duration) {
+    await pool.query(
+        `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id, gcc_duration) values (?, ?, ?)`,
+            [catID, conditionID, duration]);
+}
+
+Play.removeCondition = async function(catConditionID) {
+    await pool.query(`
+        Delete from game_team_cat_condition where gcc_id = ?`,
+            [catConditionID]);
+}
+
+Play.setConditionDuration = async function(catConditionID, duration) {
+    await pool.query(
+        `Update game_team_cat_condition set gcc_duration = ? where gcc_id = ?`,
+            [duration, catConditionID]);
+}
+
+Play.tickDownConditionDuration = async function(catConditionID, subtraction) {
+    // Get the condition we are trying to update
+    let conditionDB = await pool.query(`Select gcc_duration as "duration" from game_team_cat_condition where gcc_id = ?`, [catConditionID]);
+    
+    // Is the condition about to expire or expired already?
+    if (conditionDB <= 0) {
+        // Yes
+        // Remove it
+        await Play.removeCondition(catConditionID);
+    }
+    else {
+        // No
+        // Update its duration
+        await pool.query(
+            `Update game_team_cat_condition set gcc_duration = gcc_duration - ? where gcc_id = ?`,
+                [subtraction, catConditionID]);
+    }
+
+}
+
 // Returns a game cat team of the given player (if any)
 // Cat stats are:
 // id
@@ -50,6 +88,17 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     player.team.cats = [];
 
     [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
+
+    // Ask for the conditions for that cat (even if empty)
+    // For each cat
+    for (let i = 0; i < player.team.cats.length; i++) {
+        player.team.cats[i].conditions = [];
+        [player.team.cats[i].conditions] = await pool.query(
+            `select ccn_name as "name", gcc_duration as "duration", gcc_id as "id"
+            from game_team_cat, game_team_cat_condition, cat_condition
+            where gcc_ccn_id = ccn_id and gcc_gtc_id = ?`,
+                [player.team.cats[i].id]);
+    }
 
     return player
 }

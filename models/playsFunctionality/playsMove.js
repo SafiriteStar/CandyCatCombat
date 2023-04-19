@@ -51,13 +51,14 @@
                 [x, y, map]
             );
 
+            // Store the data
+            let tile = tiles[0]
+
             // Does the tile exist?
             if (tile === 0) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
             }
 
-            // Store the data
-            let tile = tiles[0]
 
             if (selectedCat.gtc_game_board_id === 1) {
                 if (tile.tile_type_id != 3) {
