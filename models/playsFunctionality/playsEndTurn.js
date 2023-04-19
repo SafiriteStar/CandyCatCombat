@@ -4,13 +4,14 @@ require("./playsAttacks");
 const CatStandardAttack = require("./playsCatAttacks/standardAttack");
 const GumCatAttack = require("./playsCatAttacks/gumCatAttack");
 const CaramelCatAttack = require("./playsCatAttacks/caramelCatAttack");
+const PopCatAttack = require("./playsCatAttacks/popCatAttack");
 
 let attackTypes = [
     CatStandardAttack, // Vanilla Cat
     CatStandardAttack, // Candy Corn Cat
     CatStandardAttack, // Mawbreaker Cat
     GumCatAttack, // Gum Cat
-    null, // Pop Cat
+    PopCatAttack, // Pop Cat
     CaramelCatAttack, // Caramel Cat
     CatStandardAttack // Choco Diary Milk Cat
 ]
