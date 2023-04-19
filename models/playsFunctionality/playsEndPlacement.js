@@ -7,7 +7,7 @@ Play.endPlacement = async function(game) {
             `Select tile_x, tile_y
             from game_team, game_team_cat, tile
             where gt_game_id = ? and gt_user_id = ? and gtc_game_team_id = gt_id and tile_x = gtc_x and tile_y = gtc_y and tile_board_id = 1`,
-            [user, game]
+            [game.player.id, game.id]
         );
 
         // Check if there are cats to be placed
