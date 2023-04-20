@@ -2,15 +2,19 @@ const pool = require("../../config/database");
 const Play = require("./playsInit");
 require("./playsAttacks");
 const CatStandardAttack = require("./playsCatAttacks/standardAttack");
+const ChocoDairyMilkHeal = require("./playsCatAttacks/chocoDairyMilkHeal");
+const GumCatAttack = require("./playsCatAttacks/gumCatAttack");
+const CaramelCatAttack = require("./playsCatAttacks/caramelCatAttack");
+const PopCatAttack = require("./playsCatAttacks/popCatAttack");
 
 let attackTypes = [
     CatStandardAttack, // Vanilla Cat
     CatStandardAttack, // Candy Corn Cat
     CatStandardAttack, // Mawbreaker Cat
-    null, // Gum Cat
-    null, // Pop Cat
-    null, // Caramel Cat
-    CatStandardAttack // Choco Diary Milk Cat
+    GumCatAttack, // Gum Cat
+    PopCatAttack, // Pop Cat
+    CaramelCatAttack, // Caramel Cat
+    ChocoDairyMilkHeal // Choco Diary Milk Cat
 ]
 
 Play.resolveAttacks = async function(game) {
@@ -27,7 +31,7 @@ Play.resolveAttacks = async function(game) {
         // If we aren't in the placement map
         if (playerCat.boardID !== 1) {
 
-            let attackCat = new attackTypes[playerCat.type](playerCat, opponentsTeams, player);
+            let attackCat = new attackTypes[playerCat.type](playerCat, opponentsTeams, [player]);
 
             await attackCat.executeAttackSequence();
         }

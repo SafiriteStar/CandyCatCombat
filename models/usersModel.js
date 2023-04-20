@@ -41,7 +41,7 @@ class User {
             // Get the user ID of the newly made user
             let [[userData]] = await pool.query('Select * from user where usr_name=?', [user.name]);
             // Make a new default team for that user
-            let [newDefaultTeam] = await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
+            await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
             // Get the team ID of the newly made team
             let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
             // Add characters to new default team
