@@ -1,12 +1,10 @@
 const pool = require("../../../config/database");
 const Play = require("../playsInit");
+const CatStandardAttack = require("./standardAttack");
 
-class CatStandardAttack {
+class ChocoDairyMilkHeal extends CatStandardAttack {
     constructor(playerCat, targetSearchTeams, playerSearchTeams) {
-        this.playerCat = playerCat;
-        this.playerSearchTeams = targetSearchTeams;
-        this.validTargetTeams = [];
-        this.playerSearchTeams;
+        super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
     generateAttackTargetList() {
@@ -32,19 +30,18 @@ class CatStandardAttack {
     }
 
     async attack(targetCatData) {
-        let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
+        let healingDealt = -this.playerCat.damage;
+        console.log("Healing Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
+        console.log("Healing Power: " + this.playerCat.damage);
         console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
+        console.log("Healing Done: " + healingDealt);
         console.log("Updating database...");
 
         // APPLY DAMAGE
-        await Play.applyDamage(damageDealt, targetCatData.id);
+        await Play.applyDamage(healingDealt, targetCatData.id);
 
         // In case we need it, give back who we hit and for how much
-        return [targetCatData.id, damageDealt];
+        return [targetCatData.id, healingDealt];
     }
 
     getRandomAttackTarget() {
@@ -62,10 +59,13 @@ class CatStandardAttack {
                 if (cat.distance <= shortestDistance) {
                     // Is it shorter
                     if (cat.distance < shortestDistance) {
+                        console.log("New shortest distance");
                         // Set a new shortest distance
                         shortestDistance = cat.distance;
                         // Override the current array
                         closestCats = [];
+                        console.log("Closest cat array: ");
+                        console.log(closestCats);
                     }
                     // Add a new cat in
                     closestCats.push({teamIndex: team.teamIndex, catIndex:cat.index, distance:cat.distance});
@@ -88,33 +88,14 @@ class CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        console.log("Target Cat Data:");
-        console.log(targetCat);
-        console.log("playerSearchTeams: ");
-        console.log(this.playerSearchTeams);
-        
+        let targetCatData = this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]
+
         // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
-        let targetHit, damageDealt;
-        if (targetCat !== null && targetCat !== undefined) {
-            [targetHit, damageDealt] = await this.attack(this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
-        }
+        let [targetHit, damageDealt] = await this.attack(targetCatData);
 
         // In case we need it, give back who we hit and for how much
         return targetHit, damageDealt;
     }
-
-    async executeAttackSequence() {
-        // Get the cats we can attack
-        this.generateAttackTargetList();
-        // Attack a random target
-        await this.attackRandomTarget();
-    }
-
-    setNewSearchTeam(targetSearchTeams) {
-        this.playerSearchTeams = targetSearchTeams;
-        this.validTargetTeams = [];
-    }
-
 }
 
-module.exports = CatStandardAttack;
+module.exports = ChocoDairyMilkHeal;
