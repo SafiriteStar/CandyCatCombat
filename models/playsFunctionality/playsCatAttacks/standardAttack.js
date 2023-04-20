@@ -88,10 +88,6 @@ class CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        console.log("Target Cat Data:");
-        console.log(targetCat);
-        console.log("playerSearchTeams: ");
-        console.log(this.playerSearchTeams);
         
         // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
         let targetHit, damageDealt;

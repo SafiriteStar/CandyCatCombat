@@ -66,16 +66,19 @@ class PopCatAttack extends CatStandardAttack {
         let targetCat = this.getRandomAttackTarget();
         let targetCatData = this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex];
 
-        // Before we attack, get our AOE targets
-        this.generateAOETargets(targetCatData);
-        let targetAOECatData = [];
-
-        this.validAOETargetTeams.forEach(aoeTarget => {
-            targetAOECatData.push(this.targetSearchTeams[aoeTarget.teamIndex].team.cats[aoeTarget.catIndex]);
-        });
-
-        // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
-        let [targetHit, damageDealt] = await this.attack(targetCatData, targetAOECatData);
+        let targetHit, damageDealt;
+        if (targetCatData !== null && targetCatData !== undefined) {
+            // Before we attack, get our AOE targets
+            this.generateAOETargets(targetCatData);
+            let targetAOECatData = [];
+    
+            this.validAOETargetTeams.forEach(aoeTarget => {
+                targetAOECatData.push(this.targetSearchTeams[aoeTarget.teamIndex].team.cats[aoeTarget.catIndex]);
+            });
+    
+            // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
+            [targetHit, damageDealt] = await this.attack(targetCatData, targetAOECatData);
+        }
 
         // In case we need it, give back who we hit and for how much
         return targetHit, damageDealt;
