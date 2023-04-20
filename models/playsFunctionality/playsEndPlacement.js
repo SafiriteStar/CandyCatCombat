@@ -7,7 +7,7 @@ Play.endPlacement = async function(game) {
             `Select tile_x, tile_y
             from game_team, game_team_cat, tile
             where gt_game_id = ? and gt_user_id = ? and gtc_game_team_id = gt_id and tile_x = gtc_x and tile_y = gtc_y and tile_board_id = 1`,
-            [user, game]
+            [game.id, game.player.id]
         );
 
         // Check if there are cats to be placed
@@ -17,20 +17,20 @@ Play.endPlacement = async function(game) {
 
         // Change the player to be ready
         await Play.changePlayerState(2, game.player.id);
-        
+
         // Check if all players are ready
         if (await Play.checkPlayersReady(game.id)) {
-            
+
             // Set the player's order
             await Play.changePlayerStateByOrder(game.player.order, game.player.id);
-            
+
             // For each opponent
             for (let i = 0; i < game.opponents.length; i++) {
                 // Set their order
                 await Play.changePlayerStateByOrder(game.opponents[i].order, game.opponents[i].id);
             }
         }
-        
+
         return { status: 200, result: { msg: "You readied up." } };
     } catch (err) {
         console.log(err);
