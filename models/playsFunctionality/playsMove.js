@@ -77,6 +77,7 @@ Play.move = async function(game, x, y, map, catID, teamID) {
             where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ?`,
             [x, y, map, teamID]
         );
+
         if (cats.length > 1) {
             return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
         }
@@ -99,7 +100,7 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         else {
             // Check if player is in placement
             if (userGame.ug_state_id === 1) { // 1 = Placement
-                
+
                 if (tile.tile_type_id !== 3) { // 3 = Placement tile
                     return { status: 400, result: {msg:"You cannot end placement since placement has ended"} };
                 }
