@@ -10,7 +10,7 @@ class CaramelCatAttack extends CatStandardAttack {
 
     async attack() {
         // Execute the normal attack
-        super().attack();
+        super.attack();
         // Is the target already rooted?
         let isRooted = false;
         let rootedIndex = null;

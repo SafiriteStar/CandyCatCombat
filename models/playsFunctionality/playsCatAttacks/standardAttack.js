@@ -62,13 +62,10 @@ class CatStandardAttack {
                 if (cat.distance <= shortestDistance) {
                     // Is it shorter
                     if (cat.distance < shortestDistance) {
-                        console.log("New shortest distance");
                         // Set a new shortest distance
                         shortestDistance = cat.distance;
                         // Override the current array
                         closestCats = [];
-                        console.log("Closest cat array: ");
-                        console.log(closestCats);
                     }
                     // Add a new cat in
                     closestCats.push({teamIndex: team.teamIndex, catIndex:cat.index, distance:cat.distance});
@@ -91,10 +88,16 @@ class CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        let targetCatData = this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]
-
+        console.log("Target Cat Data:");
+        console.log(targetCat);
+        console.log("playerSearchTeams: ");
+        console.log(this.playerSearchTeams);
+        
         // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
-        let [targetHit, damageDealt] = await this.attack(targetCatData);
+        let targetHit, damageDealt;
+        if (targetCat !== null && targetCat !== undefined) {
+            [targetHit, damageDealt] = await this.attack(this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
+        }
 
         // In case we need it, give back who we hit and for how much
         return targetHit, damageDealt;
