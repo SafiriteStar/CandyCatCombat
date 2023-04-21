@@ -2,14 +2,15 @@ const pool = require("../../config/database");
 const Play = require("./playsInit");
 require("./playsAttacks");
 const CatStandardAttack = require("./playsCatAttacks/standardAttack");
+
 const ChocoDairyMilkHeal = require("./playsCatAttacks/chocoDairyMilkHeal");
 const GumCatAttack = require("./playsCatAttacks/gumCatAttack");
 const CaramelCatAttack = require("./playsCatAttacks/caramelCatAttack");
 const PopCatAttack = require("./playsCatAttacks/popCatAttack");
-
+const CandyCornCatAttack = require("./playsCatAttacks/candyCornCatAttack");
 let attackTypes = [
     CatStandardAttack, // Vanilla Cat
-    CatStandardAttack, // Candy Corn Cat
+    CandyCornCatAttack, // Candy Corn Cat
     CatStandardAttack, // Mawbreaker Cat
     GumCatAttack, // Gum Cat
     PopCatAttack, // Pop Cat
