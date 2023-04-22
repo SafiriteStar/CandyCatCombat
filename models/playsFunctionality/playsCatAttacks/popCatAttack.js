@@ -35,28 +35,35 @@ class PopCatAttack extends CatStandardAttack {
     }
 
     async attack(targetCatData, targetAOECatData) {
-        let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
+        // Need to to this here because javascript is weird...
+        let playerCatData = this.playerCat;
+        
+        let damageDealt = targetCatData.defense - playerCatData.damage;
+        console.log("Attacking Cat: " + playerCatData.name + " GTC ID: " + playerCatData.id);
+        console.log("Attack: " + playerCatData.damage);
         // The main cat
         console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
         console.log("Defense: " + targetCatData.defense);
         console.log("Damage Dealt: " + damageDealt);
         console.log("Updating database...");
+        await Play.applyDamage(damageDealt, targetCatData.id);
+        
         // Cats around the main cat
-        targetAOECatData.forEach(aoeTarget => {
-            let aoeDamageDealt = aoeTarget.defense - this.playerCat.damage;
+        targetAOECatData.forEach(async function(aoeTarget) {
+            console.log("AOE TARGET: ");
+            console.log(aoeTarget);
+            let aoeDamageDealt = aoeTarget.defense - playerCatData.damage;
             // Tally up the damage as well
             damageDealt = damageDealt + aoeDamageDealt;
-
+            
             console.log("Defending Cat: " + aoeTarget.name + " GTC ID: " + aoeTarget.id);
             console.log("Defense: " + aoeTarget.defense);
             console.log("Damage Dealt: " + aoeDamageDealt);
             console.log("Updating database...");
+            await Play.applyDamage(aoeDamageDealt, aoeTarget.id);
         });
 
         // APPLY DAMAGE
-        await Play.applyDamage(damageDealt, targetCatData.id);
 
         // In case we need it, give back who we hit and for how much
         return [targetCatData.id, damageDealt];
@@ -67,17 +74,18 @@ class PopCatAttack extends CatStandardAttack {
         
         let targetHit, damageDealt;
         if (targetCat !== null && targetCat !== undefined) {
-            let targetCatData = this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex];
             // Before we attack, get our AOE targets
-            this.generateAOETargets(targetCatData);
+            this.generateAOETargets(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
             let targetAOECatData = [];
     
-            this.validAOETargetTeams.forEach(aoeTarget => {
-                targetAOECatData.push(this.targetSearchTeams[aoeTarget.teamIndex].team.cats[aoeTarget.catIndex]);
+            this.validAOETargetTeams.forEach(team => {
+                team.catIndexes.forEach(aoeTarget => {
+                    targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                });
             });
-    
+            console.log(targetAOECatData);
             // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
-            [targetHit, damageDealt] = await this.attack(targetCatData, targetAOECatData);
+            [targetHit, damageDealt] = await this.attack(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex], targetAOECatData);
         }
 
         // In case we need it, give back who we hit and for how much

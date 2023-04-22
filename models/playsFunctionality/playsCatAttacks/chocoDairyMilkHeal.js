@@ -5,21 +5,22 @@ const CatStandardAttack = require("./standardAttack");
 class ChocoDairyMilkHeal extends CatStandardAttack {
     constructor(playerCat, targetSearchTeams, playerSearchTeams) {
         super(playerCat, targetSearchTeams, playerSearchTeams);
+        this.targetSearchTeams = this.targetSearchTeams.concat(playerSearchTeams);
     }
 
     generateAttackTargetList() {
         let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
             
         // For every team
-        for (let team = 0; team < this.playerSearchTeams.length; team++) {
+        for (let team = 0; team < this.targetSearchTeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.getCatNeighbors(this.playerSearchTeams[team].team.cats, attackRangeTiles);
+            let targetCatIndexes = Play.getCatNeighbors(this.targetSearchTeams[team].team.cats, attackRangeTiles);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team
                 this.validTargetTeams.push({
                     // Save the database game team cat id
-                    teamID:this.playerSearchTeams[team].team.id,
+                    teamID:this.targetSearchTeams[team].team.id,
                     // Save which team index we are looking at
                     teamIndex:team,
                     // Save all the indexes of the cats we can hit in that team
@@ -30,7 +31,7 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
     }
 
     async attack(targetCatData) {
-        let healingDealt = -this.playerCat.damage;
+        let healingDealt = this.playerCat.damage;
         console.log("Healing Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
         console.log("Healing Power: " + this.playerCat.damage);
         console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
@@ -59,13 +60,10 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
                 if (cat.distance <= shortestDistance) {
                     // Is it shorter
                     if (cat.distance < shortestDistance) {
-                        console.log("New shortest distance");
                         // Set a new shortest distance
                         shortestDistance = cat.distance;
                         // Override the current array
                         closestCats = [];
-                        console.log("Closest cat array: ");
-                        console.log(closestCats);
                     }
                     // Add a new cat in
                     closestCats.push({teamIndex: team.teamIndex, catIndex:cat.index, distance:cat.distance});
