@@ -11,7 +11,10 @@ class CatStandardAttack {
 
     generateAttackTargetList() {
         let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
-            
+        
+        // Reset our list
+        this.validTargetTeams = [];
+
         // For every team
         for (let team = 0; team < this.playerSearchTeams.length; team++) {
             // Get all valid neighbors
@@ -88,7 +91,6 @@ class CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        
         // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
         let targetHit, damageDealt;
         if (targetCat !== null && targetCat !== undefined) {

@@ -85,20 +85,6 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
 
         return targetCat;
     }
-
-    async attackRandomTarget() {
-        let targetCat = this.getRandomAttackTarget();
-        let targetCatData = this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]
-
-        let targetHit, damageDealt;
-        if (targetCatData !== null && targetCatData !== undefined) {
-            // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
-            [targetHit, damageDealt] = await this.attack(targetCatData);
-        }
-
-        // In case we need it, give back who we hit and for how much
-        return targetHit, damageDealt;
-    }
 }
 
 module.exports = ChocoDairyMilkHeal;

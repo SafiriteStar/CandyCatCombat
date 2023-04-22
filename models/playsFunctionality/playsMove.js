@@ -74,7 +74,7 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         let [cats] = await pool.query(
             `Select gtc_x, gtc_y
             from game, game_team, game_team_cat
-            where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ?`,
+            where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ? and gtc_game_team_id = gt_id`,
             [x, y, map, teamID]
         );
 

@@ -32,7 +32,7 @@ Play.resolveAttacks = async function(game) {
         // If we aren't in the placement map
         if (playerCat.boardID !== 1) {
 
-            let attackCat = new attackTypes[playerCat.type](playerCat, opponentsTeams, [player]);
+            let attackCat = new attackTypes[playerCat.type - 1](playerCat, opponentsTeams, [player]);
 
             await attackCat.executeAttackSequence();
         }

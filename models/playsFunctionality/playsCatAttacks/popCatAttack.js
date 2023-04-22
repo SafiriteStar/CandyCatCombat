@@ -64,10 +64,10 @@ class PopCatAttack extends CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        let targetCatData = this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex];
-
+        
         let targetHit, damageDealt;
-        if (targetCatData !== null && targetCatData !== undefined) {
+        if (targetCat !== null && targetCat !== undefined) {
+            let targetCatData = this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex];
             // Before we attack, get our AOE targets
             this.generateAOETargets(targetCatData);
             let targetAOECatData = [];
