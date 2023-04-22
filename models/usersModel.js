@@ -46,10 +46,8 @@ class User {
             let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
             // Add characters to new default team
             let fillCharacterData = [];
-            let defaultCharacterType = 1;
             for (let i = 0; i < 6; i++) {
-                if (i == 3) {defaultCharacterType = 2}
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [defaultCharacterType, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [i + 1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
