@@ -69,7 +69,7 @@ class MapSelector {
     updateRangeIndicators(selectedCatData) {
         this.rangeIndicator.newSource(selectedCatData, selectedCatData.min_range, selectedCatData.max_range);
         // CHANGE TO SPEED AFTER
-        this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.speed);
+        this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.stamina);
     }
     
     update(posX, posY, coordX, coordY, map) {

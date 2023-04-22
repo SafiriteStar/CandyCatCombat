@@ -17,7 +17,10 @@ class CandyCornCatAttack extends CatStandardAttack {
             await this.attackRandomTarget();
         }
         else {
+            // Attack once
             await this.attackRandomTarget();
         }
     }
 }
+
+module.exports = CandyCornCatAttack;

@@ -4,24 +4,27 @@ const Play = require("../playsInit");
 class CatStandardAttack {
     constructor(playerCat, targetSearchTeams, playerSearchTeams) {
         this.playerCat = playerCat;
-        this.playerSearchTeams = targetSearchTeams;
+        this.targetSearchTeams = targetSearchTeams;
         this.validTargetTeams = [];
         this.playerSearchTeams;
     }
 
     generateAttackTargetList() {
         let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
-            
+        
+        // Reset our list
+        this.validTargetTeams = [];
+
         // For every team
-        for (let team = 0; team < this.playerSearchTeams.length; team++) {
+        for (let team = 0; team < this.targetSearchTeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.getCatNeighbors(this.playerSearchTeams[team].team.cats, attackRangeTiles);
+            let targetCatIndexes = Play.getCatNeighbors(this.targetSearchTeams[team].team.cats, attackRangeTiles);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team
                 this.validTargetTeams.push({
                     // Save the database game team cat id
-                    teamID:this.playerSearchTeams[team].team.id,
+                    teamID:this.targetSearchTeams[team].team.id,
                     // Save which team index we are looking at
                     teamIndex:team,
                     // Save all the indexes of the cats we can hit in that team
@@ -88,15 +91,10 @@ class CatStandardAttack {
 
     async attackRandomTarget() {
         let targetCat = this.getRandomAttackTarget();
-        console.log("Target Cat Data:");
-        console.log(targetCat);
-        console.log("playerSearchTeams: ");
-        console.log(this.playerSearchTeams);
-        
         // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
         let targetHit, damageDealt;
         if (targetCat !== null && targetCat !== undefined) {
-            [targetHit, damageDealt] = await this.attack(this.playerSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
+            [targetHit, damageDealt] = await this.attack(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
         }
 
         // In case we need it, give back who we hit and for how much
@@ -111,7 +109,7 @@ class CatStandardAttack {
     }
 
     setNewSearchTeam(targetSearchTeams) {
-        this.playerSearchTeams = targetSearchTeams;
+        this.targetSearchTeams = targetSearchTeams;
         this.validTargetTeams = [];
     }
 
