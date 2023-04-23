@@ -8,7 +8,8 @@ class CaramelCatAttack extends CatStandardAttack {
         super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
-    async attack() {
+    async attack(targetCatData) {
+        console.log(targetCatData);
         // Execute the normal attack
         super.attack(targetCatData);
         // Is the target already rooted?

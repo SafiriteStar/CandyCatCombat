@@ -4,7 +4,7 @@ const Play = require("../playsFunctionality/playsInit");
 Play.move = async function(game, x, y, map, catID, teamID) {
     try {
         // Check if it's the user's turn
-        if (game.player.state === 3) { // 3 = waiting
+        if (game.player.state.id === 3) { // 3 = waiting
             return { status: 400, result: {msg:"You cannot move the character since it's not this user's turn"} };
         }
 
@@ -83,11 +83,10 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         }
         // Moving from board 2
         else {
-            // Check if player is in placement
-            if (game.player.state === 1) { // 1 = Placement
-
+            // Check if player is in placement state
+            if (game.player.state.id === 1) { // 1 = Placement
                 if (tile.tile_type_id !== 3) { // 3 = Placement tile
-                    return { status: 400, result: {msg:"You cannot end placement since placement has ended"} };
+                    return { status: 400, result: {msg:"You cannot end placement since you readied up"} };
                 }
             }
             else {

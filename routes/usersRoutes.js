@@ -81,7 +81,7 @@ router.post('/auth', async function (req, res, next) {
 router.get('/auth/defaultteam', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Get User Default Team");
-        let result = await User.getDefaultTeam(req.user);
+        let result = await User.getDefaultTeam(req.user.id);
         res.status(result.status).send(result.result);
     } catch (err) {
         console.log(err);
