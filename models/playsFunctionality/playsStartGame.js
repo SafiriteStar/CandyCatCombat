@@ -60,9 +60,6 @@ Play.startGame = async function(game) {
         let p2Id = myTurn ? game.opponents[0].id : game.player.id;
 
         // Player
-        console.log("---");
-        console.log("STARTING GAME");
-        console.log("---");
         await Play.addDBGameCatTeam(game.id, game.player.id);
         
         // Opponents (can do multiple but you should only have one)

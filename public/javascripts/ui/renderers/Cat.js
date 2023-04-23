@@ -6,6 +6,9 @@ class Cat {
     static healthBarLength = 200;
     static healthBarHeight = 35;
 
+    static aliveOpacity = 255;
+    static deadOpacity = 25;
+
     static catColor = [
         [255, 0, 0],
         [9, 0, 255],
@@ -36,7 +39,7 @@ class Cat {
 
         this.showDebug = showDebug;
 
-        this.opacity = (this.current_health === 0) && 150 || 255;
+        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
     }
 
     draw(teamColor) {
@@ -67,10 +70,9 @@ class Cat {
             vertex(-Tile.width, 0);                   // Middle Left
             endShape(CLOSE);
             
-            stroke(0);
+            stroke(0, 0, 0, this.opacity);
             strokeWeight(0);
             fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], this.opacity);
-            
             // Filler circle to represent cat
             circle(
                 0,
@@ -132,6 +134,6 @@ class Cat {
 
         this.showDebug = showDebug
 
-        this.opacity = (this.current_health === 0) && 150 || 255;
+        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
     }
 }
