@@ -90,16 +90,5 @@ router.patch('/auth/cancel', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
-router.get('/auth/defaultteam', auth.verifyAuth, async function (req, res, next) {
-    try {
-        console.log("Get User Default Team");
-        let result = await Game.getDefaultTeam(req.user);
-        res.status(result.status).send(result.result);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
-});
-
 
 module.exports = router;

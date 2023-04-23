@@ -160,24 +160,6 @@ class Game {
         }
     }
 
-    // Returns the default team of the player (even if empty)
-    static async getDefaultTeam(userId) {
-        try {
-            let [teamData] = await pool.query(
-                `select tmc_id as "id", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost"
-                from team, team_cat, cat
-                where tm_id = tmc_team_id and tmc_cat_id = cat_id and tm_user_id = ?`,
-                    [userId]);
-
-            return {status:200, result: teamData};
-        } catch (err) {
-            console.log(err);
-            return { status: 500, result: err };
-        }
-        
-        
-    }
-
     // ---- These methods assume a two players game (we need it at this point) --------
 
     // We consider the following verifications were already made (because of authentication):
