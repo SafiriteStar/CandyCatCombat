@@ -172,6 +172,15 @@ class World {
         }
     }
 
+
+    keyPressed() {
+        if (keyCode === ESCAPE) {
+            if(confirm("Are you sure you want to quit?")) {
+                cancelGame();
+            }
+        }
+    }
+
     mousePressed() {
         this.cameraMouseStartX = mouseX;
         this.cameraMouseStartY = mouseY;

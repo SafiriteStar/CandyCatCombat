@@ -69,6 +69,10 @@ function draw() {
     }
 }
 
+async function keyPressed() {
+    GameInfo.world.keyPressed();
+}
+
 async function mousePressed() {
     GameInfo.world.mousePressed();
 }
