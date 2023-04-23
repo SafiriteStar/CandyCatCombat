@@ -76,7 +76,6 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid position"} };
             }
 
-
             // Check if valid placement group
             let [tileGroups] = await pool.query(
                 `Select *
