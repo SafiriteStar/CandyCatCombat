@@ -6,18 +6,21 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
 
     // Add in a new game team
     await pool.query(
-        'Insert into game_team (gt_game_id, gt_user_id) values (?, ?)',
+        'Insert into game_team (gt_game_id, gt_user_game_id) values (?, ?)',
         [gameId, playerId]);
     
     // Get the game_team ID made for the player
-    let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_id = ?",
+    let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_game_id = ?",
         [gameId, playerId]
     );
+
+    // Get the player's user id
+    let [[userData]] = await pool.query(`Select ug_user_id as "id" from user_game where ug_id = ?`, [playerId]);
 
     // Get the players default team
     let [playerDefaultTeam] = await pool.query(
         "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
-        [playerId]
+        [userData.id]
     );
     
     // Add the cats in the default team to game_team_cat
@@ -57,6 +60,9 @@ Play.startGame = async function(game) {
         let p2Id = myTurn ? game.opponents[0].id : game.player.id;
 
         // Player
+        console.log("---");
+        console.log("STARTING GAME");
+        console.log("---");
         await Play.addDBGameCatTeam(game.id, game.player.id);
         
         // Opponents (can do multiple but you should only have one)
@@ -72,7 +78,6 @@ Play.startGame = async function(game) {
         // Changing the game state to start
         await pool.query(`Update game set gm_state_id=? where gm_id = ?`, [2, game.id]);
 
-        // ---- Specific rules for each game start bellow
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };

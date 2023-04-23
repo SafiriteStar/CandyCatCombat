@@ -81,3 +81,17 @@ async function requestProfile() {
         return {err: err};
     }
 }
+
+async function requestDefaultTeam() {
+    try {
+        const response = await fetch(`/api/users/auth/defaultteam`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 team: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}

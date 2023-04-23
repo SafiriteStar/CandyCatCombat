@@ -9,6 +9,8 @@ class HoverTile {
 
     draw() {
         push();
+            fill(0, 0, 0, 0);
+            strokeWeight(24);
             stroke(255, 255, 255, 150);
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();

@@ -102,7 +102,7 @@ class Game {
             let games = [];
             for (let dbGame of dbGames) {
                 let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
-                let result = await this.fillPlayersOfGame(userId,game);
+                let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
                 }
@@ -160,10 +160,7 @@ class Game {
         }
     }
 
-
-
     // ---- These methods assume a two players game (we need it at this point) --------
-          
 
     // We consider the following verifications were already made (because of authentication):
     //  - Id exists and user exists

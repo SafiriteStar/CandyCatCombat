@@ -31,6 +31,8 @@ class MapSelector {
 
     draw() {
         push();
+            fill(0, 0, 0, 0);
+            strokeWeight(24);
             stroke(255, 255, 0, 150);
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();
@@ -67,9 +69,14 @@ class MapSelector {
     }
 
     updateRangeIndicators(selectedCatData) {
-        this.rangeIndicator.newSource(selectedCatData, selectedCatData.min_range, selectedCatData.max_range);
-        // CHANGE TO SPEED AFTER
-        this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.stamina);
+        if (selectedCatData === null) {
+            this.rangeIndicator.newSource(null, null, null);
+            this.moveIndicator.newSource(null, null, null);
+        }
+        else {
+            this.rangeIndicator.newSource(selectedCatData, selectedCatData.min_range, selectedCatData.max_range);
+            this.moveIndicator.newSource(selectedCatData, 1, selectedCatData.stamina);
+        }
     }
     
     update(posX, posY, coordX, coordY, map) {
@@ -86,7 +93,6 @@ class MapSelector {
 
             // Try and see who is in the tile
             let [newTeam, newCat] = this.#getCatAtTile(this.coordX, this.coordY, this.map);
-            
             // If there is a cat in the new tile
             if (newTeam !== null && newCat !== null) {
                 // Set the current cat to the new one
@@ -98,17 +104,22 @@ class MapSelector {
             }
             else {
                 // There was no cat in that tile
-                // Do we have a player cat?
-                if (this.team == 0) {
-                    // We do
-                    // Lets try to move to the tile we just clicked
-                    moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
-                }
                 // Do we have *a* cat?
-                else if (this.team) {
-                    // We do, lets set it to null
-                    this.cat = null;
-                    this.team = null;
+                if (this.team !== null && this.team !== undefined) {
+                    // We do
+                    // Do we have a player cat?
+                    if (this.team == 0) {
+                        // We do
+                        // Lets try to move to the tile we just clicked
+                        moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
+                    }
+                    else {
+                        // No
+                        // Lets set it to null
+                        this.cat = null;
+                        this.team = null;
+                        this.updateRangeIndicators(null);
+                    }
                 }
             }
         }
@@ -116,6 +127,7 @@ class MapSelector {
             // We are not on a map, clear cat info
             this.cat = null;
             this.team = null;
+            this.updateRangeIndicators(null);
         }
     }
 }

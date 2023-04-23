@@ -8,7 +8,7 @@ class GumCatAttack extends CatStandardAttack {
         super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
-    async attack() {
+    async attack(targetCatData) {
         let damageDealt = this.playerCat.damage;
 
         // Are we stealthed?

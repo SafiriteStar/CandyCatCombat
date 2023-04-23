@@ -8,9 +8,18 @@ class CaramelCatAttack extends CatStandardAttack {
         super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
-    async attack() {
-        // Execute the normal attack
-        super.attack(targetCatData);
+    async attack(targetCatData) {
+        let damageDealt = targetCatData.defense - this.playerCat.damage;
+        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
+        console.log("Attack: " + this.playerCat.damage);
+        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
+        console.log("Defense: " + targetCatData.defense);
+        console.log("Damage Dealt: " + damageDealt);
+        console.log("Updating database...");
+
+        // APPLY DAMAGE
+        await Play.applyDamage(damageDealt, targetCatData.id);
+
         // Is the target already rooted?
         let isRooted = false;
         let rootedIndex = null;
@@ -32,6 +41,8 @@ class CaramelCatAttack extends CatStandardAttack {
             // Add the condition (2 is rooted)
             Play.addCondition(targetCatData.id, 2, 2);
         }
+
+        return [targetCatData.id, damageDealt];
     }
 }
 

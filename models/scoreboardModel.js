@@ -28,7 +28,7 @@ class PlayerScore {
             inner join scoreboard_state on sb_state_id = sbs_id
             where ug_id=?`, [playerId]);
             let dbPS = dbPlayerScores[0];
-            let pScore = new PlayerScore(dbPS.usr_id,dbPS.ug_id,dbPS.usr_name,
+            let pScore = new PlayerScore(dbPS.usr_id, dbPS.ug_id, dbPS.usr_name,
                             new State(dbPS.sbs_id,dbPS.sbs_state),dbPS.sb_points );
             return {status:200, result: pScore};
         } catch (err) {
@@ -49,7 +49,7 @@ class ScoreBoardLine {
         return new ScoreBoardLine(this.gameId,this.playerScores.map(p=>p.export()));
     }
 
-    static async getScoreBoardLine(gameId,playerIds) {
+    static async getScoreBoardLine(gameId, playerIds) {
         try {
             let pScores = [];
             for (let pId of playerIds) {
@@ -74,7 +74,7 @@ class ScoreBoardLine {
             for (let opp of game.opponents) {
                 playerIds.push(opp.id);
             }
-            let result = await ScoreBoardLine.getScoreBoardLine(game.id,playerIds);
+            let result = await ScoreBoardLine.getScoreBoardLine(game.id, playerIds);
             return result ;
         } catch (err) {
             console.log(err);

@@ -15,7 +15,10 @@ class RangeHighlighter {
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
                 push();
-                    fill(red, green, blue, 50);
+                    translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
+                    fill(red, green, blue, 100);
+                    strokeWeight(12);
+                    stroke(red, green, blue, 150);
                     Tile.drawSimpleTile(tile.screenX, tile.screenY);
                 pop();
             });
@@ -63,8 +66,12 @@ class RangeHighlighter {
 
         // Update our map
         this.map = sourceCat.map;
-        // Add in the source tile to it
-        this.tiles.push(GameInfo.world.getTileInMap(sourceCat.x, sourceCat.y, this.map));
+
+        // If we aren't in the placement map
+        if (this.map !== 0) {
+            // Add in the source tile to it
+            this.tiles.push(GameInfo.world.getTileInMap(sourceCat.x, sourceCat.y, this.map));
+        }
 
         // For the max range of our cat
         for (let i = 0; i < maxRange; i++) {
