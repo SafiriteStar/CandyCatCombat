@@ -1,21 +1,43 @@
 const pool = require("../../config/database");
-const Play = require("../playsFunctionality/playsInit");
+const Play = require("./playsInit");
+require("./playsUtils");
+
+async function countLiveCats(playerID, gameID) {
+    // Get the team we are looking for
+    let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
+
+    let count = 0;
+
+    // For each cat in that team
+    playerTeam.team.cats.forEach(cat => {
+        // If its dead
+        if (cat.current_health <= 0) {
+            // Add to the score
+            count++;
+        }
+    });
+
+    // Return the score
+    return count;
+}
 
 // Makes all the calculation needed to end and score the game
 Play.endGame = async function(game) {
     try {
         // Both players go to score phase (id = 5)
         let sqlPlayer = `Update user_game set ug_state_id = ? where ug_id = ?`;
-        await pool.query(sqlPlayer, [4, game.player.id]);
-        await pool.query(sqlPlayer, [4, game.opponents[0].id]);
+        await pool.query(sqlPlayer, [5, game.player.id]);
+        await pool.query(sqlPlayer, [5, game.opponents[0].id]);
         // Set game to finished (id = 3)
         await pool.query(`Update game set gm_state_id=? where gm_id = ?`, [3, game.id]);
 
         // Insert score lines with the state and points.
-        // For this template both are  tied (id = 1) and with one point 
-        let sqlScore = `Insert into scoreboard (sb_user_game_id,sb_state_id,sb_points) values (?,?,?)`;
-        await pool.query(sqlScore, [game.player.id,1,1]);
-        await pool.query(sqlScore, [game.opponents[0].id,1,1]);
+        // A player has a score equal to the number of dead cats on the enemy team
+        let sqlScore = `Insert into scoreboard (sb_user_game_id, sb_state_id, sb_points) values (?, ?, ?)`;
+        let playerScore = await countLiveCats(game.player.id, game.id);
+        let opponentScore = await countLiveCats(game.player.id, game.id);
+        await pool.query(sqlScore, [game.player.id, 1, playerScore]);
+        await pool.query(sqlScore, [game.opponents[0].id, 1, opponentScore]);
 
         return { status: 200, result: { msg: "Game ended. Check scores." } };
     } catch (err) {

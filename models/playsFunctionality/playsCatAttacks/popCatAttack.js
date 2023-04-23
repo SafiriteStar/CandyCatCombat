@@ -80,7 +80,9 @@ class PopCatAttack extends CatStandardAttack {
     
             this.validAOETargetTeams.forEach(team => {
                 team.catIndexes.forEach(aoeTarget => {
-                    targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                    if (this.targetSearchTeams[team.teamIndex] !== null && this.targetSearchTeams[team.teamIndex] !== undefined) {
+                        targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                    }
                 });
             });
             console.log(targetAOECatData);

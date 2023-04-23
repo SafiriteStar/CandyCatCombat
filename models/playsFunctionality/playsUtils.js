@@ -75,9 +75,8 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     // Player info
     let player = {};
     player.ownership = teamOwnershipType;
-
     // Get the game_team id made for the player
-    let [[playerGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_id = ?",
+    let [[playerGameTeamData]] = await pool.query("select * from game_team where gt_game_id = ? and gt_user_game_id = ?",
         [gameId, playerId]);
 
     // Get a list of cats in the player's game team

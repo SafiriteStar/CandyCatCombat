@@ -38,7 +38,7 @@ create table scoreboard (
     sb_id int not null auto_increment,
     sb_user_game_id int not null,
     sb_state_id int not null,
-    sb_points int not null,
+    sb_points int not null default 0,
     primary key (sb_id));
 
  create table scoreboard_state (
@@ -90,7 +90,7 @@ create table game_cat_state (
 create table game_team (
     gt_id int not null auto_increment,
     gt_game_id int not null,
-    gt_user_id int not null,
+    gt_user_game_id int not null,
     primary key (gt_id));
 
 create table cat_condition (
@@ -195,7 +195,7 @@ alter table game_team add constraint game_team_fk_game
 
 # Link Game Team to User by usr_id
 alter table game_team add constraint game_team_fk_user
-        foreign key (gt_user_id) references user(usr_id)
+        foreign key (gt_user_game_id) references user_game(ug_id)
         ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 # Link Game Team Cat to Cat by gtc_type_id

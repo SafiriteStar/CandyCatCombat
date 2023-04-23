@@ -28,7 +28,12 @@ class GameInfo  {
     // Call the method every time there is a game state change
     static prepareUI() {
         if (GameInfo.game.player.state == "Placement") {
-            GameInfo.placementReadyButton.show();
+            if (GameInfo.world.teams[0].unplacedCatsCheck()) {
+                GameInfo.placementReadyButton.hide();
+            }
+            else {
+                GameInfo.placementReadyButton.show();
+            }
             GameInfo.endturnButton.hide();
         }
         else if (GameInfo.game.player.state == "PlacementReady") {

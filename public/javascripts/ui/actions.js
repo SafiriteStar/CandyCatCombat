@@ -15,7 +15,7 @@ async function getGameInfo() {
         // if game ended we get the scores and prepare the ScoreWindow
         if (GameInfo.game.state == "Finished") {
             let result = await requestScore();
-            GameInfo.scoreWindow = new ScoreWindow(50,50,GameInfo.width-100,GameInfo.height-100,result.score,closeScore);
+            GameInfo.scoreWindow = new ScoreWindow(50, 50, GameInfo.width-100, GameInfo.height-100, result.score, closeScore);
         }
     }
 }
