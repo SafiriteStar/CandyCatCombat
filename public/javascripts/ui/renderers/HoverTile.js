@@ -21,7 +21,7 @@ class HoverTile {
             // If we are in the placement map and all the cats are ready
             if (i === 0 && !GameInfo.world.teams[0].unplacedCatsCheck()) {
                 // Then skip this loop
-                break;
+                continue;
             }
 
             if (GameInfo.world.maps[i].checkPositionExists(this.posX, this.posY)) {
