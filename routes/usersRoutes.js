@@ -77,4 +77,16 @@ router.post('/auth', async function (req, res, next) {
     }
 });
 
+// Gets information about the user's default team
+router.get('/auth/defaultteam', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Get User Default Team");
+        let result = await User.getDefaultTeam(req.user.id);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 module.exports = router;

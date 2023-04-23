@@ -3,26 +3,9 @@ const Play = require("../playsFunctionality/playsInit");
 
 Play.move = async function(game, x, y, map, catID, teamID) {
     try {
-        let [userGames] = await pool.query(
-            `Select *
-            from user_game
-            where ug_user_id = ? and ug_game_id = ?`,
-            [game.player.id, game.id]
-        );
-
-        // Check if user with that ID is playing this game
-        if (userGames.length > 1) {
-            return { status: 400, result: {msg:"You cannot move the character since the user is not playing this game"} };
-        }
-
-        // Get the user_game data
-        let userGame = userGames[0];
-
         // Check if it's the user's turn
-        if (userGame.ug_state_id === 2) { // 2 = placement ready
-            return { status: 400, result: {msg:"You cannot move the character since you're waiting for the other player"} };
-        }
-        if (userGame.ug_state_id === 3) { // 3 = waiting
+        if (game.player.state.id === 3) { // 3 = waiting
+
             return { status: 400, result: {msg:"You cannot move the character since it's not this user's turn"} };
         }
         
@@ -85,13 +68,14 @@ Play.move = async function(game, x, y, map, catID, teamID) {
             return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
         }
 
-        // Check if moving cat from board1
+        // Check if moving cat from board 1
         if (selectedCat.gtc_game_board_id === 1) {
 
             // Check if it's not placement tile
             if (tile.tile_type_id !== 3) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid position"} };
             }
+
 
             // Check if valid placement group
             let [tileGroups] = await pool.query(
@@ -117,15 +101,13 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 [catID]
             );
         }
-        // Moving from board2
+        // Moving from board 2
         else {
-            // Check if player is in placement
-            if (userGame.ug_state_id === 1) { // 1 = Placement
-
+            // Check if player is in placement state
+            if (game.player.state.id === 1) { // 1 = Placement
                 if (tile.tile_type_id !== 3) { // 3 = Placement tile
-                    return { status: 400, result: {msg:"You cannot end placement since placement has ended"} };
+                    return { status: 400, result: {msg:"You cannot end placement since you readied up"} };
                 }
-
                 // Check if valid placement group
                 let [tileGroups] = await pool.query(
                     `Select *
@@ -144,7 +126,8 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                     return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
                 }
 
-            } else {
+            } 
+            else {
 
                 // Check if the target tile not in same board or not next to the cat
                 if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {

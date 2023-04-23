@@ -1,18 +1,48 @@
 window.onload = async function () {
     try {
+        // Check we are authenticated
         let result = await checkAuthenticated(true);
+
         if (result.err) {  throw result.err; }
-        document.getElementById('player').textContent = "Hello "+window.user.name;
+
+        document.getElementById('player').textContent = "Hello " + window.user.name;
+    
+        // Check we are in a game
         result = await checkGame(true);
-        if (result.err) throw result.err;
+    
+        if (result.err) { throw result.err };
+
+        // Get default team
+        result = await requestDefaultTeam();
+        
+        if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
+
+        createTeamDropDown(result.team);
+
+        // Check if any players have posted a match
         result = await requestWaitingMatches();
-        if (!result.successful || result.err)
-            throw result.err || { err: "Not successfull" }
+
+        if (!result.successful || result.err) { throw result.err || { err: "Not successful" } };
+
         fillMatches(result.matches);
     } catch (err) {
         console.log(err);
        // alert("Something went wrong!")
     }
+}
+
+function createTeamDropDown(team) {
+    console.log(team);
+
+    for (let i = 0; i < team.length; i++) {
+        const para = document.createElement("p");
+        const node = document.createTextNode(team[i].name);
+        para.appendChild(node);
+        const element = document.getElementById("defaultTeam");
+        element.appendChild(para);
+    }
+
+    
 }
 
 function fillMatches(matches) {

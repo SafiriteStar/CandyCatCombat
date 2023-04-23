@@ -60,7 +60,7 @@ Play.endTurn = async function(game) {
         await Play.changePlayerState(4, game.opponents[0].id);
 
         // Both players played
-        if (game.player.order == 4) {
+        if (game.player.order == 2) {
             // Criteria to check if game ended
             if (await checkEndGame(game)) {
                 return await Play.endGame(game);

@@ -18,7 +18,7 @@ class PopCatAttack extends CatStandardAttack {
         // For every team
         for (let team = 0; team < this.targetAOETeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.getCatNeighbors(this.targetAOETeams[team].team.cats, aoeTiles);
+            let targetCatIndexes = Play.getCatNeighbors(this.targetAOETeams[team].team.cats, aoeTiles, this.filters);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team
@@ -80,7 +80,9 @@ class PopCatAttack extends CatStandardAttack {
     
             this.validAOETargetTeams.forEach(team => {
                 team.catIndexes.forEach(aoeTarget => {
-                    targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                    if (this.targetSearchTeams[team.teamIndex] !== null && this.targetSearchTeams[team.teamIndex] !== undefined) {
+                        targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                    }
                 });
             });
             console.log(targetAOECatData);
