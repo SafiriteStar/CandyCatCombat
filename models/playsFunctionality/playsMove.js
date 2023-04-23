@@ -89,8 +89,8 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 if (tile.tile_type_id !== 3) { // 3 = Placement tile
                     return { status: 400, result: {msg:"You cannot end placement since placement has ended"} };
                 }
-
-            } else {
+            }
+            else {
 
                 // Check if the target tile not in same board or not next to the cat
                 if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
