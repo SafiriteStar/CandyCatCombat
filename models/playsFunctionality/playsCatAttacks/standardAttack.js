@@ -7,7 +7,16 @@ class CatStandardAttack {
         this.targetSearchTeams = targetSearchTeams;
         this.validTargetTeams = [];
         this.playerSearchTeams;
+        this.filters = CatStandardAttack.filters;
     }
+
+    static catIsAliveFilter(cat) {
+        return cat.current_health > 0;
+    }
+
+    static filters = [
+        CatStandardAttack.catIsAliveFilter
+    ]
 
     generateAttackTargetList() {
         let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
@@ -18,7 +27,7 @@ class CatStandardAttack {
         // For every team
         for (let team = 0; team < this.targetSearchTeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.getCatNeighbors(this.targetSearchTeams[team].team.cats, attackRangeTiles);
+            let targetCatIndexes = Play.getCatNeighbors(this.targetSearchTeams[team].team.cats, attackRangeTiles, this.filters);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team

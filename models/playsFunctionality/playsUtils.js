@@ -187,12 +187,40 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
     return neighbors;
 }
 
+function catFilterNeighborCheck(cat, filters) {
+    // Do we have filters?
+    if (filters !== null && filters !== undefined) {
+        // Yes
+        // Foreach filter
+        filters.forEach(filter => {
+            // If the filter fails (returns false), we want to also fail
+            if (filter(cat) === false) {
+                return false;
+            }
+        });
+
+        // If we got here, we passed all filters
+        return true;
+    }
+    else {
+        // No
+        // If we aren't checking for anything then its all good right?
+        return true;
+    }
+}
+
 // Returns the an array of indexes for neighbors at the given x and y
-Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles) {
+Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles, filters) {
     let neighborCats = []
 
     // For each cat
     potentialNeighborCats.forEach(function(cat, catIndex) {
+        // May we move on?
+        if (!catFilterNeighborCheck(cat, filters)) {
+            // Nope!
+            // Do not add anything, just return out of this current foreach iteration 
+            return;
+        }   
         // We want to check if they are in any of our neighbor tiles
         neighborTiles.forEach(function(layer, layerIndex) {
             // Does that layer have our cat?
