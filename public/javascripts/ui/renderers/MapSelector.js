@@ -95,16 +95,20 @@ class MapSelector {
             let [newTeam, newCat] = this.#getCatAtTile(this.coordX, this.coordY, this.map);
             // If there is a cat in the new tile
             if (newTeam !== null && newCat !== null) {
-                // Set the current cat to the new one
-                this.team = newTeam;
-                this.cat = newCat;
-                // Update our indicators
-                this.catInfoBox.update(this.cat, this.team);
-                this.updateRangeIndicators(GameInfo.world.teams[this.team].cats[this.cat]);
+                // Wait is the cat alive?
+                if (GameInfo.world.teams[newTeam].cats[newCat].current_health > 0) {
+                    // It is!
+                    // Set the current cat to the new one
+                    this.team = newTeam;
+                    this.cat = newCat;
+                    // Update our indicators
+                    this.catInfoBox.update(this.cat, this.team);
+                    this.updateRangeIndicators(GameInfo.world.teams[this.team].cats[this.cat]);
+                }
             }
             else {
                 // There was no cat in that tile
-                // Do we have *a* cat?
+                // Do we have *a* cat already?
                 if (this.team !== null && this.team !== undefined) {
                     // We do
                     // Do we have a player cat?

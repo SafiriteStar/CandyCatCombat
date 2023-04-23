@@ -18,6 +18,12 @@ class HoverTile {
     
     updateCoord() {
         for (let i = 0; i < GameInfo.world.maps.length; i++) {
+            // If we are in the placement map and all the cats are ready
+            if (i === 0 && !GameInfo.world.teams[0].unplacedCatsCheck()) {
+                // Then skip this loop
+                break;
+            }
+
             if (GameInfo.world.maps[i].checkPositionExists(this.posX, this.posY)) {
                 [this.coordX, this.coordY] = GameInfo.world.maps[i].getPositionCoord(this.posX, this.posY);
                 this.map = i;
