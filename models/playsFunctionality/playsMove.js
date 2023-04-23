@@ -19,10 +19,13 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         let userGame = userGames[0];
 
         // Check if it's the user's turn
+        if (userGame.ug_state_id === 2) { // 2 = placement ready
+            return { status: 400, result: {msg:"You cannot move the character since you're waiting for the other player"} };
+        }
         if (userGame.ug_state_id === 3) { // 3 = waiting
             return { status: 400, result: {msg:"You cannot move the character since it's not this user's turn"} };
         }
-
+        
         let [selectedCats] = await pool.query(
             `Select *
             from game_team_cat
@@ -90,6 +93,24 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid position"} };
             }
 
+            // Check if valid placement group
+            let [tileGroups] = await pool.query(
+                `Select *
+                from placement_tile_group
+                where ptg_tile_x = ? and ptg_tile_y = ? and ptg_tile_board_id = ?`,
+                [x, y, map]
+            );
+
+            // Does the tile group exist?
+            if (tileGroups.length === 0) {
+                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid tile"} };
+            }
+
+            let tileGroup = tileGroups[0];
+            if(tileGroup.ptg_group !== game.player.id) {
+                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
+            }
+
             // Change cat to board2
             await pool.query(
                 `Update game_team_cat set gtc_game_board_id = 2 where gtc_id = ?`,
@@ -103,6 +124,24 @@ Play.move = async function(game, x, y, map, catID, teamID) {
 
                 if (tile.tile_type_id !== 3) { // 3 = Placement tile
                     return { status: 400, result: {msg:"You cannot end placement since placement has ended"} };
+                }
+
+                // Check if valid placement group
+                let [tileGroups] = await pool.query(
+                    `Select *
+                    from placement_tile_group
+                    where ptg_tile_x = ? and ptg_tile_y = ? and ptg_tile_board_id = ?`,
+                    [x, y, map]
+                );
+
+                // Does the tile group exist?
+                if (tileGroups.length === 0) {
+                    return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid tile"} };
+                }
+
+                let tileGroup = tileGroups[0];
+                if(tileGroup.ptg_group !== game.player.id) {
+                    return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
                 }
 
             } else {
