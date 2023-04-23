@@ -51,6 +51,15 @@ Play.tickDownConditionDuration = async function(catConditionID, subtraction) {
 
 }
 
+Play.applyDamage = async function(damage, catDBID) {
+    await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
+        [damage, catDBID]);
+}
+
+Play.adjustStamina = async function(catID, staminaAdjustment) {
+    await pool.query(`Update game_team_cat set gtc_stamina = gtc_stamina + ? where gtc_id = ?`, [staminaAdjustment, catID]);
+}
+
 // Returns a game cat team of the given player (if any)
 // Cat stats are:
 // id
@@ -190,13 +199,13 @@ function catFilterNeighborCheck(cat, filters) {
     // Do we have filters?
     if (filters !== null && filters !== undefined) {
         // Yes
-        // Foreach filter
-        filters.forEach(filter => {
-            // If the filter fails (returns false), we want to also fail
-            if (filter(cat) === false) {
+        // For every filter
+        for (let i = 0; i < filters.length; i++) {
+            if (filters[i](cat) === false) {
+                // If the filter fails (returns false), we want to also fail
                 return false;
             }
-        });
+        }
 
         // If we got here, we passed all filters
         return true;
@@ -234,4 +243,23 @@ Play.getCatNeighbors = function(potentialNeighborCats, neighborTiles, filters) {
 
     // Return the list of index neighbors
     return neighborCats;
+}
+
+Play.countLiveCats = async function (playerID, gameID) {
+    // Get the team we are looking for
+    let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
+
+    let count = 0;
+
+    // For each cat in that team
+    playerTeam.team.cats.forEach(cat => {
+        // If its dead
+        if (cat.current_health <= 0) {
+            // Add to the score
+            count++;
+        }
+    });
+
+    // Return the score
+    return count;
 }

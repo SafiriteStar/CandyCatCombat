@@ -50,8 +50,6 @@ class PopCatAttack extends CatStandardAttack {
         
         // Cats around the main cat
         targetAOECatData.forEach(async function(aoeTarget) {
-            console.log("AOE TARGET: ");
-            console.log(aoeTarget);
             let aoeDamageDealt = aoeTarget.defense - playerCatData.damage;
             // Tally up the damage as well
             damageDealt = damageDealt + aoeDamageDealt;

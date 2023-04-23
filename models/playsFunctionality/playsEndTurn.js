@@ -1,13 +1,12 @@
 const pool = require("../../config/database");
 const Play = require("./playsInit");
-require("./playsAttacks");
 const CatStandardAttack = require("./playsCatAttacks/standardAttack");
-
+const CandyCornCatAttack = require("./playsCatAttacks/candyCornCatAttack");
 const ChocoDairyMilkHeal = require("./playsCatAttacks/chocoDairyMilkHeal");
 const GumCatAttack = require("./playsCatAttacks/gumCatAttack");
 const CaramelCatAttack = require("./playsCatAttacks/caramelCatAttack");
 const PopCatAttack = require("./playsCatAttacks/popCatAttack");
-const CandyCornCatAttack = require("./playsCatAttacks/candyCornCatAttack");
+
 let attackTypes = [
     CatStandardAttack, // Vanilla Cat
     CandyCornCatAttack, // Candy Corn Cat
@@ -29,19 +28,15 @@ Play.resolveAttacks = async function(game) {
     }
     // For every player cat
     player.team.cats.forEach(async function(playerCat, index, array) {
-        // If we aren't in the placement map
-        if (playerCat.boardID !== 1) {
-
+        // If we aren't in the placement map and the cat is alive
+        if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
             let attackCat = new attackTypes[playerCat.type - 1](playerCat, opponentsTeams, [player]);
 
             await attackCat.executeAttackSequence();
+            // Refill our stamina to max
+            await Play.adjustStamina(playerCat.id, playerCat.speed - playerCat.stamina);
         }
     });
-}
-
-// auxiliary function to check if the game ended
-async function checkEndGame(game) {
-    return game.turn >= Play.maxNumberTurns;
 }
 
 // This considers that only one player plays at each moment,
@@ -60,15 +55,13 @@ Play.endTurn = async function(game) {
         await Play.changePlayerState(4, game.opponents[0].id);
 
         // Both players played
-        if (game.player.order == 2) {
-            // Criteria to check if game ended
-            if (await checkEndGame(game)) {
-                return await Play.endGame(game);
-            } else {
-                // Increase the number of turns and continue 
-                await pool.query(`Update game set gm_turn = gm_turn + 1 where gm_id = ?`,
-                    [game.id]);
-            }
+        // Criteria to check if game ended
+        if (await Play.checkEndGame(game)) {
+            return await Play.endGame(game);
+        } else {
+            // Increase the number of turns and continue 
+            await pool.query(`Update game set gm_turn = gm_turn + 1 where gm_id = ?`,
+                [game.id]);
         }
 
         return { status: 200, result: { msg: "Your turn ended." } };
