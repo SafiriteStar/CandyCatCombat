@@ -101,4 +101,28 @@ router.patch('/auth/changedefaultcat', auth.verifyAuth, async function (req, res
     }
 });
 
+// Add a default cat
+router.post('/auth/adddefaultcat', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Adding Default User Cat");
+        let result = await User.addDefaultCat(req.user.id, req.body.newCatID);
+        res.status(200).send({msg: "Successful Cat Add!"});
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+// Remove a default cat
+router.delete('/auth/removedefaultcat', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Removing Default User Cat");
+        let result = await User.removeDefaultCat(req.body.teamCatID);
+        res.status(200).send({msg: "Successful Cat Remove!"});
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 module.exports = router;

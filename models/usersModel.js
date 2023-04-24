@@ -136,6 +136,39 @@ class User {
             return { status: 500, result: err };
         }
     }
+
+    static async removeDefaultCat(teamCatId) {
+        try {
+            await pool.query(`Delete from team_cat where tmc_id = ?`, [teamCatId]);
+
+            return { status: 200, result: {msg:"Cat Removed!"}} ;            
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async addDefaultCat(userID, newCatId) {
+        try {
+            let [userDefaultTeam] = await pool.query(`Select * from team_cat, team where tm_id = tmc_team_id and tm_selected = TRUE and tm_user_id = ?`, [userID]);
+
+            if (userDefaultTeam.length > 5) {
+                return { status: 400, result: {msg:"Your team is full, cannot add anymore cats"}} ;
+            }
+
+            // If we got here, the team is not full
+            // Get the default team
+            let [[userTeamDB]] = await pool.query(`Select tm_id as "id" from team where tm_selected = TRUE and tm_user_id = ?`, [userID]);
+            
+            // Insert the new cat
+            await pool.query(`Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)`, [newCatId, userTeamDB.id]);
+            
+            return { status: 200, result: {msg:"Cat Added!"}} ;  
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
 }
 
 module.exports = User;

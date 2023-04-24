@@ -54,9 +54,15 @@ let catBrackets = [
 ]
 
 async function catOnChange(teamCatID, newCatID) {
-    console.log("teamCatID: " + teamCatID);
-    console.log("newCatID: " + newCatID);
     await requestChangeDefaultCat(newCatID, teamCatID);
+}
+
+async function addCatOnClick(newCatID) {
+    await requestAddDefaultCat(newCatID);
+}
+
+async function removeCatOnClick(teamCatID) {
+    await requestRemoveDefaultCat(teamCatID);
 }
 
 async function createTeamDropDown(team, baseCats) {
@@ -81,47 +87,59 @@ async function createTeamDropDown(team, baseCats) {
     }
 
     // For each cat
-    for (let i = 0; i < team.length; i++) {
+    for (let i = 0; i < team.length + 1; i++) {
         // New Cat
         const catRow = defaultTeamTable.insertRow();
         
-        // All cat data
-        for (let j = 0; j < catBrackets.length; j++) {
-            if (j === 0) {
-                const catSelect = document.createElement('select');
-                catSelect.name = "catSelect";
-                catSelect.id = "catSelect";
-
-                for (let k = 0; k < baseCats.length + 1; k++) {
-                    let id = null;
-                    let name = null;
-                    if (baseCats[k] !== undefined) {
-                        name = baseCats[k].name;
-                        id = baseCats[k].id;
+        if (i === team.length) {
+            const catData = catRow.insertCell();
+            const removeButton = document.createElement('button');
+            removeButton.innerText = 'Add';
+            removeButton.setAttribute('onClick', 'addCatOnClick(this.value)');
+            removeButton.value = 1;
+            catData.appendChild(removeButton);
+            catData.style.border = '1px solid black';
+        }
+        else {
+            // All cat data
+            for (let j = 0; j < catBrackets.length + 1; j++) {
+                if (j === 0) {
+                    const catSelect = document.createElement('select');
+                    catSelect.name = "catSelect";
+                    catSelect.id = "catSelect";
+    
+                    for (let k = 0; k < baseCats.length; k++) {
+                        const catOption = document.createElement('option');
+                        catOption.value = team[i].id;
+                        catOption.appendChild(document.createTextNode(baseCats[k].name));
+                        catOption.index = baseCats[k].id;
+                        if (baseCats[k].name === team[i][catBrackets[j]]) {
+                            catOption.selected = "selected";
+                        }
+    
+                        catSelect.appendChild(catOption);
                     }
-                    const catOption = document.createElement('option');
-                    catOption.value = team[i].id;
-                    catOption.appendChild(document.createTextNode(name));
-                    console.log("Id: " + id);
-                    catOption.index = id;
-                    console.log("Index: " + catOption.index);
-                    if (name === team[i][catBrackets[j]]) {
-                        catOption.selected = "selected";
-                    }
-
-                    catSelect.appendChild(catOption);
+    
+                    catSelect.setAttribute('onChange', 'catOnChange(this.options[this.selectedIndex].value, this.options[this.selectedIndex].index + 1)')
+    
+                    const catData = catRow.insertCell();
+                    catData.appendChild(catSelect);
+                    catData.style.border = '1px solid black';
                 }
-
-                catSelect.setAttribute('onChange', 'catOnChange(this.options[this.selectedIndex].value, this.options[this.selectedIndex].index + 1)')
-
-                const catData = catRow.insertCell();
-                catData.appendChild(catSelect);
-                catData.style.border = '1px solid black';
-            }
-            else {
-                const catData = catRow.insertCell();
-                catData.appendChild(document.createTextNode(team[i][catBrackets[j]]));
-                catData.style.border = '1px solid black';
+                else if (j === catBrackets.length) {
+                    const catData = catRow.insertCell();
+                    const removeButton = document.createElement('button');
+                    removeButton.innerText = 'Remove';
+                    removeButton.value = team[i].id
+                    removeButton.setAttribute('onClick', 'removeCatOnClick(this.value)');
+                    catData.appendChild(removeButton);
+                    catData.style.border = '1px solid black';
+                }
+                else {
+                    const catData = catRow.insertCell();
+                    catData.appendChild(document.createTextNode(team[i][catBrackets[j]]));
+                    catData.style.border = '1px solid black';
+                }
             }
         }
     }
