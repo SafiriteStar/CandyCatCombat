@@ -9,7 +9,7 @@ class Window {
         this.createButton('X',x+width-35,y+5,()=> { this.close()});
     }
 
-    createButton(name, x,y, action, widthCenter) {
+    createButton(name, x, y, action, widthCenter) {
         let button = createButton(name);
         this.buttonList.push(button);
         button.parent('game');

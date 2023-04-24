@@ -102,7 +102,7 @@ class Game {
             let games = [];
             for (let dbGame of dbGames) {
                 let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
-                let result = await this.fillPlayersOfGame(userId,game);
+                let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
                 }
@@ -116,6 +116,11 @@ class Game {
         }
     }    
 
+    static async #addUserToGame(userID, gameID) {
+        let [result] = await pool.query('Insert into user_game (ug_user_id,ug_game_id, ug_state_id) values (?, ?, ?)',
+            [userID, gameID, 1]);
+        return result;
+    }
 
     // A game is always created with one user
     // No verifications. We assume the following were already made (because of authentication):
@@ -127,8 +132,7 @@ class Game {
             let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 1]);
             let gameId = result.insertId;
             // add the user to the game
-            await pool.query('Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)',
-                 [userId, gameId, 1]);
+            Game.#addUserToGame(userId, gameId);
 
             return {status:200, result: {msg: "You created a new game."}};
         } catch (err) {
@@ -156,10 +160,7 @@ class Game {
         }
     }
 
-
-
     // ---- These methods assume a two players game (we need it at this point) --------
-          
 
     // We consider the following verifications were already made (because of authentication):
     //  - Id exists and user exists
@@ -175,8 +176,7 @@ class Game {
                 return {status:400, result:{msg:"Game not waiting for other players"}};
 
             // We join the game but the game still has not started, that will be done outside
-            let [result] = await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`,
-                        [userId, gameId, 1]);
+            let result = Game.#addUserToGame(userId, gameId);
          
             return {status:200, result: {msg: "You joined the game."}};
         } catch (err) {

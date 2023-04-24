@@ -41,15 +41,13 @@ class User {
             // Get the user ID of the newly made user
             let [[userData]] = await pool.query('Select * from user where usr_name=?', [user.name]);
             // Make a new default team for that user
-            let [newDefaultTeam] = await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
+            await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
             // Get the team ID of the newly made team
             let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
             // Add characters to new default team
             let fillCharacterData = [];
-            let defaultCharacterType = 1;
             for (let i = 0; i < 6; i++) {
-                if (i == 3) {defaultCharacterType = 2}
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [defaultCharacterType, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [i + 1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
@@ -100,6 +98,72 @@ class User {
             user.id = result[0].usr_id;
             user.name = result[0].usr_name;
             return { status: 200, result: user} ;
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    // Returns the default team of the player (even if empty)
+    static async getDefaultTeam(userId) {
+        try {
+            let [teamData] = await pool.query(
+                `Select tmc_id as "id", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost"
+                from team, team_cat, cat
+                where tm_id = tmc_team_id and tmc_cat_id = cat_id and tm_user_id = ?`,
+                    [userId]);
+
+            let [baseCats] = await pool.query(
+                `Select cat_name as "name", cat_id as "id"
+                from cat`
+            )
+
+            return {status:200, result: { teamData, baseCats }};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async changeDefaultCat(userId, newCatId, teamCatId) {
+        try {
+            // Update the cat
+            await pool.query(`Update team_cat set tmc_cat_id = ? where tmc_id = ?`, [newCatId, teamCatId]);
+
+            return { status: 200, result: {msg:"Cat Changed!"}} ;            
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async removeDefaultCat(teamCatId) {
+        try {
+            await pool.query(`Delete from team_cat where tmc_id = ?`, [teamCatId]);
+
+            return { status: 200, result: {msg:"Cat Removed!"}} ;            
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async addDefaultCat(userID, newCatId) {
+        try {
+            let [userDefaultTeam] = await pool.query(`Select * from team_cat, team where tm_id = tmc_team_id and tm_selected = TRUE and tm_user_id = ?`, [userID]);
+
+            if (userDefaultTeam.length > 5) {
+                return { status: 400, result: {msg:"Your team is full, cannot add anymore cats"}} ;
+            }
+
+            // If we got here, the team is not full
+            // Get the default team
+            let [[userTeamDB]] = await pool.query(`Select tm_id as "id" from team where tm_selected = TRUE and tm_user_id = ?`, [userID]);
+            
+            // Insert the new cat
+            await pool.query(`Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)`, [newCatId, userTeamDB.id]);
+            
+            return { status: 200, result: {msg:"Cat Added!"}} ;  
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };

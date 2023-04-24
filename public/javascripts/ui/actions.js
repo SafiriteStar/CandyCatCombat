@@ -6,12 +6,16 @@ async function getGameInfo() {
         window.location.pathname = "index.html";
     } else {
         GameInfo.game = result.game;
-        if (GameInfo.scoreBoard) GameInfo.scoreBoard.update(GameInfo.game); 
-        else GameInfo.scoreBoard = new ScoreBoard(GameInfo.game);
+        if (GameInfo.scoreBoard) {
+            GameInfo.scoreBoard.update(GameInfo.game);  
+        }
+        else {
+            GameInfo.scoreBoard = new ScoreBoard(GameInfo.game);
+        }
         // if game ended we get the scores and prepare the ScoreWindow
         if (GameInfo.game.state == "Finished") {
             let result = await requestScore();
-            GameInfo.scoreWindow = new ScoreWindow(50,50,GameInfo.width-100,GameInfo.height-100,result.score,closeScore);
+            GameInfo.scoreWindow = new ScoreWindow(50, 50, GameInfo.width-100, GameInfo.height-100, result.score, closeScore);
         }
     }
 }
@@ -30,18 +34,19 @@ async function getBoardInfo() {
         console.log(result.game);
 
         // Actual board
-        if (GameInfo.board) {
+        if (GameInfo.world) {
             // A board already exists
-            GameInfo.board.update(result.game);
+            GameInfo.world.update(result.game.maps, result.game.player, result.game.opponents);
         }
         else {
             // Create a new board
-            GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
+            //GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
+            GameInfo.world = new World(result.game.maps, result.game.player, result.game.opponents);
         }
-        console.log(GameInfo.board);
+
+        console.log(GameInfo.world);
     }
 }
-
 
 async function endturnAction() {
     let result = await requestEndTurn();
@@ -49,7 +54,29 @@ async function endturnAction() {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
-    } else alert("Something went wrong when ending the turn.")
+    } else alert("Something went wrong when ending the turn.");
+}
+
+async function placementReadyAction() {
+    let result = await requestPlacementReady();
+    if (result.successful) {
+        await  getGameInfo();
+        await getBoardInfo();
+        GameInfo.prepareUI();
+    } else alert("Something went wrong when readying up.");
+}
+
+async function moveCatAction(x, y, map, catID, teamID) {
+    let result = await requestMoveCharacter(x, y, map + 1, catID, teamID)
+
+    if (result.successful) {
+        await getGameInfo();
+        await getBoardInfo();
+        GameInfo.prepareUI();
+    }
+    else {
+        alert("Something went wrong when trying to move the character");
+    }
 }
 
 async function closeScore() {

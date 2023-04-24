@@ -1,7 +1,43 @@
 // Actions
+async function cancelGame() {
+    try {
+        const response = await fetch(`/api/games/auth/cancel`, 
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PATCH",
+        });
+        return {successful: response.status == 200};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
 async function requestEndTurn() {
     try {
         const response = await fetch(`/api/plays/endturn`, 
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PATCH"
+        });
+        return {successful: response.status == 200};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestPlacementReady() {
+    try {
+        const response = await fetch(`/api/plays/placementready`,
         {
             headers: {
                 'Accept': 'application/json',
@@ -24,6 +60,33 @@ async function requestGameBoard() {
         return { successful: response.status == 200,
                  unauthenticated: response.status == 401,
                  game: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestMoveCharacter(x, y, placementX, placementY, catID) {
+    try {
+        const response = await fetch(`/api/plays/move`, 
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PATCH",
+          body: JSON.stringify({
+              x: x,
+              y: y,
+              placementX: placementX,
+              placementY: placementY,
+              catID: catID
+          })
+        });
+        // We are not checking for errors (considering the GUI is only allowing correct choices)
+        // We only need to send if the user logged or not since the token will be in the cookie
+        return { successful: response.status == 200};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

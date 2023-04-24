@@ -3,17 +3,48 @@ class Tile {
     static height = 130;
     static spacing = this.width * 0.5;
 
+    static typeStringArray = [
+        "Err",
+        "Normal",
+        "Wall",
+        "Placement"
+    ]
+
     constructor(baseTile) {
         this.x = baseTile.x;
         this.y = baseTile.y;
         this.type = baseTile.type;
+        this.group = null;
+        this.connections = baseTile.connections;
+
+        // Some short circuiting "magic"
+        // If its even then displace it by Tile.width * 1.5
+        // If its not even then displace it by 0
+        let evenOffset = isEven(this.x) && (-Tile.height) * 1 || 0;
+        // The X and Y in terms of pixels
+        this.screenX = (Tile.width * 1.5 * this.x);
+        this.screenY = (-Tile.height * 2 * this.y) + evenOffset;
 
         if (!(baseTile.group == null)) {
             this.group = baseTile.group;
         }
     }
 
-    draw(xOffset, yOffset, boardScale) {
+    static drawSimpleTile(x, y) {
+        // Some short circuiting "magic"
+        translate(x, y);
+        beginShape();
+            vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+            vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+            vertex(Tile.width, 0);                    // Middle Right
+            vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+            vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+            vertex(-Tile.width, 0);                   // Middle Left
+        endShape(CLOSE);
+    }
+
+    draw() {
+
         // Placement
         if (this.type == 3) {
             fill('rgba(186, 251, 255, 1)');
@@ -34,20 +65,7 @@ class Tile {
         stroke(0);
         strokeWeight(5);
         push();
-            // Some short circuiting "magic"
-            let evenOffset = isEven(this.y) && (Tile.width) * 1.5 || 0;
-            translate(
-                (Board.startPosX / boardScale) + (Tile.width * 3 * this.x) + evenOffset + xOffset,
-                (Board.startPosY / boardScale) - (Tile.height * 1 * this.y) + yOffset
-            );
-            beginShape();
-                vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-                vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-                vertex(Tile.width, 0);                    // Middle Right
-                vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-                vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-                vertex(-Tile.width, 0);                   // Middle Left
-            endShape(CLOSE);
+            Tile.drawSimpleTile(this.screenX, this.screenY);
 
             // Debug Text Inside
             fill(0, 0, 0);
@@ -62,5 +80,9 @@ class Tile {
         this.x = tile.x;
         this.y = tile.y;
         this.type = tile.type;
+
+        if (!(tile.group == null)) {
+            this.group = tile.group;
+        }
     }
 }

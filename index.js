@@ -1,3 +1,4 @@
+const { argv } = require('node:process');
 require('dotenv').config();
 
 var express = require('express');
@@ -22,7 +23,8 @@ const usersRouter = require("./routes/usersRoutes");
 const gamesRouter = require("./routes/gamesRoutes");
 const playsRouter = require("./routes/playsRoutes");
 const scoresRouter = require("./routes/scoresRoutes");
-const populateMap = require('./db_scripts/mapPopulate');
+const World = require('./db_scripts/mapPopulate');
+const Play = require('./models/playsModel');
 
 app.use("/api/users",usersRouter);
 app.use("/api/games",gamesRouter);
@@ -48,4 +50,24 @@ app.listen(port,function() {
 // After we start the sever, we want to add in the maps to the database if they aren't in there already
 require("./db_scripts/mapPopulate");
 
-populateMap();
+class Argument {
+  constructor(command) {
+    this.command = command;
+    this.execute = false;
+  }
+}
+
+let validArguments = [
+  new Argument("-r"),
+  new Argument("-p")
+];
+
+for (let i = 0; i < argv.length; i++) {
+  for (let j = 0; j < validArguments.length; j++) {
+    if (argv[i] == validArguments[j].command) {
+      validArguments[j].execute = true;
+    }
+  }
+}
+
+Play.setWorldData(World.createWorld, true, true);

@@ -1,12 +1,12 @@
 const Game = require("../../../models/gamesModel");
 
 async function refresh() {
-    if (GameInfo.game.player.state == "Waiting") { 
+    if (GameInfo.game.player.state == "Waiting" || GameInfo.game.player.state == "PlacementReady") { 
         // Every time we are waiting
         await getGameInfo();
         await getBoardInfo();
 
-        if (GameInfo.game.player.state != "Waiting") {
+        if (GameInfo.game.player.state != "Waiting" || GameInfo.game.player.state != "PlacementReady") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
         }
@@ -16,7 +16,15 @@ async function refresh() {
 }
 
 function preload() {
-
+    GameInfo.images.cats = [
+        loadImage("../../assets/VanillaCat.png"),
+        loadImage("../../assets/CandyCornCat.png"),
+        loadImage("../../assets/MawBreakerCat.png"),
+        loadImage("../../assets/GumCat.png"),
+        loadImage("../../assets/PopCat.png"),
+        loadImage("../../assets/CaramelCat.png"),
+        loadImage("../../assets/ChocoDairyMilkCat.png")
+    ]
 }
 
 
@@ -28,15 +36,20 @@ async function setup() {
     
     await getGameInfo();
     await getBoardInfo();
-    setInterval(refresh,1000);
+    setInterval(refresh, 1000);
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
     GameInfo.endturnButton.parent('game');
-    GameInfo.endturnButton.position(GameInfo.width-150,GameInfo.height-50);
+    GameInfo.endturnButton.position(GameInfo.width-150, GameInfo.height-50);
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game')
 
+    GameInfo.placementReadyButton = createButton('Ready');
+    GameInfo.placementReadyButton.parent('game');
+    GameInfo.placementReadyButton.position(GameInfo.width-150, GameInfo.height-50);
+    GameInfo.placementReadyButton.mousePressed(placementReadyAction);
+    GameInfo.placementReadyButton.addClass('game')
 
     GameInfo.prepareUI();
     
@@ -59,17 +72,21 @@ function draw() {
     } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
         GameInfo.scoreWindow.draw();
     } else  {
-        GameInfo.board.draw();
+        GameInfo.world.draw();
         GameInfo.scoreBoard.draw();
     }
 }
 
+async function keyPressed() {
+    GameInfo.world.keyPressed();
+}
+
 async function mousePressed() {
-    GameInfo.board.mousePressed();
+    GameInfo.world.mousePressed();
 }
 
 async function mouseReleased() {
-    
+    GameInfo.world.mouseReleased();
 }
 
 async function mouseClicked() {
@@ -77,5 +94,5 @@ async function mouseClicked() {
 }
 
 function changeScale(event) {
-    GameInfo.board.changeScale(event);
+    GameInfo.world.changeScale(event);
 }
