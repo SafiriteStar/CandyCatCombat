@@ -255,7 +255,7 @@ class World {
 
     static async createWorld(fullReset, purgeDB) {
         // If we want to reset everything
-        if (fullReset) {
+        if (false) {
             if (purgeDB) {
                 console.log("Purging Database");
                 await pool.query(
