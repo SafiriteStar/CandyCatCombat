@@ -108,12 +108,29 @@ class User {
     static async getDefaultTeam(userId) {
         try {
             let [teamData] = await pool.query(
-                `select tmc_id as "id", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost"
+                `Select tmc_id as "id", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost"
                 from team, team_cat, cat
                 where tm_id = tmc_team_id and tmc_cat_id = cat_id and tm_user_id = ?`,
                     [userId]);
 
-            return {status:200, result: teamData};
+            let [baseCats] = await pool.query(
+                `Select cat_name as "name", cat_id as "id"
+                from cat`
+            )
+
+            return {status:200, result: { teamData, baseCats }};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+
+    static async changeDefaultCat(userId, newCatId, teamCatId) {
+        try {
+            // Update the cat
+            await pool.query(`Update team_cat set tmc_cat_id = ? where tmc_id = ?`, [newCatId, teamCatId]);
+
+            return { status: 200, result: {msg:"Cat Changed!"}} ;            
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };

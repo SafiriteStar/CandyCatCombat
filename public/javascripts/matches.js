@@ -17,7 +17,7 @@ window.onload = async function () {
         
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
-        createTeamDropDown(result.team);
+        await createTeamDropDown(result.team, result.baseCats);
 
         // Check if any players have posted a match
         result = await requestWaitingMatches();
@@ -53,8 +53,17 @@ let catBrackets = [
     "cost"
 ]
 
-function createTeamDropDown(team) {
+async function catOnChange(teamCatID, newCatID) {
+    console.log("Hello");
+    console.log(teamCatID);
+    console.log(newCatID);
+
+    await requestChangeDefaultCat(newCatID, teamCatID);
+}
+
+async function createTeamDropDown(team, baseCats) {
     console.log(team);
+    console.log(baseCats);
 
     // Where we are going to attach the table
     const element = document.getElementById("defaultTeam"); 
@@ -80,9 +89,33 @@ function createTeamDropDown(team) {
         
         // All cat data
         for (let j = 0; j < catBrackets.length; j++) {
-            const catName = catRow.insertCell();
-            catName.appendChild(document.createTextNode(team[i][catBrackets[j]]));
-            catName.style.border = '1px solid black';
+            if (j === 0) {
+                const catSelect = document.createElement('select');
+                catSelect.name = "catSelect";
+                catSelect.id = "catSelect";
+
+                for (let k = 0; k < baseCats.length; k++) {
+                    const catOption = document.createElement('option');
+                    catOption.value = team[i].id;
+                    catOption.appendChild(document.createTextNode(baseCats[k].name));
+                    if (baseCats[k].name == team[i][catBrackets[j]]) {
+                        catOption.selected = "selected";
+                    }
+
+                    catSelect.appendChild(catOption);
+                }
+
+                catSelect.setAttribute('onChange', 'catOnChange(this.options[this.selectedIndex].value, this.options[this.selectedIndex].index + 1)')
+
+                const catData = catRow.insertCell();
+                catData.appendChild(catSelect);
+                catData.style.border = '1px solid black';
+            }
+            else {
+                const catData = catRow.insertCell();
+                catData.appendChild(document.createTextNode(team[i][catBrackets[j]]));
+                catData.style.border = '1px solid black';
+            }
         }
     }
 
