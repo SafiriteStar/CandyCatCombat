@@ -16,7 +16,15 @@ async function refresh() {
 }
 
 function preload() {
-
+    GameInfo.images.cats = [
+        loadImage("../../assets/VanillaCat.png"),
+        loadImage("../../assets/CandyCornCat.png"),
+        loadImage("../../assets/MawBreakerCat.png"),
+        loadImage("../../assets/GumCat.png"),
+        loadImage("../../assets/PopCat.png"),
+        loadImage("../../assets/CaramelCat.png"),
+        loadImage("../../assets/ChocoDairyMilkCat.png")
+    ]
 }
 
 

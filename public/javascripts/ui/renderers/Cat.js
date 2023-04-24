@@ -37,7 +37,7 @@ class Cat {
         [247, 0, 255]
     ];
     
-    constructor(cat, showDebug) {
+    constructor(cat, image, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
         this.x = cat.x;
@@ -59,6 +59,8 @@ class Cat {
         this.showDebug = showDebug;
 
         this.opacity = calculateOpacity(cat);
+
+        this.img = image
     }
 
     draw(teamColor) {
@@ -98,6 +100,12 @@ class Cat {
                 0,
                 Cat.diameter
             );
+
+            // Stand in image for now
+            push();
+                scale(0.5);
+                image(this.img, -this.img.width * 0.5, -this.img.height * 0.5);
+            pop();
 
             // Health Bar Background
             fill(255, 255, 255, 255);

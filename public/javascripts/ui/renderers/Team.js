@@ -6,8 +6,9 @@ class Team {
         this.color = colorArray;
 
         let unplacedIndex = 0;
+        console.log(GameInfo.images.cats);
         for (let i = 0; i < catList.length; i++) {
-            this.cats[i] = new Cat(catList[i], false);
+            this.cats[i] = new Cat(catList[i], GameInfo.images.cats[catList[i].type - 1], false);
         }
     }
     
