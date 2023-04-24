@@ -1,3 +1,20 @@
+function calculateOpacity(cat) {
+    // If we are dead
+    if (cat.current_health <= 0) {
+        return Cat.deadOpacity;
+    }
+    
+    for (let i = 0; i < cat.conditions.length; i++) {
+        // If we are in stealth
+        if (cat.conditions[i].id == 1) {
+            return Cat.stealthOpacity;
+        }
+    }
+
+    // No special opacity conditions so just appear as normal;
+    return Cat.aliveOpacity;
+}
+
 class Cat {
     static width = 300;
     static height = 420;
@@ -8,6 +25,7 @@ class Cat {
 
     static aliveOpacity = 255;
     static deadOpacity = 25;
+    static stealthOpacity = 200;
 
     static catColor = [
         [255, 0, 0],
@@ -40,7 +58,7 @@ class Cat {
 
         this.showDebug = showDebug;
 
-        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
+        this.opacity = calculateOpacity(cat);
     }
 
     draw(teamColor) {
@@ -136,6 +154,6 @@ class Cat {
 
         this.showDebug = showDebug
 
-        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
+        this.opacity = calculateOpacity(cat);
     }
 }

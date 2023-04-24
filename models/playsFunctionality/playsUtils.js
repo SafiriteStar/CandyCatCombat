@@ -103,7 +103,7 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     for (let i = 0; i < player.team.cats.length; i++) {
         player.team.cats[i].conditions = [];
         [player.team.cats[i].conditions] = await pool.query(
-            `select ccn_name as "name", gcc_duration as "duration", gcc_id as "id"
+            `select ccn_name as "name", gcc_duration as "duration", gcc_ccn_id as "id"
             from game_team_cat, game_team_cat_condition, cat_condition
             where gcc_ccn_id = ccn_id and gtc_id = gcc_gtc_id and gcc_gtc_id = ?`,
                 [player.team.cats[i].id]);
