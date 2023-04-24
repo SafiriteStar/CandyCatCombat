@@ -30,6 +30,16 @@ Play.move = async function(game, x, y, map, catID, teamID) {
             return { status: 400, result: {msg:"You cannot move the character since it is dead"} };
         }
 
+        // Check if the cat is rooted
+        // For every condition the cat has
+        for (let i = 0; i < selectedCat.conditions.length; i++) {
+            // If its rooted
+            if (selectedCat.conditions[i].id === 2) {
+                // Don't move
+                return { status: 400, result: { msg:"You cannot move the character since it is rooted" } };
+            }
+        }
+
         // Cats with no stamina can't be moved
         if (stamina <= 0) {
             return { status: 400, result: {msg:"You cannot move the character since it has no stamina"} };
