@@ -38,7 +38,7 @@ Play.resolveAttacks = async function(game) {
             await Play.adjustStamina(playerCat.id, playerCat.speed - playerCat.stamina);
         }
 
-        
+        await CatStandardAttack.rootedCheck(playerCat);
 
         await GumCatAttack.reStealthCheck(playerCat, attackSuccessful);
     });

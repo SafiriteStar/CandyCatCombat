@@ -45,7 +45,7 @@ Play.tickConditionDuration = async function(catConditionID, change) {
         // No
         // Update its duration
         await pool.query(
-            `Update game_team_cat_condition set gcc_duration = gcc_duration - ? where gcc_id = ?`,
+            `Update game_team_cat_condition set gcc_duration = gcc_duration + ? where gcc_id = ?`,
                 [change, catConditionID]);
     }
 

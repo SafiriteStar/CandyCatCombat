@@ -140,7 +140,7 @@ class CatStandardAttack {
             // If its the root condition
             if (playerCat.conditions[i].id === 2) {
                 // Tick it down
-                await Play.tickConditionDuration(playerCat.id, -1); 
+                await Play.tickConditionDuration(playerCat.conditions[i].game_id, -1); 
             }
         }
     }

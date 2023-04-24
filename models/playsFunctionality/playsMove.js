@@ -25,6 +25,9 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         let selectedCat = selectedCats[0];
         let stamina = selectedCat.gtc_stamina;
 
+        let [selectedCatConditions] = await pool.query(
+            `Select gcc_ccn_id as "id" from game_team_cat_condition where gcc_gtc_id = ?`, [selectedCat.gtc_id])
+
         // Dead cats can't be moved
         if (selectedCat.gtc_state_id === 3) { // 3 = dead
             return { status: 400, result: {msg:"You cannot move the character since it is dead"} };
@@ -32,9 +35,9 @@ Play.move = async function(game, x, y, map, catID, teamID) {
 
         // Check if the cat is rooted
         // For every condition the cat has
-        for (let i = 0; i < selectedCat.conditions.length; i++) {
+        for (let i = 0; i < selectedCatConditions.length; i++) {
             // If its rooted
-            if (selectedCat.conditions[i].id === 2) {
+            if (selectedCatConditions[i].id === 2) {
                 // Don't move
                 return { status: 400, result: { msg:"You cannot move the character since it is rooted" } };
             }

@@ -56,8 +56,8 @@ class GumCatAttack extends CatStandardAttack {
                     }
                     else {
                         // No
-                        // Increase it (-1 because math)
-                        await Play.tickConditionDuration(playerCat.conditions[i].game_id, -1);
+                        // Increase it
+                        await Play.tickConditionDuration(playerCat.conditions[i].game_id, 1);
                     }
                 }
             }

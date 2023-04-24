@@ -26,7 +26,7 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
     // Add the cats in the default team to game_team_cat
     for (let i = 0; i < playerDefaultTeam.length; i++) {
         // Get the data of the current cat
-        let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [playerDefaultTeam[i].tmc_cat_id + 1]);
+        let [[currentCat]] = await pool.query('Select * from cat where cat_id = ?', [i < 3 && 6 || 7]);
 
         // Add that cat to the game team, default to the placement board (1)
         await pool.query(
