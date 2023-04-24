@@ -258,7 +258,7 @@ class World {
         if (fullReset) {
             if (purgeDB) {
                 console.log("Purging Database");
-                await pool.query('drop database cccdb');
+                await pool.query('drop database ccatcdb');
             }
             console.log("Creating tables and foreign keys...");
             await runSQLFile('create');
