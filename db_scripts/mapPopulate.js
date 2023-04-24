@@ -284,10 +284,54 @@ class World {
                 // Map 1
                 new DatabaseMap(
                     33, 20,                                             // Width & Height
-                    [   new TileTypeGroup(6, 10, 5, 4, 2, null)   ],    // Walls
-                    [                                                   
-                        new TileTypeGroup(1, 7, 3, 6, 3, 1),            // Placement
-                        new TileTypeGroup(28, 7, 3, 6, 3, 2)
+                    [   // <-------------------- Walls -------------------->
+                        new TileTypeGroup(9, 0, 7, 1, 2, null),         // ^
+                        new TileTypeGroup(11, 1, 3, 1, 2, null),        // |
+                        new TileTypeGroup(11, 2, 3, 1, 2, null),        // |
+                        new TileTypeGroup(12, 3, 1, 1, 2, null),        // |
+                        new TileTypeGroup(12, 4, 1, 1, 2, null),        // | Bottom Pillars
+                        new TileTypeGroup(17, 0, 7, 1, 2, null),        // |
+                        new TileTypeGroup(19, 1, 3, 1, 2, null),        // |
+                        new TileTypeGroup(19, 2, 3, 1, 2, null),        // |
+                        new TileTypeGroup(20, 3, 1, 1, 2, null),        // |
+                        new TileTypeGroup(20, 4, 1, 1, 2, null),        // v
+                        new TileTypeGroup(6, 5, 3, 1, 2, null),         // ^
+                        new TileTypeGroup(7, 6, 1, 1, 2, null),         // | Bottom Duds 
+                        new TileTypeGroup(24, 5, 3, 1, 2, null),        // |
+                        new TileTypeGroup(25, 6, 1, 1, 2, null),        // v
+                        new TileTypeGroup(9, 12, 3, 1, 2, null),        // ^
+                        new TileTypeGroup(10, 11, 1, 1, 2, null),       // | Top Duds
+                        new TileTypeGroup(21, 12, 3, 1, 2, null),       // |
+                        new TileTypeGroup(22, 11, 1, 1, 2, null),       // v
+                        new TileTypeGroup(16, 7, 1, 1, 2, null),        // ^
+                        new TileTypeGroup(15, 8, 3, 1, 2, null),        // |
+                        new TileTypeGroup(15, 9, 1, 1, 2, null),        // |
+                        new TileTypeGroup(17, 9, 1, 1, 2, null),        // | Center Pieces
+                        new TileTypeGroup(15, 11, 3, 1, 2, null),       // |
+                        new TileTypeGroup(15, 12, 3, 1, 2, null),       // |
+                        new TileTypeGroup(14, 13, 2, 1, 2, null),       // |
+                        new TileTypeGroup(17, 13, 2, 1, 2, null),       // v
+                        new TileTypeGroup(10, 16, 1, 1, 2, null),       // ^
+                        new TileTypeGroup(8, 17, 3, 1, 2, null),        // |
+                        new TileTypeGroup(6, 18, 7, 1, 2, null),        // |
+                        new TileTypeGroup(4, 19, 11, 1, 2, null),       // | Top Chunks
+                        new TileTypeGroup(22, 16, 1, 1, 2, null),       // |
+                        new TileTypeGroup(22, 17, 3, 1, 2, null),       // |
+                        new TileTypeGroup(20, 18, 7, 1, 2, null),       // |
+                        new TileTypeGroup(18, 19, 11, 1, 2, null),      // |
+                        new TileTypeGroup(14, 18, 1, 1, 2, null),       // |
+                        new TileTypeGroup(18, 18, 1, 1, 2, null),       // v
+                        new TileTypeGroup(0, 19, 3, 1, 2, null),        // ^
+                        new TileTypeGroup(0, 18, 1, 1, 2, null),        // | Top Corners
+                        new TileTypeGroup(30, 19, 3, 1, 2, null),       // |
+                        new TileTypeGroup(32, 18, 1, 1, 2, null),       // v
+                    ],
+                    [   // <------------------ Placement ------------------>
+                        new TileTypeGroup(3, 7, 3, 6, 3, 1),            // ^ Player 1
+                        new TileTypeGroup(4, 6, 1, 1, 3, 1),            // v
+
+                        new TileTypeGroup(27, 7, 3, 6, 3, 2),           // ^ Player 2
+                        new TileTypeGroup(28, 6, 1, 1, 3, 2)            // v
                     ])
             ];
     
