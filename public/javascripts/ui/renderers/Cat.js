@@ -36,6 +36,7 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+        this.conditions = cat.conditions;
 
         this.showDebug = showDebug;
 
@@ -131,6 +132,7 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+        this.conditions = cat.conditions;
 
         this.showDebug = showDebug
 
