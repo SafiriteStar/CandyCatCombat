@@ -134,6 +134,16 @@ class CatStandardAttack {
         this.validTargetTeams = [];
     }
 
+    static async rootedCheck(playerCat) {
+        // For every condition
+        for (let i = 0; i < playerCat.conditions.length; i++) {
+            // If its the root condition
+            if (playerCat.conditions[i].id === 2) {
+                // Tick it down
+                await Play.tickConditionDuration(playerCat.id, -1); 
+            }
+        }
+    }
 }
 
 module.exports = CatStandardAttack;

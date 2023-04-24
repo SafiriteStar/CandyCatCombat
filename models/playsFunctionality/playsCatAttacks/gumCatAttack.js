@@ -37,6 +37,32 @@ class GumCatAttack extends CatStandardAttack {
         // In case we need it, give back who we hit and for how much
         return [targetCatData.id, damageDealt];
     }
+
+    static async reStealthCheck(playerCat, attackSuccessful) {
+        // Are we a stealth cat that didn't attack?
+        if (playerCat.type === 4 && attackSuccessful === false) {
+            // Yes
+            // Do we have a ReStealth counter?
+            for (let i = 0; i < playerCat.conditions.length; i++) {
+                if (playerCat.conditions[i].id == 3) {
+                    // We do
+                    // Is it at 3?
+                    if (playerCat.conditions[i].duration === 3) {
+                        // Yes
+                        // Remove it
+                        await Play.removeCondition(playerCat.conditions[i].game_id);
+                        // And add stealth
+                        await Play.addCondition(playerCat.id, 1, null);
+                    }
+                    else {
+                        // No
+                        // Increase it (-1 because math)
+                        await Play.tickConditionDuration(playerCat.conditions[i].game_id, -1);
+                    }
+                }
+            }
+        }
+    }
 }
 
 module.exports = GumCatAttack;
