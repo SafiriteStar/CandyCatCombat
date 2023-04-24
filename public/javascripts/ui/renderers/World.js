@@ -1,6 +1,6 @@
 class World {
-    static cameraStartPosX = 0;
-    static cameraStartPosY = 0;
+    static cameraStartPosX = Tile.width * 1.5 * 5;
+    static cameraStartPosY = Tile.height * 7.5 * 5;
 
     static teamColors = [
         [151, 255, 175],
@@ -16,8 +16,8 @@ class World {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
-        this.cameraX = 0;
-        this.cameraY = 0;
+        this.cameraX = World.cameraStartPosX;
+        this.cameraY = World.cameraStartPosY;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
 
