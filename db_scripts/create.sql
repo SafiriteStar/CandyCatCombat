@@ -41,11 +41,6 @@ create table scoreboard (
     sb_points int not null default 0,
     primary key (sb_id));
 
-create table testTable(
-    ttt_id int not null auto_increment,
-    ttt_useless int not null,
-    primary key (ttt_id));
-
 create table scoreboard_state (
     sbs_id int not null auto_increment,
     sbs_state varchar(60) not null,
