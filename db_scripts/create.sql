@@ -1,5 +1,3 @@
-create database ccatcdb;
-
 use ccatcdb;
 
 create table user (
