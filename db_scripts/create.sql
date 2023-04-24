@@ -1,5 +1,3 @@
-use ccatcdb;
-
 create table user (
     usr_id int not null auto_increment,
     usr_name varchar(60) not null,
