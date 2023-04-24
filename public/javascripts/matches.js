@@ -54,10 +54,8 @@ let catBrackets = [
 ]
 
 async function catOnChange(teamCatID, newCatID) {
-    console.log("Hello");
-    console.log(teamCatID);
-    console.log(newCatID);
-
+    console.log("teamCatID: " + teamCatID);
+    console.log("newCatID: " + newCatID);
     await requestChangeDefaultCat(newCatID, teamCatID);
 }
 
@@ -94,11 +92,20 @@ async function createTeamDropDown(team, baseCats) {
                 catSelect.name = "catSelect";
                 catSelect.id = "catSelect";
 
-                for (let k = 0; k < baseCats.length; k++) {
+                for (let k = 0; k < baseCats.length + 1; k++) {
+                    let id = null;
+                    let name = null;
+                    if (baseCats[k] !== undefined) {
+                        name = baseCats[k].name;
+                        id = baseCats[k].id;
+                    }
                     const catOption = document.createElement('option');
                     catOption.value = team[i].id;
-                    catOption.appendChild(document.createTextNode(baseCats[k].name));
-                    if (baseCats[k].name == team[i][catBrackets[j]]) {
+                    catOption.appendChild(document.createTextNode(name));
+                    console.log("Id: " + id);
+                    catOption.index = id;
+                    console.log("Index: " + catOption.index);
+                    if (name === team[i][catBrackets[j]]) {
                         catOption.selected = "selected";
                     }
 
