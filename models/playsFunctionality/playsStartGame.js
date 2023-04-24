@@ -45,11 +45,26 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                     currentCat.cat_id,          // gtc_type_id
                     currentCat.cat_max_health,  // gtc_current_health
                     currentCat.cat_speed,       // gtc_stamina
-                    i,                          // gtc_x
-                    0,                          // gtc_y
+                    0,                          // gtc_x
+                    i,                          // gtc_y
                     1                           // gtc_game_board_id
                 ]);
     }
+
+    // After adding all the cats, add in any special conditions
+    
+    // Get the cat data:
+    let playerTeamData = await Play.getGameCatTeam("Player", playerId, gameId);
+    // For every cat in the player team
+    playerTeamData.team.cats.forEach(async function(cat) {
+        // If its a gum at
+        if (cat.type === 4) {
+            // Add in the stealth condition (condition id: 1)
+            await pool.query(
+                `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id) values (?, ?)`,
+                    [cat.id, 1]);
+        }
+    });
 }
 
 Play.startGame = async function(game) {

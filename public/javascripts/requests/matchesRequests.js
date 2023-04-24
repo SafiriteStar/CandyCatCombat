@@ -26,9 +26,6 @@ async function requestWaitingMatches() {
     }
 }
 
-
-
-
 async function requestJoinMatch(mId) {
     try {
         const response = await fetch(`/api/games/${mId}/join`, 

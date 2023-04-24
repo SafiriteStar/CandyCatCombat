@@ -10,12 +10,6 @@ class CaramelCatAttack extends CatStandardAttack {
 
     async attack(targetCatData) {
         let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
-        console.log("Updating database...");
 
         // APPLY DAMAGE
         await Play.applyDamage(damageDealt, targetCatData.id);
@@ -34,7 +28,7 @@ class CaramelCatAttack extends CatStandardAttack {
         // So if the target is rooted
         if (isRooted) {
             // Reset the duration
-            Play.setConditionDuration(targetCatData.conditions[rootedIndex].id, 2);
+            Play.setConditionDuration(targetCatData.conditions[rootedIndex].id, 1);
         }
         else {
             // Since its not rooted

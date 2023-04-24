@@ -39,14 +39,14 @@ class Map {
 
     // Checks if the given X and Y position have a tile
     checkPositionExists(screenX, screenY) {
-        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5));
+        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5)) - (this.drawStartX / (Tile.width * 1.5));
         let tileCoordY = Math.ceil((-screenY - Tile.height) / (Tile.height * 2)) + (this.drawStartY / (Tile.height * 2));
         
         return this.checkTileExists(tileCoordX, tileCoordY);
     }
 
     getPositionCoord(screenX, screenY) {
-        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5));
+        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5)) - (this.drawStartX / (Tile.width * 1.5));
         let tileCoordY = Math.ceil((-screenY - Tile.height) / (Tile.height * 2)) + (this.drawStartY / (Tile.height * 2));
 
         return [tileCoordX, tileCoordY]

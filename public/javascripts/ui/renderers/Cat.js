@@ -1,3 +1,20 @@
+function calculateOpacity(cat) {
+    // If we are dead
+    if (cat.current_health <= 0) {
+        return Cat.deadOpacity;
+    }
+    
+    for (let i = 0; i < cat.conditions.length; i++) {
+        // If we are in stealth
+        if (cat.conditions[i].id == 1) {
+            return Cat.stealthOpacity;
+        }
+    }
+
+    // No special opacity conditions so just appear as normal;
+    return Cat.aliveOpacity;
+}
+
 class Cat {
     static width = 300;
     static height = 420;
@@ -8,6 +25,7 @@ class Cat {
 
     static aliveOpacity = 255;
     static deadOpacity = 25;
+    static stealthOpacity = 200;
 
     static catColor = [
         [255, 0, 0],
@@ -19,7 +37,7 @@ class Cat {
         [247, 0, 255]
     ];
     
-    constructor(cat, showDebug) {
+    constructor(cat, image, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
         this.x = cat.x;
@@ -36,10 +54,13 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+        this.conditions = cat.conditions;
 
         this.showDebug = showDebug;
 
-        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
+        this.opacity = calculateOpacity(cat);
+
+        this.img = image
     }
 
     draw(teamColor) {
@@ -79,6 +100,12 @@ class Cat {
                 0,
                 Cat.diameter
             );
+
+            // Stand in image for now
+            push();
+                scale(0.5);
+                image(this.img, -this.img.width * 0.5, -this.img.height * 0.5);
+            pop();
 
             // Health Bar Background
             fill(255, 255, 255, 255);
@@ -131,9 +158,10 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+        this.conditions = cat.conditions;
 
         this.showDebug = showDebug
 
-        this.opacity = (this.current_health <= 0) && Cat.deadOpacity || Cat.aliveOpacity;
+        this.opacity = calculateOpacity(cat);
     }
 }

@@ -1,6 +1,6 @@
 class World {
-    static cameraStartPosX = 0;
-    static cameraStartPosY = 0;
+    static cameraStartPosX = Tile.width * 1.5 * 5;
+    static cameraStartPosY = Tile.height * 7.5 * 5;
 
     static teamColors = [
         [151, 255, 175],
@@ -8,16 +8,16 @@ class World {
     ];
 
     static mapDrawOffsets = [
-        [0, Tile.height * 4],
+        [-Tile.width * 3, -Tile.height * 14],
         [0, 0]
     ]
 
-    constructor(maps, player, opponents) {
+    constructor(maps, player, opponents, playerOrder) {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
-        this.cameraX = 0;
-        this.cameraY = 0;
+        this.cameraX = World.cameraStartPosX;
+        this.cameraY = World.cameraStartPosY;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
 
@@ -62,12 +62,21 @@ class World {
         this.maps = [];
         // Note: First map is always placement map
         for (let i = 0; i < maps.length; i++) {
+
+            let xOffset = World.mapDrawOffsets[i][0];
+            let yOffset = World.mapDrawOffsets[i][1];
+            
+            // If we are the placement map and are second
+            if (GameInfo.game.player.order === 2 && i === 0) {
+                xOffset = -xOffset * (Math.floor(maps[i+1].width * 0.5) + 1);
+            }
+            
             this.maps[i] = new Map (
                 maps[i].width,
                 maps[i].height,
                 maps[i].tiles,
-                World.mapDrawOffsets[i][0],
-                World.mapDrawOffsets[i][1]
+                xOffset,
+                yOffset
             );
         }
     }

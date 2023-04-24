@@ -45,11 +45,6 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
 
     async attack(targetCatData) {
         let healingDealt = this.playerCat.damage;
-        console.log("Healing Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Healing Power: " + this.playerCat.damage);
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Healing Done: " + healingDealt);
-        console.log("Updating database...");
 
         // APPLY DAMAGE
         await Play.applyDamage(healingDealt, targetCatData.id);

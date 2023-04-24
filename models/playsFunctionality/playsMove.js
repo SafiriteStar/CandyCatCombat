@@ -25,9 +25,22 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         let selectedCat = selectedCats[0];
         let stamina = selectedCat.gtc_stamina;
 
+        let [selectedCatConditions] = await pool.query(
+            `Select gcc_ccn_id as "id" from game_team_cat_condition where gcc_gtc_id = ?`, [selectedCat.gtc_id])
+
         // Dead cats can't be moved
         if (selectedCat.gtc_state_id === 3) { // 3 = dead
             return { status: 400, result: {msg:"You cannot move the character since it is dead"} };
+        }
+
+        // Check if the cat is rooted
+        // For every condition the cat has
+        for (let i = 0; i < selectedCatConditions.length; i++) {
+            // If its rooted
+            if (selectedCatConditions[i].id === 2) {
+                // Don't move
+                return { status: 400, result: { msg:"You cannot move the character since it is rooted" } };
+            }
         }
 
         // Cats with no stamina can't be moved
@@ -52,7 +65,7 @@ Play.move = async function(game, x, y, map, catID, teamID) {
         let tile = tiles[0]
 
         // Is the tile a wall?
-        if (tile.type_id == 2) { // 2 = wall
+        if (tile.tile_type_id == 2) { // 2 = wall
             return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
         }
 
@@ -121,12 +134,12 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 }
 
                 let tileGroup = tileGroups[0];
-                if(tileGroup.ptg_group !== game.player.id) {
+                if(tileGroup.ptg_group !== game.player.order) {
                     return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
                 }
 
             } 
-            else if (game.player.state_id === 4) {
+            else if (game.player.state.id === 4) {
 
                 // Check if the target tile not in same board or not next to the cat
                 if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {

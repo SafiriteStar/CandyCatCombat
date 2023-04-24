@@ -28,14 +28,19 @@ Play.resolveAttacks = async function(game) {
     }
     // For every player cat
     player.team.cats.forEach(async function(playerCat, index, array) {
+        let attackSuccessful = false;
         // If we aren't in the placement map and the cat is alive
         if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
             let attackCat = new attackTypes[playerCat.type - 1](playerCat, opponentsTeams, [player]);
 
-            await attackCat.executeAttackSequence();
+            attackSuccessful = await attackCat.executeAttackSequence();
             // Refill our stamina to max
             await Play.adjustStamina(playerCat.id, playerCat.speed - playerCat.stamina);
         }
+
+        await CatStandardAttack.rootedCheck(playerCat);
+
+        await GumCatAttack.reStealthCheck(playerCat, attackSuccessful);
     });
 }
 
