@@ -39,13 +39,8 @@ class PopCatAttack extends CatStandardAttack {
         let playerCatData = this.playerCat;
         
         let damageDealt = targetCatData.defense - playerCatData.damage;
-        console.log("Attacking Cat: " + playerCatData.name + " GTC ID: " + playerCatData.id);
-        console.log("Attack: " + playerCatData.damage);
+
         // The main cat
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
-        console.log("Updating database...");
         await Play.applyDamage(damageDealt, targetCatData.id);
         
         // Cats around the main cat
@@ -54,10 +49,6 @@ class PopCatAttack extends CatStandardAttack {
             // Tally up the damage as well
             damageDealt = damageDealt + aoeDamageDealt;
             
-            console.log("Defending Cat: " + aoeTarget.name + " GTC ID: " + aoeTarget.id);
-            console.log("Defense: " + aoeTarget.defense);
-            console.log("Damage Dealt: " + aoeDamageDealt);
-            console.log("Updating database...");
             await Play.applyDamage(aoeDamageDealt, aoeTarget.id);
         });
 
@@ -89,7 +80,7 @@ class PopCatAttack extends CatStandardAttack {
         }
 
         // In case we need it, give back who we hit and for how much
-        return targetHit, damageDealt;
+        return targetHit !== null && targetHit !== undefined;
     }
 }
 

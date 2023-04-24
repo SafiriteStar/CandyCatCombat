@@ -30,12 +30,6 @@ class GumCatAttack extends CatStandardAttack {
         });
 
         damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
-        console.log("Updating database...");
 
         // APPLY DAMAGE
         await Play.applyDamage(damageDealt, targetCatData.id);

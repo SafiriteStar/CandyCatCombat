@@ -28,13 +28,38 @@ Play.resolveAttacks = async function(game) {
     }
     // For every player cat
     player.team.cats.forEach(async function(playerCat, index, array) {
+        let attackSuccessful = false;
         // If we aren't in the placement map and the cat is alive
         if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
             let attackCat = new attackTypes[playerCat.type - 1](playerCat, opponentsTeams, [player]);
 
-            await attackCat.executeAttackSequence();
+            attackSuccessful = await attackCat.executeAttackSequence();
             // Refill our stamina to max
             await Play.adjustStamina(playerCat.id, playerCat.speed - playerCat.stamina);
+        }
+
+        // Are we a stealth cat that didn't attack?
+        if (playerCat.type === 4 && attackSuccessful === false) {
+            // Yes
+            // Do we have a ReStealth counter?
+            for (let i = 0; i < playerCat.conditions.length; i++) {
+                if (playerCat.conditions[i].id == 3) {
+                    // We do
+                    // Is it at 3?
+                    if (playerCat.conditions[i].duration === 3) {
+                        // Yes
+                        // Remove it
+                        await Play.removeCondition(playerCat.conditions[i].game_id);
+                        // And add stealth
+                        await Play.addCondition(playerCat.id, 1, null);
+                    }
+                    else {
+                        // No
+                        // Increase it (-1 because math)
+                        await Play.tickConditionDuration(playerCat.conditions[i].game_id, -1);
+                    }
+                }
+            }
         }
     });
 }

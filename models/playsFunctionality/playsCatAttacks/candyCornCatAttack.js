@@ -10,16 +10,20 @@ class CandyCornCatAttack extends CatStandardAttack {
     async executeAttackSequence() {
         // Get the cats we can attack
         this.generateAttackTargetList();
+        let hitTarget = false; 
         // If we haven't moved
         if (this.playerCat.stamina === this.playerCat.speed) {
             // Attack twice
-            await this.attackRandomTarget();
+            hitTarget = await this.attackRandomTarget();
             await this.attackRandomTarget();
         }
         else {
             // Attack once
-            await this.attackRandomTarget();
+            hitTarget = await this.attackRandomTarget();
         }
+
+        // Return true if we hit someone, false if else
+        return hitTarget;
     }
 }
 

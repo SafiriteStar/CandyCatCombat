@@ -31,12 +31,12 @@ Play.setConditionDuration = async function(catConditionID, duration) {
             [duration, catConditionID]);
 }
 
-Play.tickDownConditionDuration = async function(catConditionID, subtraction) {
+Play.tickConditionDuration = async function(catConditionID, change) {
     // Get the condition we are trying to update
-    let conditionDB = await pool.query(`Select gcc_duration as "duration" from game_team_cat_condition where gcc_id = ?`, [catConditionID]);
+    let [[conditionDB]] = await pool.query(`Select gcc_duration as "duration" from game_team_cat_condition where gcc_id = ?`, [catConditionID]);
     
-    // Is the condition about to expire or expired already?
-    if (conditionDB <= 0) {
+    // Is the condition about to expire or expired already and are we subtracting?
+    if (conditionDB.duration <= 0 && change < 0) {
         // Yes
         // Remove it
         await Play.removeCondition(catConditionID);
@@ -46,7 +46,7 @@ Play.tickDownConditionDuration = async function(catConditionID, subtraction) {
         // Update its duration
         await pool.query(
             `Update game_team_cat_condition set gcc_duration = gcc_duration - ? where gcc_id = ?`,
-                [subtraction, catConditionID]);
+                [change, catConditionID]);
     }
 
 }
@@ -78,7 +78,7 @@ Play.adjustStamina = async function(catID, staminaAdjustment) {
 // cost
 // state
 // boardID
-// conditions
+// conditions [ { name, duration, id, game_id } ]
 Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 

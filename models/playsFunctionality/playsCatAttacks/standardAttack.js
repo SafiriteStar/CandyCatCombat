@@ -60,12 +60,6 @@ class CatStandardAttack {
 
     async attack(targetCatData) {
         let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
-        console.log("Updating database...");
 
         // APPLY DAMAGE
         await Play.applyDamage(damageDealt, targetCatData.id);
@@ -122,14 +116,17 @@ class CatStandardAttack {
         }
 
         // In case we need it, give back who we hit and for how much
-        return targetHit, damageDealt;
+        return targetHit !== null && targetHit !== undefined;
     }
 
     async executeAttackSequence() {
         // Get the cats we can attack
         this.generateAttackTargetList();
         // Attack a random target
-        await this.attackRandomTarget();
+        let hitTarget = await this.attackRandomTarget();
+
+        // Return true if we hit someone, false if else
+        return hitTarget
     }
 
     setNewSearchTeam(targetSearchTeams) {
