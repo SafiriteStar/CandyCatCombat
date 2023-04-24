@@ -55,7 +55,6 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
     
     // Get the cat data:
     let playerTeamData = await Play.getGameCatTeam("Player", playerId, gameId);
-    console.log(playerTeamData);
     // For every cat in the player team
     playerTeamData.team.cats.forEach(async function(cat) {
         // If its a gum at

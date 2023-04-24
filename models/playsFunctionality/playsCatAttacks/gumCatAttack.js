@@ -13,11 +13,11 @@ class GumCatAttack extends CatStandardAttack {
 
         // Are we stealthed?
         this.playerCat.conditions.forEach(async function (condition) {
-            if (condition.name === "Stealth") {
+            if (condition.id === 1) {
                 // Yup, double our damage
-                damageDealt = this.playerCat.damage * 2;
+                damageDealt = damageDealt * 2;
                 // Remove stealth from this cat
-                await Play.removeCondition(condition.id);
+                await Play.removeCondition(condition.game_id);
             }
         });
 

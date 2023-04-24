@@ -14,8 +14,23 @@ class CatStandardAttack {
         return cat.current_health > 0;
     }
 
+    static catIsNotStealthedFilter(cat) {
+        // For each condition
+        for (let i = 0; i < cat.conditions.length; i++) {
+            // If its stealth
+            if (cat.conditions[i].id === 1) {
+                // Then the check failed
+                return false;
+            }
+        }
+
+        // If we got here then the cat was not stealthed
+        return true;
+    }
+
     static filters = [
-        CatStandardAttack.catIsAliveFilter
+        CatStandardAttack.catIsAliveFilter,
+        CatStandardAttack.catIsNotStealthedFilter
     ]
 
     generateAttackTargetList() {
