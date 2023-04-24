@@ -53,16 +53,29 @@ let catBrackets = [
     "cost"
 ]
 
+async function remakeTable() {
+    // Delete the table
+    document.getElementById("defaultTeamTable").remove();
+
+    // Get default team
+    result = await requestDefaultTeam();
+
+    await createTeamDropDown(result.team, result.baseCats);
+}
+
 async function catOnChange(teamCatID, newCatID) {
     await requestChangeDefaultCat(newCatID, teamCatID);
+    await remakeTable();
 }
 
 async function addCatOnClick(newCatID) {
     await requestAddDefaultCat(newCatID);
+    await remakeTable();
 }
 
 async function removeCatOnClick(teamCatID) {
     await requestRemoveDefaultCat(teamCatID);
+    await remakeTable();
 }
 
 async function createTeamDropDown(team, baseCats) {
@@ -74,6 +87,7 @@ async function createTeamDropDown(team, baseCats) {
 
     // The table
     const defaultTeamTable = document.createElement('table');
+    defaultTeamTable.id = "defaultTeamTable";
     defaultTeamTable.style.border = '1px solid black';
 
     // Header rows
