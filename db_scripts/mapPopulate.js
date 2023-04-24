@@ -258,7 +258,10 @@ class World {
         if (fullReset) {
             if (purgeDB) {
                 console.log("Purging Database");
-                await pool.query('drop database ccatcdb');
+                await pool.query(
+                    `SELECT concat('DROP TABLE IF EXISTS "', table_name, '";')
+                    FROM information_schema.tables
+                    WHERE table_schema = 'sql7614247'`);
             }
             console.log("Creating tables and foreign keys...");
             await runSQLFile('create');
