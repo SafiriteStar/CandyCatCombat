@@ -45,8 +45,8 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                     currentCat.cat_id,          // gtc_type_id
                     currentCat.cat_max_health,  // gtc_current_health
                     currentCat.cat_speed,       // gtc_stamina
-                    i,                          // gtc_x
-                    0,                          // gtc_y
+                    0,                          // gtc_x
+                    i,                          // gtc_y
                     1                           // gtc_game_board_id
                 ]);
     }

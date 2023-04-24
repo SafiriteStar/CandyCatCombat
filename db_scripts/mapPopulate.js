@@ -278,16 +278,16 @@ class World {
             let boards = [
                 // Placement Map
                 new DatabaseMap(
-                    6, 1,                                               // Width & Height
+                    1, 6,                                               // Width & Height
                     [],                                                 // Walls
-                    [   new TileTypeGroup(0, 0, 6, 1, 3, 0)   ]),       // Placement
+                    [   new TileTypeGroup(0, 0, 1, 6, 3, 0)   ]),       // Placement
                 // Map 1
                 new DatabaseMap(
                     33, 20,                                             // Width & Height
                     [   new TileTypeGroup(6, 10, 5, 4, 2, null)   ],    // Walls
-                    [                                                   // Placement
-                        new TileTypeGroup(1, 1, 3, 3, 3, 1),
-                        new TileTypeGroup(1, 6, 3, 3, 3, 2)
+                    [                                                   
+                        new TileTypeGroup(1, 7, 3, 6, 3, 1),            // Placement
+                        new TileTypeGroup(28, 7, 3, 6, 3, 2)
                     ])
             ];
     
