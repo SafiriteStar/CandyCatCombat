@@ -31,17 +31,62 @@ window.onload = async function () {
     }
 }
 
+let headerCells = [
+    "Name",
+    "Health",
+    "Damage",
+    "Defense",
+    "Speed",
+    "Max Range",
+    "Min Range",
+    "Cost"
+]
+
+let catBrackets = [
+    "name",
+    "health",
+    "damage",
+    "defense",
+    "speed",
+    "max_range",
+    "min_range",
+    "cost"
+]
+
 function createTeamDropDown(team) {
     console.log(team);
 
-    for (let i = 0; i < team.length; i++) {
-        const para = document.createElement("p");
-        const node = document.createTextNode(team[i].name);
-        para.appendChild(node);
-        const element = document.getElementById("defaultTeam");
-        element.appendChild(para);
+    // Where we are going to attach the table
+    const element = document.getElementById("defaultTeam"); 
+
+    // The table
+    const defaultTeamTable = document.createElement('table');
+    defaultTeamTable.style.border = '1px solid black';
+
+    // Header rows
+    const headerRow = defaultTeamTable.insertRow();
+
+    // Header Cells
+    for (let i = 0; i < headerCells.length; i++) {
+        const headerCell = headerRow.insertCell();
+        headerCell.appendChild(document.createTextNode([headerCells[i]]));
+        headerCell.style.border = '1px solid black';
     }
 
+    // For each cat
+    for (let i = 0; i < team.length; i++) {
+        // New Cat
+        const catRow = defaultTeamTable.insertRow();
+        
+        // All cat data
+        for (let j = 0; j < catBrackets.length; j++) {
+            const catName = catRow.insertCell();
+            catName.appendChild(document.createTextNode(team[i][catBrackets[j]]));
+            catName.style.border = '1px solid black';
+        }
+    }
+
+    element.appendChild(defaultTeamTable);
     
 }
 
