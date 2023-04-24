@@ -28,7 +28,7 @@ class CaramelCatAttack extends CatStandardAttack {
         // So if the target is rooted
         if (isRooted) {
             // Reset the duration
-            Play.setConditionDuration(targetCatData.conditions[rootedIndex].id, 2);
+            Play.setConditionDuration(targetCatData.conditions[rootedIndex].id, 1);
         }
         else {
             // Since its not rooted
