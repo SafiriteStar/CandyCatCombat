@@ -78,7 +78,7 @@ function draw() {
 }
 
 async function keyPressed() {
-    GameInfo.world.keyPressed();
+    await GameInfo.world.keyPressed();
 }
 
 async function mousePressed() {

@@ -255,6 +255,25 @@ Play.countLiveCats = async function (playerID, gameID) {
     // For each cat in that team
     playerTeam.team.cats.forEach(cat => {
         // If its dead
+        if (cat.current_health > 0) {
+            // Add to the score
+            count++;
+        }
+    });
+
+    // Return the score
+    return count;
+}
+
+Play.countDeadCats = async function (playerID, gameID) {
+    // Get the team we are looking for
+    let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
+
+    let count = 0;
+
+    // For each cat in that team
+    playerTeam.team.cats.forEach(cat => {
+        // If its dead
         if (cat.current_health <= 0) {
             // Add to the score
             count++;

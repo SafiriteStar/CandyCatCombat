@@ -104,6 +104,7 @@ class Cat {
             // Stand in image for now
             push();
                 scale(0.5);
+                tint(255, 255, 255, this.opacity);
                 image(this.img, -this.img.width * 0.5, -this.img.height * 0.5);
             pop();
 
