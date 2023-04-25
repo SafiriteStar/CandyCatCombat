@@ -4,7 +4,7 @@ const Play = require("../playsFunctionality/playsInit");
 Play.move = async function(game, x, y, map, catID, teamID) {
     try {
         // Check if it's the user's turn
-        if (game.player.state.id === 3) { // 3 = waiting
+        if (!(game.player.state.id === 1 || game.player.state.id === 4)) { // If its not the placement (1) or playing (4) phase, we can't move
 
             return { status: 400, result: {msg:"You cannot move the character since it's not this user's turn"} };
         }
