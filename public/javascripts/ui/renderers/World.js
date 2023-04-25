@@ -182,10 +182,11 @@ class World {
     }
 
 
-    keyPressed() {
+    async keyPressed() {
         if (keyCode === ESCAPE) {
             if(confirm("Are you sure you want to quit?")) {
-                cancelGame();
+                await cancelGame();
+                window.location.reload();
             }
         }
     }
