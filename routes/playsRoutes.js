@@ -81,11 +81,11 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
 
 
 // Generates and sets the map
-router.post('/generateMap', async function(req, res, next) {
+router.get('/generateMap', async function(req, res, next) {
     try {
         console.log("Generating Map");
-        res.status(200).send({ msg: "Map Generated!" });
         await Play.setWorldData(World.createWorld, true, true);
+        res.status(200).send({ msg: "Map Generated!" });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
