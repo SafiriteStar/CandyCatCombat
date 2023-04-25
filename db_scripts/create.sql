@@ -41,7 +41,7 @@ create table scoreboard (
     sb_points int not null default 0,
     primary key (sb_id));
 
- create table scoreboard_state (
+create table scoreboard_state (
     sbs_id int not null auto_increment,
     sbs_state varchar(60) not null,
     primary key (sbs_id));
