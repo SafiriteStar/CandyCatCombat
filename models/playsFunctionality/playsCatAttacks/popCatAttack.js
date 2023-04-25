@@ -64,18 +64,17 @@ class PopCatAttack extends CatStandardAttack {
         let targetHit, damageDealt;
         if (targetCat !== null && targetCat !== undefined) {
             // Before we attack, get our AOE targets
-            this.generateAOETargets(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
+            this.generateAOETargets(this.targetAOETeams[targetCat.teamIndex].team.cats[targetCat.catIndex]);
             let targetAOECatData = [];
     
             this.validAOETargetTeams.forEach(team => {
                 team.catIndexes.forEach(aoeTarget => {
-                    if (this.targetSearchTeams[team.teamIndex] !== null && this.targetSearchTeams[team.teamIndex] !== undefined) {
-                        targetAOECatData.push(this.targetSearchTeams[team.teamIndex].team.cats[aoeTarget.index]);
+                    if (this.targetAOETeams[team.teamIndex] !== null && this.targetAOETeams[team.teamIndex] !== undefined) {
+                        targetAOECatData.push(this.targetAOETeams[team.teamIndex].team.cats[aoeTarget.index]);
                     }
                 });
             });
-            console.log(targetAOECatData);
-            // Standard Cat types (Melee, Ranged, Mawbreaker (Tank))
+            
             [targetHit, damageDealt] = await this.attack(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex], targetAOECatData);
         }
 
