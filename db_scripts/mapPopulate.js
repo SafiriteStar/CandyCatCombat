@@ -255,6 +255,16 @@ class World {
 
     static async createWorld(fullReset, purgeDB) {
         // If we want to reset everything
+        if (fullReset) {
+            if (purgeDB) {
+                console.log("Purging Database");
+                await pool.query('drop database cccdb');
+            }
+            console.log("Creating tables and foreign keys...");
+            await runSQLFile('create');
+            console.log("Populating...");
+            await runSQLFile('populate');
+        }
     
         let [preMapCheck] = await pool.query(
             `Select *
