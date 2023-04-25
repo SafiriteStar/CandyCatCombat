@@ -15,17 +15,17 @@ class ScoreBoard {
         textAlign(LEFT,CENTER);
         textSize(16);
         textStyle(NORMAL);
-        text("Turn: "+this.game.turn,ScoreBoard.x+10,ScoreBoard.y+ScoreBoard.height/4)
-        text("Player: "+this.game.player.name,ScoreBoard.x+10,ScoreBoard.y+2*ScoreBoard.height/4);
-        text("Opponent: "+this.game.opponents[0].name,ScoreBoard.x+10,ScoreBoard.y+3*ScoreBoard.height/4);
-        text(`(${this.game.player.state})`,ScoreBoard.x+200,ScoreBoard.y+2*ScoreBoard.height/4);
-        text(`(${this.game.opponents[0].state})`,ScoreBoard.x+200,ScoreBoard.y+3*ScoreBoard.height/4);
+        text("Turn: " + this.game.turn, ScoreBoard.x + 10, ScoreBoard.y + ScoreBoard.height / 4)
+        text("Player: " + this.game.player.name, ScoreBoard.x + 10, ScoreBoard.y + 2 * ScoreBoard.height / 4);
+        text("Opponent: " + this.game.opponents[0].name, ScoreBoard.x + 10, ScoreBoard.y + 3 * ScoreBoard.height / 4);
+        text(`(${this.game.player.state})`, ScoreBoard.x + 200, ScoreBoard.y + 2 * ScoreBoard.height / 4);
+        text(`(${this.game.opponents[0].state})`, ScoreBoard.x + 200, ScoreBoard.y + 3 * ScoreBoard.height / 4);
         if (this.game.state == "Finished"){ 
             fill(200,0,0);
             textSize(24);
             textStyle(BOLD);
             textAlign(CENTER,CENTER);
-            text("GAMEOVER",ScoreBoard.x+200,ScoreBoard.y-5+ScoreBoard.height/4)    
+            text("GAMEOVER",ScoreBoard.x + 200, ScoreBoard.y - 5 + ScoreBoard.height / 4)    
         }
     }
 
