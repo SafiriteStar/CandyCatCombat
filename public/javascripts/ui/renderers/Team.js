@@ -26,7 +26,7 @@ class Team {
     // Returns the index
     getCatAtCoord(x, y, map) {
         for (let i = 0; i < this.cats.length; i++) {
-            if (this.cats[i].x == x && this.cats[i].y == y && this.cats[i].map == map) {
+            if (this.cats[i].x == x && this.cats[i].y == y && this.cats[i].map == map && this.cats[i].current_health > 0) {
                 return i;
             }
             
