@@ -70,4 +70,5 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-await Play.setWorldData(World.createWorld, true, true);
+const makeWorld = Play.setWorldData(World.createWorld, true, true);
+makeWorld();
