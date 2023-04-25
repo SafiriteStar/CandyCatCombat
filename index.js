@@ -70,4 +70,4 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-Play.setWorldData(World.createWorld, true, true);
+await Play.setWorldData(World.createWorld, true, true);
