@@ -70,7 +70,7 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-function start() {
+async function start() {
   return Play.setWorldData(World.createWorld, true, true);
 }
 
