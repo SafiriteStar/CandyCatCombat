@@ -7,7 +7,7 @@ require("../db_scripts/mapPopulate");
 
 router.get('/auth', auth.verifyAuth, async function (req, res, next) {
     try {
-        console.log("Get information about the game");
+        console.log("Get information about the board");
         if (!req.game) {
             res.status(400).send({msg:"You are not at a game, please create or join a game"});
         }
@@ -70,7 +70,7 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
         } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
             res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.placementX, req.body.placementY, req.body.catID, req.body.teamID);
+            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.map, req.body.catID, req.body.teamID);
             res.status(result.status).send(result.result);
         }
     } catch (err) {

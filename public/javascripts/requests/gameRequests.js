@@ -67,7 +67,7 @@ async function requestGameBoard() {
     }
 }
 
-async function requestMoveCharacter(x, y, placementX, placementY, catID) {
+async function requestMoveCharacter(x, y, map, catID, teamID) {
     try {
         const response = await fetch(`/api/plays/move`, 
         {
@@ -75,14 +75,14 @@ async function requestMoveCharacter(x, y, placementX, placementY, catID) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-          method: "PATCH",
-          body: JSON.stringify({
+            method: "PATCH",
+            body: JSON.stringify({
               x: x,
               y: y,
-              placementX: placementX,
-              placementY: placementY,
-              catID: catID
-          })
+              map: map,
+              catID: catID,
+              teamID: teamID
+            })
         });
         // We are not checking for errors (considering the GUI is only allowing correct choices)
         // We only need to send if the user logged or not since the token will be in the cookie
