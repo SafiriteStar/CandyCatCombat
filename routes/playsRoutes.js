@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const World = require('../db_scripts/mapPopulate');
 const Play = require("../models/playsModel");
 const auth = require("../middleware/auth");
+require("../db_scripts/mapPopulate");
 
 router.get('/auth', auth.verifyAuth, async function (req, res, next) {
     try {
@@ -59,28 +61,6 @@ router.patch('/placementready', auth.verifyAuth, async function (req, res, next)
     }
 });
 
-// router.patch('/team/select', async function (req, res, next) {
-//     try{
-//         const characterId = req.body.characterId;
-//         const teamId = req.body.teamId;
-
-//         if (!teamId) {
-//             res.status(400).send({msg:"You cannot selected that team since the chosen team is not valid"});
-//         } else {
-//             let result = await Play.selectTeam(0, characterId, teamId);
-//             res.status(result.status).send(result.result);
-//         }
-
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).send(err);
-//     }
-// })
-
-// Body:
-// "characterId": (num),
-// "coord": (2D array)
-
 router.patch('/move', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Play move");
@@ -93,6 +73,19 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
             let result = await Play.move(req.game, req.body.x, req.body.y, req.body.placementX, req.body.placementY, req.body.catID, req.body.teamID);
             res.status(result.status).send(result.result);
         }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+
+// Generates and sets the map
+router.get('/generateMap', async function(req, res, next) {
+    try {
+        console.log("Generating Map");
+        Play.setWorldData(World.createWorld, true, true);
+        res.status(200).send({ msg: "Map Generated!" });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
