@@ -70,5 +70,14 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-const makeWorld = Play.setWorldData(World.createWorld, true, true);
-makeWorld();
+function start() {
+  return Play.setWorldData(World.createWorld, true, true);
+}
+
+(async() => {
+  console.log('before start');
+
+  await start();
+  
+  console.log('after start');
+})();
