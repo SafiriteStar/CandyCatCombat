@@ -176,7 +176,7 @@ class Game {
                 return {status:400, result:{msg:"Game not waiting for other players"}};
 
             // We join the game but the game still has not started, that will be done outside
-            let result = Game.#addUserToGame(userId, gameId);
+            let result = await Game.#addUserToGame(userId, gameId);
          
             return {status:200, result: {msg: "You joined the game."}};
         } catch (err) {
