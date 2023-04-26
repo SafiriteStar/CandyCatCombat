@@ -44,10 +44,10 @@ class User {
             await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
             // Get the team ID of the newly made team
             let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
-            // Add characters to new default team
+            // Add add a bunch of vanilla cats
             let fillCharacterData = [];
             for (let i = 0; i < 6; i++) {
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [i + 1, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
