@@ -139,7 +139,7 @@ class User {
         return catDataList[0];
     }
 
-    static async catCostCheck(newCatData, defaultTeamData, replaceTeamCatID) {
+    static catCostCheck(newCatData, defaultTeamData, replaceTeamCatID) {
         // Calculate the current cost of the team
         
         let currentCost = 0;
@@ -147,16 +147,14 @@ class User {
         for (let i = 0; i < defaultTeamData.length; i++) {
             
             // If its not the cat we are going to replace
-            console.log("tmc_id:");
-            console.log(defaultTeamData[i].tmc_id);
-            console.log("replaceCatID");
-            console.log(parseInt(replaceTeamCatID));
             if (defaultTeamData[i].tmc_id !== parseInt(replaceTeamCatID)) {
                 currentCost = currentCost + defaultTeamData[i].cat_cost;
             }
         }
 
-        return currentCost + newCatData.cat_cost > 6;
+        console.log((currentCost + newCatData.cat_cost) <= 6);
+
+        return (currentCost + newCatData.cat_cost) <= 6;
     }
 
     static async changeDefaultCat(userId, newCatId, teamCatId) {
@@ -173,7 +171,7 @@ class User {
             let [userDefaultTeam] = await pool.query(`Select * from team_cat, team, cat where tm_id = tmc_team_id and tm_selected = TRUE and tmc_cat_id = cat_id and tm_user_id = ?`, [userId]);
             
             // Do we have space
-            if (User.catCostCheck(catData, userDefaultTeam, teamCatId)) {
+            if (User.catCostCheck(catData, userDefaultTeam, teamCatId) === false) {
                 // No
                 return { status: 400, result: { msg:"Not enough space in team. Please remove a cat." } };
             }
@@ -211,7 +209,7 @@ class User {
             let [userDefaultTeam] = await pool.query(`Select * from team_cat, team, cat where tm_id = tmc_team_id and tm_selected = TRUE and tmc_cat_id = cat_id and tm_user_id = ?`, [userId]);
             
             // Do we have space
-            if (User.catCostCheck(catData, userDefaultTeam, null)) {
+            if (User.catCostCheck(catData, userDefaultTeam, null) === false) {
                 // No
                 return { status: 400, result: { msg:"Not enough space in team. Please remove a cat." } }
             }
