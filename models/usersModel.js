@@ -44,10 +44,10 @@ class User {
             await pool.query('Insert into team (tm_user_id, tm_selected) values (?, ?)', [userData.usr_id, true]);
             // Get the team ID of the newly made team
             let [[teamData]] = await pool.query('Select * from team where tm_user_id=?', [userData.usr_id]);
-            // Add characters to new default team
+            // Add add a bunch of vanilla cats
             let fillCharacterData = [];
             for (let i = 0; i < 6; i++) {
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [i + 1, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
@@ -125,12 +125,61 @@ class User {
         }
     }
 
+    static async getCatData(catID) {
+        // Try to get the data from the database
+        let [catDataList] = await pool.query(`Select * from cat where cat_id = ?`, [catID]);
+
+        // Does the cat exist
+        if (catDataList.length === 0) {
+            // Nope
+            return null;
+        }
+
+        // Return the cat data
+        return catDataList[0];
+    }
+
+    static catCostCheck(newCatData, defaultTeamData, replaceTeamCatID) {
+        // Calculate the current cost of the team
+        
+        let currentCost = 0;
+        
+        for (let i = 0; i < defaultTeamData.length; i++) {
+            
+            // If its not the cat we are going to replace
+            if (defaultTeamData[i].tmc_id !== parseInt(replaceTeamCatID)) {
+                currentCost = currentCost + defaultTeamData[i].cat_cost;
+            }
+        }
+
+        console.log((currentCost + newCatData.cat_cost) <= 6);
+
+        return (currentCost + newCatData.cat_cost) <= 6;
+    }
+
     static async changeDefaultCat(userId, newCatId, teamCatId) {
         try {
+            // Get the cat data
+            let catData = await User.getCatData(newCatId);
+            // Does the new cat exist?
+            if (catData === null) {
+                // No
+                return { status: 400, result: { msg:"New cat does not exist." } };
+            }
+
+            // Get the team data
+            let [userDefaultTeam] = await pool.query(`Select * from team_cat, team, cat where tm_id = tmc_team_id and tm_selected = TRUE and tmc_cat_id = cat_id and tm_user_id = ?`, [userId]);
+            
+            // Do we have space
+            if (User.catCostCheck(catData, userDefaultTeam, teamCatId) === false) {
+                // No
+                return { status: 400, result: { msg:"Not enough space in team. Please remove a cat." } };
+            }
+
             // Update the cat
             await pool.query(`Update team_cat set tmc_cat_id = ? where tmc_id = ?`, [newCatId, teamCatId]);
 
-            return { status: 200, result: {msg:"Cat Changed!"}} ;            
+            return { status: 200, result: { msg:"Cat Changed!" } } ;            
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
@@ -148,17 +197,27 @@ class User {
         }
     }
 
-    static async addDefaultCat(userID, newCatId) {
+    static async addDefaultCat(userId, newCatId) {
         try {
-            let [userDefaultTeam] = await pool.query(`Select * from team_cat, team where tm_id = tmc_team_id and tm_selected = TRUE and tm_user_id = ?`, [userID]);
-
-            if (userDefaultTeam.length > 5) {
-                return { status: 400, result: {msg:"Your team is full, cannot add anymore cats"}} ;
+            // Get the cat data
+            let catData = await User.getCatData(newCatId);
+            
+            if (catData === null) {
+                return { status: 400, result: { msg:"New cat does not exist." } }
+            }
+            
+            let [userDefaultTeam] = await pool.query(`Select * from team_cat, team, cat where tm_id = tmc_team_id and tm_selected = TRUE and tmc_cat_id = cat_id and tm_user_id = ?`, [userId]);
+            
+            // Do we have space
+            if (User.catCostCheck(catData, userDefaultTeam, null) === false) {
+                // No
+                return { status: 400, result: { msg:"Not enough space in team. Please remove a cat." } }
             }
 
             // If we got here, the team is not full
             // Get the default team
-            let [[userTeamDB]] = await pool.query(`Select tm_id as "id" from team where tm_selected = TRUE and tm_user_id = ?`, [userID]);
+            // We need to do this incase we had no cats in the previous cat
+            let [[userTeamDB]] = await pool.query(`Select tm_id as "id" from team where tm_selected = TRUE and tm_user_id = ?`, [userId]);
             
             // Insert the new cat
             await pool.query(`Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)`, [newCatId, userTeamDB.id]);
