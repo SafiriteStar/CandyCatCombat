@@ -26,7 +26,7 @@ Play.resolveAttacks = async function(game) {
     for (let i = 0; i < game.opponents.length; i++) {
         opponentsTeams[i] = await Play.getGameCatTeam("opponent", game.opponents[i].id, game.id);
 
-        await opponentsTeams[i].forEach(async function(oppCat) {
+        opponentsTeams[i].team.cats.forEach(async function(oppCat) {
             await CatStandardAttack.rootedCheck(oppCat);
         });
     }
