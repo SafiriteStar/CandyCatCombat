@@ -71,14 +71,19 @@ Play.move = async function(game, x, y, map, catID, teamID) {
 
         // Is there a cat already at the target tile?
         let [cats] = await pool.query(
-            `Select gtc_x, gtc_y
+            `Select gtc_x, gtc_y, gtc_current_health
             from game, game_team, game_team_cat
-            where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ? and gtc_game_team_id = gt_id`,
-            [x, y, map, teamID]
+            where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_game_id = ? and gtc_game_team_id = gt_id and gm_id = gt_game_id`,
+            [x, y, map, game.id]
         );
 
         if (cats.length > 1) {
-            return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
+            for (let i = 0; i < cats.length; i++) {
+                // Is the cat in the tile alive
+                if (cats[i].gtc_current_health > 0) {
+                    return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
+                }
+            }
         }
 
         // Check if moving cat from board 1

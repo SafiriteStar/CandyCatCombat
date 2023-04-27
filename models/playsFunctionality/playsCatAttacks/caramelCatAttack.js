@@ -33,7 +33,7 @@ class CaramelCatAttack extends CatStandardAttack {
         else {
             // Since its not rooted
             // Add the condition (2 is rooted)
-            Play.addCondition(targetCatData.id, 2, 2);
+            Play.addCondition(targetCatData.id, 2, 1);
         }
 
         return [targetCatData.id, damageDealt];

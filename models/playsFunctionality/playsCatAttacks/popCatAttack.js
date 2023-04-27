@@ -11,7 +11,7 @@ class PopCatAttack extends CatStandardAttack {
     }
 
     generateAOETargets(targetCatData) {
-        let aoeTiles = Play.getNeighborsOfRange(Play.getTile(targetCatData.x, targetCatData.y, targetCatData.boardID - 1), 1, 1);
+        let aoeTiles = Play.getNeighborsOfRange(Play.getTile(targetCatData.x, targetCatData.y, targetCatData.boardID - 1), 1, 1, true);
 
         // Add the player team to the targetSearchTeams
 
