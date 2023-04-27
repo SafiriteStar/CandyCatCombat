@@ -108,37 +108,39 @@ class Cat {
                 image(this.img, -this.img.width * 0.5, -this.img.height * 0.5);
             pop();
 
-            // Health Bar Background
-            fill(255, 255, 255, 255);
-            stroke(0, 0, 0, 0);
-            strokeWeight(1);
-            rect(
-                -Cat.healthBarLength * 0.5,
-                Tile.height - (Cat.healthBarHeight * 2),
-                Cat.healthBarLength,
-                Cat.healthBarHeight
-            );
-            
-            // Health Bar
-            fill(teamColor[0], teamColor[1], teamColor[2], this.opacity);
-            stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
-            strokeWeight(1);
-            rect(
-                -Cat.healthBarLength * 0.5,
-                Tile.height - (Cat.healthBarHeight * 2),
-                Cat.healthBarLength * (1 - (this.max_health - this.current_health) / this.max_health),
-                Cat.healthBarHeight
-            );
-            // Health Bar Outline
-            fill(255, 255, 255, 0);
-            stroke(0, 0, 0, this.opacity);
-            strokeWeight(12);
-            rect(
-                -Cat.healthBarLength * 0.5,
-                Tile.height - (Cat.healthBarHeight * 2),
-                Cat.healthBarLength,
-                Cat.healthBarHeight
-            );
+            if (this.current_health > 0) {
+                // Health Bar Background
+                fill(255, 255, 255, 255);
+                stroke(0, 0, 0, 0);
+                strokeWeight(1);
+                rect(
+                    -Cat.healthBarLength * 0.5,
+                    Tile.height - (Cat.healthBarHeight * 2),
+                    Cat.healthBarLength,
+                    Cat.healthBarHeight
+                );
+                
+                // Health Bar
+                fill(teamColor[0], teamColor[1], teamColor[2], this.opacity);
+                stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
+                strokeWeight(1);
+                rect(
+                    -Cat.healthBarLength * 0.5,
+                    Tile.height - (Cat.healthBarHeight * 2),
+                    Cat.healthBarLength * (1 - (this.max_health - this.current_health) / this.max_health),
+                    Cat.healthBarHeight
+                );
+                // Health Bar Outline
+                fill(255, 255, 255, 0);
+                stroke(0, 0, 0, this.opacity);
+                strokeWeight(12);
+                rect(
+                    -Cat.healthBarLength * 0.5,
+                    Tile.height - (Cat.healthBarHeight * 2),
+                    Cat.healthBarLength,
+                    Cat.healthBarHeight
+                );
+            }
         pop();
     }
 

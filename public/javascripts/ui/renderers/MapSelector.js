@@ -93,6 +93,7 @@ class MapSelector {
 
             // Try and see who is in the tile
             let [newTeam, newCat] = this.#getCatAtTile(this.coordX, this.coordY, this.map);
+
             // If there is a cat in the new tile
             if (newTeam !== null && newCat !== null) {
                 // Wait is the cat alive?

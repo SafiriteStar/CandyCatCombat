@@ -174,7 +174,7 @@ Play.getNeighborTiles = function(tilesToCheck, ignoreWalls) { //CALL THIS FUNCTI
 }
 
 // Returns an array of layers, each layer containing its neighbors
-Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
+Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange, ignoreWalls) {
     let tiles = [];
     let neighbors = [];
 
@@ -184,7 +184,7 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
     // For however many layers we want to search
     for (let i = 0; i < maxRange; i++) {
         // Find some neighbors
-        let newNeighbors = Play.getNeighborTiles(tiles);
+        let newNeighbors = Play.getNeighborTiles(tiles, ignoreWalls);
         // Add them
         tiles = tiles.concat(newNeighbors);
         // And if we are at or above our minimum range, add them to the highlighted tiles as well
