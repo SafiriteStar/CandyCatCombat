@@ -36,7 +36,21 @@ async function setup() {
     
     await getGameInfo();
     await getBoardInfo();
-    setInterval(refresh, 1000);
+
+    // Query takes 1 second to resolve
+    function refreshQuery() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => resolve(refresh()), 1000);
+        });
+    }
+
+    async function makeRefreshCall() {
+        await refreshQuery();
+        // After resolve it is called again 1/10th of a second later
+        setTimeout(() => makeRefreshCall(), 100);
+    }
+
+    makeRefreshCall();
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
