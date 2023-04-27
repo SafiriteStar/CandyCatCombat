@@ -38,19 +38,19 @@ async function setup() {
     await getBoardInfo();
 
     // Query takes 1 second to resolve
-    function mockQuery() {
+    function refreshQuery() {
         return new Promise((resolve, reject) => {
             setTimeout(() => resolve(refresh()), 1000);
         });
     }
 
-    async function makeQueryCall() {
-        await mockQuery();
+    async function makeRefreshCall() {
+        await refreshQuery();
         // After resolve it is called again 1/10th of a second later
-        setTimeout(() => makeQueryCall(), 100);
+        setTimeout(() => makeRefreshCall(), 100);
     }
 
-    makeQueryCall();
+    makeRefreshCall();
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
