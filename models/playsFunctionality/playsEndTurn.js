@@ -25,9 +25,14 @@ Play.resolveAttacks = async function(game) {
     let opponentsTeams = [];
     for (let i = 0; i < game.opponents.length; i++) {
         opponentsTeams[i] = await Play.getGameCatTeam("opponent", game.opponents[i].id, game.id);
+
+        await opponentsTeams[i].forEach(async function(oppCat) {
+            await CatStandardAttack.rootedCheck(oppCat);
+        });
     }
+    
     // For every player cat
-    player.team.cats.forEach(async function(playerCat, index, array) {
+    await player.team.cats.forEach(async function(playerCat, index, array) {
         let attackSuccessful = false;
         // If we aren't in the placement map and the cat is alive
         if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
