@@ -6,12 +6,12 @@ class MapSelector {
         this.coordX = null;
         this.coordY = null;
 
+        // Map
+        this.map = null;
+
         // Cat
         this.team = null;
         this.cat = null; // An index for the team
-
-        // Map
-        this.map = null;
 
         // Tile Info Box
         this.tileInfoBox = new TileInfoBox();
@@ -23,12 +23,7 @@ class MapSelector {
         this.rangeIndicator = new RangeHighlighter(true, [230, 30, 30]);
         this.moveIndicator = new RangeHighlighter(false, [164, 149, 255]);
     }
-
-    drawIndicators() {
-        this.rangeIndicator.draw();
-        this.moveIndicator.draw();
-    }
-
+    
     draw() {
         push();
             fill(0, 0, 0, 0);
@@ -37,6 +32,11 @@ class MapSelector {
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();
         this.drawIndicators();
+    }
+    
+    drawIndicators() {
+        this.rangeIndicator.draw();
+        this.moveIndicator.draw();
     }
 
     drawInfoBoxes() {
