@@ -33,7 +33,7 @@ class RangeHighlighter {
             // For each neighbor that tile has
             tile.connections.forEach(neighbor => {
                 // Get the actual tile data
-                let currentTile = GameInfo.world.getTileInMap(neighbor.x, neighbor.y, this.map)
+                let currentTile = GameInfo.world.getTileInMap(neighbor.x, neighbor.y, this.map);
                 // If its not in tiles already
                 // and not on our new neighbor list
                 // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
@@ -48,13 +48,22 @@ class RangeHighlighter {
         return newNeighbors
     }
 
+    getPath(tile) {
+        // We are trying to get somewhere impossible
+        if (this.tilesToHighlight.includes(tile) === false) {
+            return null
+        }
+
+        return this.tilesToHighlight;
+    }
+
     newSource(sourceCat, minRange, maxRange) {
         // Set our cat
         this.sourceCat = sourceCat;
         // Clear the array
-        this.tiles.length = 0;
+        this.tiles = [];
         // Lets also reset what tiles we are highlighting
-        this.tilesToHighlight.length = 0;
+        this.tilesToHighlight = [];
 
         // Wait did we just wipe who our cat was?
         if (this.sourceCat === null) {

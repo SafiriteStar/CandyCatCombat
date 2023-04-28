@@ -116,6 +116,7 @@ class MapSelector {
                     if (this.team == 0) {
                         // We do
                         // Lets try to move to the tile we just clicked
+                        console.log(this.moveIndicator.getPath(GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map)));
                         moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                     }
                     else {
