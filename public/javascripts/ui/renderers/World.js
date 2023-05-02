@@ -153,8 +153,33 @@ class World {
         this.mapSelector.drawInfoBoxes();
     }
 
+    getMap(map) {
+        return this.maps[map];
+    }
+
+    getMapTiles(map) {
+        return this.maps[map].tiles;
+    }
+
     getTileInMap(x, y, map) {
         return this.maps[map].getTile(x, y);
+    }
+
+    getCatAliveAtCoord(x, y, map) {
+        // For each team
+        for (let i = 0; i < this.teams.length; i++) {
+            // Try to see if there is a cat alive at the coordinate
+            let cat = this.teams[i].getCatAtCoord(x, y, map);
+
+            if (cat !== null) {
+                // Cat is alive
+                // Return the cat
+                return this.teams[i].cats[cat];
+            }
+        }
+
+        // If we got here it means that we could not find any cat alive at the provided coordinate
+        return null;
     }
 
     update(boards, playerTeam, opponentTeams) {

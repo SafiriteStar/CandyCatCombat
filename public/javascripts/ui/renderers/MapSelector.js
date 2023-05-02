@@ -20,8 +20,8 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, [230, 30, 30]);
-        this.moveIndicator = new RangeHighlighter(false, [164, 149, 255]);
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30]);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255]);
     }
     
     draw() {
@@ -116,7 +116,12 @@ class MapSelector {
                     if (this.team == 0) {
                         // We do
                         // Lets try to move to the tile we just clicked
-                        console.log(this.moveIndicator.getPath(GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map)));
+                        let startingTile = GameInfo.world.getTileInMap(
+                            GameInfo.world.teams[this.team].cats[this.cat].x,
+                            GameInfo.world.teams[this.team].cats[this.cat].y,
+                            GameInfo.world.teams[this.team].cats[this.cat].map)
+                        let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
+                        console.log(Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight));
                         moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                     }
                     else {

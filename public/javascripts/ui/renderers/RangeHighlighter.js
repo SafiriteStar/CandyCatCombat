@@ -1,10 +1,11 @@
 class RangeHighlighter {
 
-    constructor(ignoreWalls, color) {
+    constructor(ignoreWalls, ignoreAliveCats, color) {
         this.sourceCat = null; // An object with x and y
         this.tiles = []; // We will store the tiles to highlight here
         this.tilesToHighlight = [];
         this.ignoreWalls = ignoreWalls;
+        this.ignoreAliveCats = ignoreAliveCats;
         this.color = color
     }
 
@@ -37,7 +38,13 @@ class RangeHighlighter {
                 // If its not in tiles already
                 // and not on our new neighbor list
                 // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
-                if (!this.tiles.includes(currentTile) && !newNeighbors.includes(currentTile) && (this.ignoreWalls || (!this.ignoreWalls  && currentTile.type != 2))) {
+                // and there isn't a cat alive at the neighbor coordinate
+                if (!this.tiles.includes(currentTile)
+                    && !newNeighbors.includes(currentTile)
+                    && (this.ignoreWalls
+                        || (!this.ignoreWalls && currentTile.type != 2))
+                    && (this.ignoreAliveCats
+                        || (!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(neighbor.x, neighbor.y, this.map) === null))) {
                     // Add that neighbor
                     newNeighbors.push(currentTile);
                 }
@@ -49,12 +56,15 @@ class RangeHighlighter {
     }
 
     getPath(tile) {
-        // We are trying to get somewhere impossible
-        if (this.tilesToHighlight.includes(tile) === false) {
+        let graph = GameInfo.world.getMap(this.sourceCat.map);
+        // Are we trying to get somewhere impossible
+        if (graph.checkTileExists(tile.x, tile.y) === false) {
             return null
         }
 
-        return this.tilesToHighlight;
+        // Generate a list of nodes to ignore
+
+        return graph;
     }
 
     newSource(sourceCat, minRange, maxRange) {
