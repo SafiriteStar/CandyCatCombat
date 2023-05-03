@@ -47,14 +47,16 @@ class Pathfinder {
         return validNeighbors;
     }
 
-    static getPrevNode(startingTile, targetTile, tableOfPaths, path) {
-        // Base case
-        if (targetTile == startingTile || (targetTile !== null && targetTile !== undefined)) {
-            return null;
+    static getShortestPath(startingTile, targetTile, tableOfPaths, path) {
+        let currentTargetTile = targetTile;
+        let shortestPath = [];
+        
+        while (startingTile !== currentTargetTile) {
+            shortestPath.push(currentTargetTile);
+            currentTargetTile = tableOfPaths.previousNode[tableOfPaths.node.indexOf[currentTargetTile]];
         }
 
-
-        return Pathfinder.getPrevNode(startingTile, tableOfPaths.previousNode[tableOfPaths.node.indexOf[targetTile]], tableOfPaths, path);
+        console.log(shortestPath);
     }
 
     static getPath(startingTile, targetTile, map) {
@@ -137,7 +139,7 @@ class Pathfinder {
             }
         }
 
-        /* VERY BAD CODE
+        /* VERY BAD CODE BELOW
             DELETE
             DELETE
             DELETE AS SOON AS POSSIBLE */
@@ -190,7 +192,7 @@ class Pathfinder {
         }
 
         // Calculate the path to the target tile
-
+        Pathfinder.getShortestPath(startingTile, targetTile, tableOfPaths, []);
 
         console.log("Graph");
         return tableOfPaths
