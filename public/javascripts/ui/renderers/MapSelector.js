@@ -22,6 +22,9 @@ class MapSelector {
         // Range indicator
         this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30]);
         this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255]);
+
+        // 
+        this.tableOfPaths = null;
     }
     
     draw() {
@@ -121,7 +124,7 @@ class MapSelector {
                             GameInfo.world.teams[this.team].cats[this.cat].y,
                             GameInfo.world.teams[this.team].cats[this.cat].map)
                         let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
-                        console.log(Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight));
+                        this.tableOfPaths = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
                         moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                     }
                     else {

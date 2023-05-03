@@ -28,13 +28,14 @@ class RangeHighlighter {
 
     getNeighborTiles() {
         // Get a list of unvisited neighbor tiles
-        // For each tile in tiles
         let newNeighbors = [];
-        this.tiles.forEach(tile => {
+        
+        // For each tile in tiles
+        for (let i = 0; i < this.tiles.length; i++) {
             // For each neighbor that tile has
-            tile.connections.forEach(neighbor => {
+            for (let j = 0; j < this.tiles[i].connections.length; j++) {
                 // Get the actual tile data
-                let currentTile = GameInfo.world.getTileInMap(neighbor.x, neighbor.y, this.map);
+                let currentTile = GameInfo.world.getTileInMap(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map);
                 // If its not in tiles already
                 // and not on our new neighbor list
                 // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
@@ -44,12 +45,13 @@ class RangeHighlighter {
                     && (this.ignoreWalls
                         || (!this.ignoreWalls && currentTile.type != 2))
                     && (this.ignoreAliveCats
-                        || (!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(neighbor.x, neighbor.y, this.map) === null))) {
+                        || (!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map) === null))) {
                     // Add that neighbor
                     newNeighbors.push(currentTile);
                 }
-            });
-        });
+            }
+            
+        }
         
         // After all this we should essentially have a new ring of neighbors saved in newNeighbors
         return newNeighbors

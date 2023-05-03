@@ -146,6 +146,22 @@ class World {
             // Draw Map Tile Select Indicator
             if (this.mapSelector.map !== null) {
                 this.mapSelector.draw();
+
+                if (this.mapSelector.tableOfPaths !== null && this.mapSelector.tableOfPaths !== undefined) {
+                    for (let i = 0; i < this.mapSelector.tableOfPaths.node.length; i++) {
+                        push();
+                        translate(this.mapSelector.tableOfPaths.node[i].screenX - 60, this.mapSelector.tableOfPaths.node[i].screenY + 60);
+                        fill(255, 0, 0, 255);
+                        textSize(72);
+                        if (this.mapSelector.tableOfPaths.previousNode[i] !== null) {
+                            text("" + this.mapSelector.tableOfPaths.previousNode[i].x + ", " + this.mapSelector.tableOfPaths.previousNode[i].y, 0, 0);
+                            translate(0, -120);
+                            fill(100, 255, 100, 255);
+                            text("" + this.mapSelector.tableOfPaths.shortestPath[i], 0, 0);
+                        }
+                        pop();
+                    }
+                }
             }
         pop();
 
