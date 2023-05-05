@@ -135,7 +135,8 @@ class MapSelector {
                             this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
                         }
 
-                        if (this.path.length > 0) {
+                        if (this.path.length > 0
+                            && ((this.moveIndicator.tilesToHighlight.includes(targetTile) && GameInfo.game.player.state == "Playing") || GameInfo.game.player.state != "Playing")) {
                             moveCatAction(this.path, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                         }
                     }
