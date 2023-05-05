@@ -144,6 +144,16 @@ class Cat {
         pop();
     }
 
+    isRooted() {
+        for (let i = 0; i < this.conditions.length; i++) {
+            if (this.conditions[i].name == "Rooted") {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     update(cat, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
