@@ -146,6 +146,17 @@ class World {
             // Draw Map Tile Select Indicator
             if (this.mapSelector.map !== null) {
                 this.mapSelector.draw();
+
+                /* if (this.mapSelector.path !== null && this.mapSelector.path !== undefined) {
+                    for (let i = 0; i < this.mapSelector.path.length; i++) {
+                        push();
+                        translate(this.mapSelector.path[i].screenX - 60, this.mapSelector.path[i].screenY + 60);
+                        fill(255, 0, 0, 255);
+                        textSize(72);
+                        text(i, 0, 0);
+                        pop();
+                    }
+                } */
             }
         pop();
 
@@ -153,8 +164,36 @@ class World {
         this.mapSelector.drawInfoBoxes();
     }
 
+    getMap(map) {
+        return this.maps[map];
+    }
+
+    getMapTiles(map) {
+        return this.maps[map].tiles;
+    }
+
     getTileInMap(x, y, map) {
         return this.maps[map].getTile(x, y);
+    }
+
+    getCatAliveAtCoord(x, y, map) {
+        // For each team
+        for (let i = 0; i < this.teams.length; i++) {
+            // Try to see if there is a cat alive at the coordinate
+            let cat = this.teams[i].getCatAtCoord(x, y, map);
+
+            // Cat exists
+            if (cat !== null) {
+                // Is it alive?
+                if (this.teams[i].cats[cat].current_health > 0) {
+                    // Return the cat and the team
+                    return [this.teams[i].cats[cat], this.teams[i]];
+                }
+            }
+        }
+
+        // If we got here it means that we could not find any cat alive at the provided coordinate
+        return [];
     }
 
     update(boards, playerTeam, opponentTeams) {

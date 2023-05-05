@@ -1,7 +1,7 @@
 const pool = require("../../config/database");
 const Play = require("../playsFunctionality/playsInit");
 
-Play.move = async function(game, x, y, map, catID, teamID) {
+async function moveToTile(game, x, y, map, catID, teamID) {
     try {
         // Check if it's the user's turn
         if (!(game.player.state.id === 1 || game.player.state.id === 4)) { // If its not the placement (1) or playing (4) phase, we can't move
@@ -71,12 +71,13 @@ Play.move = async function(game, x, y, map, catID, teamID) {
 
         // Is there a cat already at the target tile?
         let [cats] = await pool.query(
-            `Select gtc_x, gtc_y, gtc_current_health
+            `Select *
             from game, game_team, game_team_cat
             where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_game_id = ? and gtc_game_team_id = gt_id and gm_id = gt_game_id`,
             [x, y, map, game.id]
         );
-
+        console.log("Target Tile");
+        console.log("x: " + x + " y: " + y + " map: " + map);
         if (cats.length > 1) {
             for (let i = 0; i < cats.length; i++) {
                 // Is the cat in the tile alive
@@ -147,7 +148,7 @@ Play.move = async function(game, x, y, map, catID, teamID) {
             else if (game.player.state.id === 4) {
 
                 // Check if the target tile not in same board or not next to the cat
-                if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
+                if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !Play.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
                     return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
                 }
 
@@ -171,7 +172,22 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 y: y
             }
         };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
 
+Play.move = async function(game, path, catID, teamID) {
+    try {
+        for (let i = 0; i < path.length; i++) {
+            result = await moveToTile(game, path[i].x, path[i].y, path[i].map, catID, teamID);
+            if (result.status !== 200) {
+                break;
+            }
+        }
+
+        return result;
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };

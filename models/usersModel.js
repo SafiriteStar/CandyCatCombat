@@ -152,8 +152,6 @@ class User {
             }
         }
 
-        console.log((currentCost + newCatData.cat_cost) <= 6);
-
         return (currentCost + newCatData.cat_cost) <= 6;
     }
 

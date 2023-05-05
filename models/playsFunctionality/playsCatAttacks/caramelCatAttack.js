@@ -8,11 +8,14 @@ class CaramelCatAttack extends CatStandardAttack {
         super(playerCat, targetSearchTeams, playerSearchTeams);
     }
 
-    async attack(targetCatData) {
+    async attack(targetCatData, distance) {
         let damageDealt = targetCatData.defense - this.playerCat.damage;
 
-        // APPLY DAMAGE
-        await Play.applyDamage(damageDealt, targetCatData.id);
+        // If we are in melee range
+        if (distance === 0) {
+            // APPLY DAMAGE
+            await Play.applyDamage(damageDealt, targetCatData.id);
+        }
 
         // Is the target already rooted?
         let isRooted = false;
@@ -37,6 +40,18 @@ class CaramelCatAttack extends CatStandardAttack {
         }
 
         return [targetCatData.id, damageDealt];
+    }
+
+    async attackRandomTarget() {
+        let targetCat = this.getRandomAttackTarget();
+
+        let targetHit, damageDealt;
+        if (targetCat !== null && targetCat !== undefined) {
+            [targetHit, damageDealt] = await this.attack(this.targetSearchTeams[targetCat.teamIndex].team.cats[targetCat.catIndex], targetCat.distance);
+        }
+
+        // In case we need it, give back who we hit and for how much
+        return targetHit !== null && targetHit !== undefined;
     }
 }
 

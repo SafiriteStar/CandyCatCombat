@@ -13,6 +13,7 @@ class Tile {
     constructor(baseTile) {
         this.x = baseTile.x;
         this.y = baseTile.y;
+        this.map = baseTile.map;
         this.type = baseTile.type;
         this.group = null;
         this.connections = baseTile.connections;
@@ -47,7 +48,12 @@ class Tile {
 
         // Placement
         if (this.type == 3) {
-            fill('rgba(186, 251, 255, 1)');
+            if (GameInfo.game.player.state == "Placement") {
+                fill('rgba(186, 251, 255, 1)');
+            }
+            else {
+                fill('rgba(246, 255, 253, 1)');
+            }
         }
         // Wall
         else if (this.type == 2) {
@@ -72,7 +78,7 @@ class Tile {
             stroke(0);
             strokeWeight(1);
             textSize(72)
-            text(this.x + ", " + this.y, -60, 0);
+            //text(this.x + ", " + this.y, -60, 0);
         pop();
     }
 

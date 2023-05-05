@@ -1,11 +1,13 @@
 class RangeHighlighter {
 
-    constructor(ignoreWalls, color) {
+    constructor(ignoreWalls, ignoreAliveCats, color) {
         this.sourceCat = null; // An object with x and y
-        this.tiles = []; // We will store the tiles to highlight here
-        this.tilesToHighlight = [];
+        this.tiles = [];
+        this.tilesToHighlight = []; // We will store the tiles to highlight here
         this.ignoreWalls = ignoreWalls;
+        this.ignoreAliveCats = ignoreAliveCats;
         this.color = color
+        this.map = null;
     }
 
     draw() {
@@ -15,46 +17,85 @@ class RangeHighlighter {
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
                 push();
+                if ((!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) || this.ignoreAliveCats) {                    
                     translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
                     fill(red, green, blue, 100);
                     strokeWeight(12);
                     stroke(red, green, blue, 150);
                     Tile.drawSimpleTile(tile.screenX, tile.screenY);
+                }
                 pop();
             });
         }
     }
 
+    neighborTileChecks(currentTile, newNeighbors, catAlive, catTeam) {
+        // If its not in tiles or our new neighbor list
+        if (this.tiles.includes(currentTile) || newNeighbors.includes(currentTile)) {
+            return false;
+        }
+
+        // If we are not ignoring walls and it is a wall
+        if (!this.ignoreWalls && currentTile.type == 2) {
+            return false;
+        }
+
+        // If there is a cat on that tile and we aren't ignoring cats that are alive
+        if (catAlive !== null && catAlive !== undefined && catTeam !== null && catTeam !== undefined && !this.ignoreAliveCats) {
+            // Is that from a different team?
+            if (!catTeam.cats.includes(this.sourceCat)) {
+                // Yes
+                return false;
+            }
+        }
+
+        // We passed it all
+        return true;
+    }
+
     getNeighborTiles() {
         // Get a list of unvisited neighbor tiles
-        // For each tile in tiles
         let newNeighbors = [];
-        this.tiles.forEach(tile => {
+        
+        // For each tile in tiles
+        for (let i = 0; i < this.tiles.length; i++) {
             // For each neighbor that tile has
-            tile.connections.forEach(neighbor => {
+            for (let j = 0; j < this.tiles[i].connections.length; j++) {
                 // Get the actual tile data
-                let currentTile = GameInfo.world.getTileInMap(neighbor.x, neighbor.y, this.map)
-                // If its not in tiles already
-                // and not on our new neighbor list
-                // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
-                if (!this.tiles.includes(currentTile) && !newNeighbors.includes(currentTile) && (this.ignoreWalls || (!this.ignoreWalls  && currentTile.type != 2))) {
+                let currentTile = GameInfo.world.getTileInMap(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map);
+                let [catAlive, catTeam] = GameInfo.world.getCatAliveAtCoord(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map);
+                
+                if (this.neighborTileChecks(currentTile, newNeighbors, catAlive, catTeam)) {
                     // Add that neighbor
                     newNeighbors.push(currentTile);
                 }
-            });
-        });
+            }
+            
+        }
         
         // After all this we should essentially have a new ring of neighbors saved in newNeighbors
         return newNeighbors
+    }
+
+    getPath(tile) {
+        let graph = GameInfo.world.getMap(this.sourceCat.map);
+        // Are we trying to get somewhere impossible
+        if (graph.checkTileExists(tile.x, tile.y) === false) {
+            return null
+        }
+
+        // Generate a list of nodes to ignore
+
+        return graph;
     }
 
     newSource(sourceCat, minRange, maxRange) {
         // Set our cat
         this.sourceCat = sourceCat;
         // Clear the array
-        this.tiles.length = 0;
+        this.tiles = [];
         // Lets also reset what tiles we are highlighting
-        this.tilesToHighlight.length = 0;
+        this.tilesToHighlight = [];
 
         // Wait did we just wipe who our cat was?
         if (this.sourceCat === null) {

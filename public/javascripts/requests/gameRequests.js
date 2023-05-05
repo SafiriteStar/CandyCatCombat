@@ -67,7 +67,7 @@ async function requestGameBoard() {
     }
 }
 
-async function requestMoveCharacter(x, y, map, catID, teamID) {
+async function requestMoveCharacter(path, catID, teamID) {
     try {
         const response = await fetch(`/api/plays/move`, 
         {
@@ -77,9 +77,7 @@ async function requestMoveCharacter(x, y, map, catID, teamID) {
             },
             method: "PATCH",
             body: JSON.stringify({
-              x: x,
-              y: y,
-              map: map,
+              path: path,
               catID: catID,
               teamID: teamID
             })
