@@ -122,7 +122,7 @@ class Cat {
                     }
                     else if (this.conditions[i].name == "Stealth") {
                         image(
-                            GameInfo.images.ui.rooted,
+                            GameInfo.images.ui.stealthed,
                             (-GameInfo.images.ui.stealthed.width * 0.5 * (i + 1)) + (-this.img.width * 0.5),
                             (-GameInfo.images.ui.stealthed.height * 0.5) + (-this.img.height * 0.5)
                         );
