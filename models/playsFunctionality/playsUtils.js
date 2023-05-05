@@ -26,6 +26,8 @@ Play.removeCondition = async function(catConditionID) {
 }
 
 Play.setConditionDuration = async function(catConditionID, duration) {
+    console.log("Game ID: " + catConditionID);
+    console.log("Duration: " + duration);
     await pool.query(
         `Update game_team_cat_condition set gcc_duration = ? where gcc_id = ?`,
             [duration, catConditionID]);
