@@ -48,7 +48,12 @@ class Tile {
 
         // Placement
         if (this.type == 3) {
-            fill('rgba(186, 251, 255, 1)');
+            if (GameInfo.game.state == "Placement") {
+                fill('rgba(186, 251, 255, 1)');
+            }
+            else {
+                fill('rgba(246, 255, 253, 1)');
+            }
         }
         // Wall
         else if (this.type == 2) {
