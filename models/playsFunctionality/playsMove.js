@@ -1,7 +1,7 @@
 const pool = require("../../config/database");
 const Play = require("../playsFunctionality/playsInit");
 
-Play.move = async function(game, x, y, map, catID, teamID) {
+async function moveToTile(game, x, y, map, catID, teamID) {
     try {
         // Check if it's the user's turn
         if (!(game.player.state.id === 1 || game.player.state.id === 4)) { // If its not the placement (1) or playing (4) phase, we can't move
@@ -171,7 +171,22 @@ Play.move = async function(game, x, y, map, catID, teamID) {
                 y: y
             }
         };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
 
+Play.move = async function(game, path, catID, teamID) {
+    try {
+        for (let i = 0; i < path.length; i++) {
+            result = await moveToTile(game, path[i].x, path[i].y, path[i].map, catID, teamID);
+            if (result.status !== 200) {
+                break;
+            }
+        }
+
+        return result;
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };
