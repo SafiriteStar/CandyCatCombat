@@ -1,4 +1,37 @@
 class Pathfinder {
+    static getMapNeighbor(neighborData, fullMap) {
+        // For the entire map
+        for (let i = 0; i < fullMap.length; i++) {
+            // If we found our tile
+            if (neighborData.x == fullMap[i].x && neighborData.y == fullMap[i].y) {
+                // Give the tile back
+                return fullMap[i];
+            }
+        }
+        // No tile exists
+        return null;
+    }
+
+    static getLayerNeighbors(closedNodes, fullMap) {
+        let newNeighbors = [];
+
+        // For every closed node
+        for (let i = 0; i < closedNodes.length; i++) {
+            // For every neighbor of that closed node
+            for (let j = 0; j < closedNodes[i].connections.length; j++) {
+                // Get that neighbor
+                let currentNeighbor = Pathfinder.getMapNeighbor(closedNodes[i].connections[j], fullMap);
+                
+                // If the neighbor is not in closed nodes and not already in the new neighbor list and it exists
+                if (!(closedNodes.includes(currentNeighbor)) && !(newNeighbors.includes(currentNeighbor)) && currentNeighbor !== null) {
+                    // Add it to the list
+                    newNeighbors.push(currentNeighbor);
+                } 
+            }
+        }
+
+        return newNeighbors;
+    }
 
     static getCurrentShortestNode(tableOfPaths, nodeList) {
         let shortestPath = Infinity;
@@ -32,6 +65,11 @@ class Pathfinder {
 
     static getUnvisitedNeighbors(node, nodeList) {
         let validNeighbors = [];
+
+        if (node === null) {
+            return validNeighbors;
+        }
+
         // For each neighbor that node has
         for (let i = 0; i < node.connections.length; i++) {
             // Get the actual tile info
@@ -47,23 +85,30 @@ class Pathfinder {
         return validNeighbors;
     }
 
-    static getShortestPath(startingTile, targetTile, tableOfPaths, path) {
+    static getShortestPath(startingTile, targetTile, tableOfPaths) {
         let currentTargetTile = targetTile;
         let shortestPath = [];
-        
-        while (startingTile !== currentTargetTile) {
+
+        // While we aren't where we started
+        while (currentTargetTile != startingTile) {
+            // Add our tile to the shortest path
             shortestPath.push(currentTargetTile);
-            currentTargetTile = tableOfPaths.previousNode[tableOfPaths.node.indexOf[currentTargetTile]];
+
+            // Get the previous tile
+            currentTargetTile = tableOfPaths.previousNode[tableOfPaths.node.indexOf(currentTargetTile)];
         }
 
-        console.log(shortestPath);
+        // Add in the starting tile
+        shortestPath.push(startingTile);
+
+        return shortestPath;
     }
 
     static getPath(startingTile, targetTile, map) {
         // Generate Unvisited Nodes
-        let unvisitedNodes = map;
+        let unvisitedNodes = [];
         // Don't forget to add in the starting node
-        unvisitedNodes.unshift(startingTile);
+        unvisitedNodes.push(startingTile);
 
 
         let visitedNodes = [];
@@ -74,32 +119,28 @@ class Pathfinder {
         tableOfPaths.previousNode = [];
         
         // For each node
-        for (let i = 0; i < unvisitedNodes.length; i++) {
+        for (let i = 0; i < map.length; i++) {
             // Add the node to the table
-            tableOfPaths.node.push(unvisitedNodes[i]);
+            tableOfPaths.node.push(map[i]);
             // Add its shortest path and set it to infinity
             tableOfPaths.shortestPath.push(Infinity);
             // Add the a null previous node to the previous node
             tableOfPaths.previousNode.push(null);
         }
 
-        console.log(tableOfPaths.node);
-
         // Find the starting node
         let startingNodeIndex = tableOfPaths.node.indexOf(startingTile);
-
+        
         // Set its shortest path to 0
         tableOfPaths.shortestPath[startingNodeIndex] = 0;
 
-        /* console.log("Table of Paths");
-        console.log(tableOfPaths); */
-
         // While we still have nodes to search
-        while (unvisitedNodes.length > 0) {
+        while (unvisitedNodes.length !== 0) {
             // Find the node with the current shortest path that we have not yet visited
             let currentShortestNode = Pathfinder.getCurrentShortestNode(tableOfPaths, unvisitedNodes); 
             
-            let validNeighbors = Pathfinder.getUnvisitedNeighbors(currentShortestNode, unvisitedNodes.concat(visitedNodes));
+            // Get the neighbors of that node
+            let validNeighbors = Pathfinder.getUnvisitedNeighbors(currentShortestNode, tableOfPaths.node);
 
             // The distance taken to get to our current node
             let distanceToCurrentNode = tableOfPaths.shortestPath[tableOfPaths.node.indexOf(currentShortestNode)];
@@ -108,18 +149,8 @@ class Pathfinder {
                 // The currently shortest distance to our neighbor
                 let currentNeighborDistance = tableOfPaths.shortestPath[tableOfPaths.node.indexOf(validNeighbors[i])];
 
-                if (currentShortestNode.x == 8 && currentShortestNode.y == 6 && validNeighbors[i].x == 9 && validNeighbors[i].y == 6) {
-                    console.log("Current Node Distance: ");
-                    console.log(distanceToCurrentNode);
-                    console.log("Current Neighbor Distance:");
-                    console.log(currentNeighborDistance);
-                }
-
                 // If the distance to our current node + 1 (the cost to any neighbor) is shorter than on the table
                 if (distanceToCurrentNode + 1 < currentNeighborDistance) {
-                    if (currentShortestNode.x == 5 && currentShortestNode.y == 5 && validNeighbors[i].x == 6 && validNeighbors[i].y == 4) {
-                        console.log("Yes");
-                    }
                     // We have found a shorter distance to this node
                     // Update the paths table what our new distance is
                     tableOfPaths.shortestPath[tableOfPaths.node.indexOf(validNeighbors[i])] = distanceToCurrentNode + 1;
@@ -137,64 +168,14 @@ class Pathfinder {
             if (removeAtIndex > -1) {
                 unvisitedNodes.splice(removeAtIndex, 1);
             }
-        }
 
-        /* VERY BAD CODE BELOW
-            DELETE
-            DELETE
-            DELETE AS SOON AS POSSIBLE */
-
-        unvisitedNodes = visitedNodes;
-        visitedNodes = [];
-
-        while (unvisitedNodes.length > 0) {
-            // Find the node with the current shortest path that we have not yet visited
-            let currentShortestNode = Pathfinder.getCurrentShortestNode(tableOfPaths, unvisitedNodes); 
-            
-            let validNeighbors = Pathfinder.getUnvisitedNeighbors(currentShortestNode, unvisitedNodes.concat(visitedNodes));
-
-            // The distance taken to get to our current node
-            let distanceToCurrentNode = tableOfPaths.shortestPath[tableOfPaths.node.indexOf(currentShortestNode)];
-            
-            for (let i = 0; i < validNeighbors.length; i++) {
-                // The currently shortest distance to our neighbor
-                let currentNeighborDistance = tableOfPaths.shortestPath[tableOfPaths.node.indexOf(validNeighbors[i])];
-
-                if (currentShortestNode.x == 8 && currentShortestNode.y == 6 && validNeighbors[i].x == 9 && validNeighbors[i].y == 6) {
-                    console.log("Current Node Distance: ");
-                    console.log(distanceToCurrentNode);
-                    console.log("Current Neighbor Distance:");
-                    console.log(currentNeighborDistance);
-                }
-
-                // If the distance to our current node + 1 (the cost to any neighbor) is shorter than on the table
-                if (distanceToCurrentNode + 1 < currentNeighborDistance) {
-                    if (currentShortestNode.x == 5 && currentShortestNode.y == 5 && validNeighbors[i].x == 6 && validNeighbors[i].y == 4) {
-                        console.log("Yes");
-                    }
-                    // We have found a shorter distance to this node
-                    // Update the paths table what our new distance is
-                    tableOfPaths.shortestPath[tableOfPaths.node.indexOf(validNeighbors[i])] = distanceToCurrentNode + 1;
-                    // Update the paths table what our new previous node is
-                    tableOfPaths.previousNode[tableOfPaths.node.indexOf(validNeighbors[i])] = currentShortestNode;
-                }
-            }
-
-            // After visiting all the neighbors, add our current node to the visited list
-            visitedNodes.push(currentShortestNode);
-
-            // And remove the node from our unvisited list
-            let removeAtIndex = unvisitedNodes.indexOf(currentShortestNode);
-            // Do this check for safety reasons
-            if (removeAtIndex > -1) {
-                unvisitedNodes.splice(removeAtIndex, 1);
+            // If the unvisited list is empty, get the next layer of neighbors
+            if (unvisitedNodes.length === 0) {
+                unvisitedNodes = Pathfinder.getLayerNeighbors(visitedNodes, tableOfPaths.node);
             }
         }
 
         // Calculate the path to the target tile
-        Pathfinder.getShortestPath(startingTile, targetTile, tableOfPaths, []);
-
-        console.log("Graph");
-        return tableOfPaths
+        return Pathfinder.getShortestPath(startingTile, targetTile, tableOfPaths).reverse();
     }
 }

@@ -13,6 +13,7 @@ class Tile {
     constructor(baseTile) {
         this.x = baseTile.x;
         this.y = baseTile.y;
+        this.map = baseTile.map;
         this.type = baseTile.type;
         this.group = null;
         this.connections = baseTile.connections;
