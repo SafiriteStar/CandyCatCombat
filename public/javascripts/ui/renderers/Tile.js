@@ -48,7 +48,7 @@ class Tile {
 
         // Placement
         if (this.type == 3) {
-            if (GameInfo.game.state == "Placement") {
+            if (GameInfo.game.player.state == "Placement") {
                 fill('rgba(186, 251, 255, 1)');
             }
             else {
