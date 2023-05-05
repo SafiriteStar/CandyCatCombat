@@ -2,8 +2,8 @@ class RangeHighlighter {
 
     constructor(ignoreWalls, ignoreAliveCats, color) {
         this.sourceCat = null; // An object with x and y
-        this.tiles = []; // We will store the tiles to highlight here
-        this.tilesToHighlight = [];
+        this.tiles = [];
+        this.tilesToHighlight = []; // We will store the tiles to highlight here
         this.ignoreWalls = ignoreWalls;
         this.ignoreAliveCats = ignoreAliveCats;
         this.color = color

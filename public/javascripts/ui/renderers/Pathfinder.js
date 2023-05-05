@@ -98,9 +98,6 @@ class Pathfinder {
             currentTargetTile = tableOfPaths.previousNode[tableOfPaths.node.indexOf(currentTargetTile)];
         }
 
-        // Add in the starting tile
-        shortestPath.push(startingTile);
-
         return shortestPath;
     }
 

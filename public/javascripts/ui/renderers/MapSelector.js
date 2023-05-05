@@ -124,7 +124,13 @@ class MapSelector {
                             GameInfo.world.teams[this.team].cats[this.cat].y,
                             GameInfo.world.teams[this.team].cats[this.cat].map)
                         let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
-                        this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
+                        let mapTiles = [];
+                        if (GameInfo.game.player.state == "Placement") {
+                            this.path = [targetTile];
+                        }
+                        else {
+                            this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
+                        }
                         moveCatAction(this.path, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
                     }
                     else {
