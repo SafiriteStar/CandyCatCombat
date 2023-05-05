@@ -17,7 +17,7 @@ class RangeHighlighter {
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
                 push();
-                if (GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) {                    
+                if ((!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) || this.ignoreAliveCats) {                    
                     translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
                     fill(red, green, blue, 100);
                     strokeWeight(12);
@@ -40,8 +40,8 @@ class RangeHighlighter {
             return false;
         }
 
-        // If there is a cat on that tile
-        if (catAlive !== null && catAlive !== undefined && catTeam !== null && catTeam !== undefined) {
+        // If there is a cat on that tile and we aren't ignoring cats that are alive
+        if (catAlive !== null && catAlive !== undefined && catTeam !== null && catTeam !== undefined && !this.ignoreAliveCats) {
             // Is that from a different team?
             if (!catTeam.cats.includes(this.sourceCat)) {
                 // Yes
