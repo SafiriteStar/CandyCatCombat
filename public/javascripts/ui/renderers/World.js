@@ -147,7 +147,7 @@ class World {
             if (this.mapSelector.map !== null) {
                 this.mapSelector.draw();
 
-                if (this.mapSelector.path !== null && this.mapSelector.path !== undefined) {
+                /* if (this.mapSelector.path !== null && this.mapSelector.path !== undefined) {
                     for (let i = 0; i < this.mapSelector.path.length; i++) {
                         push();
                         translate(this.mapSelector.path[i].screenX - 60, this.mapSelector.path[i].screenY + 60);
@@ -156,7 +156,7 @@ class World {
                         text(i, 0, 0);
                         pop();
                     }
-                }
+                } */
             }
         pop();
 
