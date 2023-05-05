@@ -182,15 +182,18 @@ class World {
             // Try to see if there is a cat alive at the coordinate
             let cat = this.teams[i].getCatAtCoord(x, y, map);
 
+            // Cat exists
             if (cat !== null) {
-                // Cat is alive
-                // Return the cat
-                return this.teams[i].cats[cat];
+                // Is it alive?
+                if (this.teams[i].cats[cat].current_health > 0) {
+                    // Return the cat and the team
+                    return [this.teams[i].cats[cat], this.teams[i]];
+                }
             }
         }
 
         // If we got here it means that we could not find any cat alive at the provided coordinate
-        return null;
+        return [];
     }
 
     update(boards, playerTeam, opponentTeams) {

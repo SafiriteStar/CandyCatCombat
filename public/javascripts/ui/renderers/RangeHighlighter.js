@@ -7,6 +7,7 @@ class RangeHighlighter {
         this.ignoreWalls = ignoreWalls;
         this.ignoreAliveCats = ignoreAliveCats;
         this.color = color
+        this.map = null;
     }
 
     draw() {
@@ -16,14 +17,40 @@ class RangeHighlighter {
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
                 push();
+                if (GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) {                    
                     translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
                     fill(red, green, blue, 100);
                     strokeWeight(12);
                     stroke(red, green, blue, 150);
                     Tile.drawSimpleTile(tile.screenX, tile.screenY);
+                }
                 pop();
             });
         }
+    }
+
+    neighborTileChecks(currentTile, newNeighbors, catAlive, catTeam) {
+        // If its not in tiles or our new neighbor list
+        if (this.tiles.includes(currentTile) || newNeighbors.includes(currentTile)) {
+            return false;
+        }
+
+        // If we are not ignoring walls and it is a wall
+        if (!this.ignoreWalls && currentTile.type == 2) {
+            return false;
+        }
+
+        // If there is a cat on that tile
+        if (catAlive !== null && catAlive !== undefined && catTeam !== null && catTeam !== undefined) {
+            // Is that from a different team?
+            if (!catTeam.cats.includes(this.sourceCat)) {
+                // Yes
+                return false;
+            }
+        }
+
+        // We passed it all
+        return true;
     }
 
     getNeighborTiles() {
@@ -36,16 +63,9 @@ class RangeHighlighter {
             for (let j = 0; j < this.tiles[i].connections.length; j++) {
                 // Get the actual tile data
                 let currentTile = GameInfo.world.getTileInMap(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map);
-                // If its not in tiles already
-                // and not on our new neighbor list
-                // and we are either ignore walls OR not ignoring walls but the tile we are looking at isn't a wall
-                // and there isn't a cat alive at the neighbor coordinate
-                if (!this.tiles.includes(currentTile)
-                    && !newNeighbors.includes(currentTile)
-                    && (this.ignoreWalls
-                        || (!this.ignoreWalls && currentTile.type != 2))
-                    && (this.ignoreAliveCats
-                        || (!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map) === null))) {
+                let [catAlive, catTeam] = GameInfo.world.getCatAliveAtCoord(this.tiles[i].connections[j].x, this.tiles[i].connections[j].y, this.map);
+                
+                if (this.neighborTileChecks(currentTile, newNeighbors, catAlive, catTeam)) {
                     // Add that neighbor
                     newNeighbors.push(currentTile);
                 }

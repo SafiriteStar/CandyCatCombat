@@ -148,7 +148,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
             else if (game.player.state.id === 4) {
 
                 // Check if the target tile not in same board or not next to the cat
-                if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
+                if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !Play.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
                     return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
                 }
 
