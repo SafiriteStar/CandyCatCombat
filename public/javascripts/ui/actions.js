@@ -66,8 +66,8 @@ async function placementReadyAction() {
     } else alert("Something went wrong when readying up.");
 }
 
-async function moveCatAction(x, y, map, catID, teamID) {
-    let result = await requestMoveCharacter(x, y, map + 1, catID, teamID)
+async function moveCatAction(path, catID, teamID) {
+    let result = await requestMoveCharacter(path, catID, teamID)
 
     if (result.successful) {
         await getGameInfo();

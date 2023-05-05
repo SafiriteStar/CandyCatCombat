@@ -6,12 +6,12 @@ class MapSelector {
         this.coordX = null;
         this.coordY = null;
 
+        // Map
+        this.map = null;
+
         // Cat
         this.team = null;
         this.cat = null; // An index for the team
-
-        // Map
-        this.map = null;
 
         // Tile Info Box
         this.tileInfoBox = new TileInfoBox();
@@ -20,15 +20,13 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, [230, 30, 30]);
-        this.moveIndicator = new RangeHighlighter(false, [164, 149, 255]);
-    }
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30]);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255]);
 
-    drawIndicators() {
-        this.rangeIndicator.draw();
-        this.moveIndicator.draw();
+        //
+        this.path = null;
     }
-
+    
     draw() {
         push();
             fill(0, 0, 0, 0);
@@ -37,6 +35,15 @@ class MapSelector {
             Tile.drawSimpleTile(this.posX, this.posY);
         pop();
         this.drawIndicators();
+    }
+    
+    drawIndicators() {
+        this.rangeIndicator.draw();
+        if (this.team !== null && this.team !== undefined) {
+            if (!GameInfo.world.teams[this.team].cats[this.cat].isRooted()) {
+                this.moveIndicator.draw();
+            }
+        }
     }
 
     drawInfoBoxes() {
@@ -113,10 +120,24 @@ class MapSelector {
                 if (this.team !== null && this.team !== undefined) {
                     // We do
                     // Do we have a player cat?
-                    if (this.team == 0) {
+                    if (this.team == 0 && !GameInfo.world.teams[this.team].cats[this.cat].isRooted()) {
                         // We do
                         // Lets try to move to the tile we just clicked
-                        moveCatAction(this.coordX, this.coordY, this.map, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
+                        let startingTile = GameInfo.world.getTileInMap(
+                            GameInfo.world.teams[this.team].cats[this.cat].x,
+                            GameInfo.world.teams[this.team].cats[this.cat].y,
+                            GameInfo.world.teams[this.team].cats[this.cat].map)
+                        let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
+                        if (GameInfo.game.player.state == "Placement") {
+                            this.path = [targetTile];
+                        }
+                        else {
+                            this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
+                        }
+
+                        if (this.path.length > 0) {
+                            moveCatAction(this.path, GameInfo.world.teams[this.team].cats[this.cat].id, GameInfo.world.teams[this.team].id);
+                        }
                     }
                     else {
                         // No

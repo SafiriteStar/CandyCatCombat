@@ -25,6 +25,9 @@ function preload() {
         loadImage("../../assets/CaramelCat.png"),
         loadImage("../../assets/ChocoDairyMilkCat.png")
     ]
+    GameInfo.images.ui = {};
+    GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
+    GameInfo.images.ui.stealthed = loadImage("../../assets/StealthIcon.png");
 }
 
 

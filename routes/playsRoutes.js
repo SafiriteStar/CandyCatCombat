@@ -67,25 +67,10 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
 
         if (req.body.catID === null || req.body.catID < 0) {
             res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
-        } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
-            res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.map, req.body.catID, req.body.teamID);
+            let result = await Play.move(req.game, req.body.path, req.body.catID, req.body.teamID);
             res.status(result.status).send(result.result);
         }
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
-});
-
-
-// Generates and sets the map
-router.get('/generateMap', async function(req, res, next) {
-    try {
-        console.log("Generating Map");
-        await Play.setWorldData(World.createWorld, true, true);
-        res.status(200).send({ msg: "Map Generated!" });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);

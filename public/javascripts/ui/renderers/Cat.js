@@ -108,6 +108,28 @@ class Cat {
                 image(this.img, -this.img.width * 0.5, -this.img.height * 0.5);
             pop();
 
+            // Condition images
+            push();
+                tint(255, 255, 255, this.opacity);
+                scale(0.25);
+                for (let i = 0; i < this.conditions.length; i++) {
+                    if (this.conditions[i].name == "Rooted") {
+                        image(
+                            GameInfo.images.ui.rooted,
+                            (-GameInfo.images.ui.rooted.width * 0.5 * (i + 1)) + (-this.img.width * 0.5),
+                            (-GameInfo.images.ui.rooted.height * 0.5) + (-this.img.height * 0.5)
+                        );
+                    }
+                    else if (this.conditions[i].name == "Stealth") {
+                        image(
+                            GameInfo.images.ui.stealthed,
+                            (-GameInfo.images.ui.stealthed.width * 0.5 * (i + 1)) + (-this.img.width * 0.5),
+                            (-GameInfo.images.ui.stealthed.height * 0.5) + (-this.img.height * 0.5)
+                        );
+                    }
+                }
+            pop();
+
             if (this.current_health > 0) {
                 // Health Bar Background
                 fill(255, 255, 255, 255);
@@ -142,6 +164,16 @@ class Cat {
                 );
             }
         pop();
+    }
+
+    isRooted() {
+        for (let i = 0; i < this.conditions.length; i++) {
+            if (this.conditions[i].name == "Rooted") {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     update(cat, showDebug) {
