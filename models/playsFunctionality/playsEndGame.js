@@ -22,7 +22,6 @@ Play.checkEndGame = async function(game) {
     console.log(opponentCatCount);
     
     // If we got here, the game can continue
-    console.log("Keep the game going");
     return false;
 }
 
