@@ -9,6 +9,22 @@ Play.getWorld = function() {
     return Play.worldData;
 }
 
+Play.checkTileExists = function(x, y, map) {
+    if (Play.worldData.maps[map] === null || Play.worldData.maps[map] === undefined) {
+        return false;
+    }
+    
+    if (Play.worldData.maps[map].tiles[x] === null || Play.worldData.maps[map].tiles[x] === undefined) {
+        return false;
+    }
+    
+    if (Play.worldData.maps[map].tiles[x][y] === null || Play.worldData.maps[map].tiles[x][y] === undefined) {
+        return false;
+    }
+
+    return true;
+}
+
 Play.getTile = function(x, y, map) {
     return Play.worldData.maps[map].tiles[x][y];
 }
@@ -81,8 +97,42 @@ Play.adjustStamina = async function(catID, staminaAdjustment) {
 // state
 // boardID
 // conditions [ { name, duration, id, game_id } ]
+Play.getGameCat = async function(catId) {
+    let askForCat = `
+    Select
+        gtc_id as "id",               gtc_type_id as "type",          gtc_x as "x",                           gtc_y as "y",
+        cat_name as "name",           cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage",
+        cat_defense as "defense",     cat_speed as "speed",           gtc_stamina as "stamina",               cat_min_range as "min_range",
+        cat_max_range as "max_range", cat_cost as "cost",             gcs_state as "state",                   gtc_game_board_id as "boardID",
+        gtc_game_team_id as "team_id"
+    from
+        cat,
+        game_cat_state,
+        game_team_cat,
+        game_team
+    where
+        gtc_type_id = cat_id AND
+        gtc_state_id = gcs_id AND
+        gtc_game_team_id = gt_id AND
+        gtc_id = ?`
+
+    let [[gameCat]] = await pool.query(askForCat, [catId]);
+
+    let askForGameCatConditions = `Select ccn_name as "name", gcc_duration as "duration", gcc_ccn_id as "id", gcc_id as "game_id"
+    from game_team_cat, game_team_cat_condition, cat_condition
+    where gcc_ccn_id = ccn_id and gtc_id = gcc_gtc_id and gcc_gtc_id = ?`
+    // Ask for the conditions for that cat (even if empty)
+    // For each cat
+    
+    let [gameCatConditions] = await pool.query(askForGameCatConditions, [catId]);
+
+    gameCat.conditions = gameCatConditions;
+
+    return gameCat;
+}
+
 Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
-    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID", gtc_game_team_id as "team_id" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
     // Player info
     let player = {};
@@ -112,6 +162,40 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     }
 
     return player
+}
+
+Play.getCatsInTile = async function(tile, gameId) {
+    let askForCats = `
+    Select
+        gtc_id as "id",               gtc_type_id as "type",          gtc_x as "x",                           gtc_y as "y",
+        cat_name as "name",           cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage",
+        cat_defense as "defense",     cat_speed as "speed",           gtc_stamina as "stamina",               cat_min_range as "min_range",
+        cat_max_range as "max_range", cat_cost as "cost",             gcs_state as "state",                   gtc_game_board_id as "boardID",
+        gtc_game_team_id as "team_id"
+    from
+        cat,
+        game_cat_state,
+        game_team_cat_condition,
+        cat_condition,
+        game_team_cat,
+        game_team,
+        game
+    where
+        gtc_type_id = cat_id AND
+        gtc_state_id = gcs_id AND
+        gcc_ccn_id = ccn_id AND
+        gtc_id = gcc_gtc_id AND
+        gtc_game_team_id = gt_id AND
+        gt_game_id = gm_id AND
+        gtc_current_health > 0 AND
+        gm_id = ? AND
+        gtc_x = ? AND
+        gtc_y = ? AND
+        gtc_game_board_id = ?`
+
+    let [cats] = await pool.query(askForCats, [gameId, tile.x, tile.y, tile.map]);
+
+    return cats;
 }
 
 Play.changePlayerState = async function(stateID, playerID) {

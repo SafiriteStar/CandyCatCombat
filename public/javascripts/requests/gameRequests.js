@@ -81,7 +81,7 @@ async function requestGameTeams() {
     }
 }
 
-async function requestMoveCharacter(path, catID, teamID) {
+async function requestMoveCharacter(path, catID) {
     try {
         const response = await fetch(`/api/plays/move`, 
         {
@@ -92,13 +92,15 @@ async function requestMoveCharacter(path, catID, teamID) {
             method: "PATCH",
             body: JSON.stringify({
               path: path,
-              catID: catID,
-              teamID: teamID
+              catID: catID
             })
         });
+        let result = await response.json();
         // We are not checking for errors (considering the GUI is only allowing correct choices)
         // We only need to send if the user logged or not since the token will be in the cookie
-        return { successful: response.status == 200};
+        return { successful: response.status == 200,
+            unauthenticated: response.status == 401,
+            msg: result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

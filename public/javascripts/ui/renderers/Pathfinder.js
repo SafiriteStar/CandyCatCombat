@@ -102,6 +102,9 @@ class Pathfinder {
     }
 
     static getPath(startingTile, targetTile, map) {
+        if (!map.includes(targetTile)) {
+            return [];
+        }
         // Generate Unvisited Nodes
         let unvisitedNodes = [];
         // Don't forget to add in the starting node

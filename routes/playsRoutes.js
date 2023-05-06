@@ -77,9 +77,9 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
         console.log("Play move");
 
         if (req.body.catID === null || req.body.catID < 0) {
-            res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
+            res.status(400).send({msg:"You cannot the move character since the chosen character is not valid"});
         } else {
-            let result = await Play.move(req.game, req.body.path, req.body.catID, req.body.teamID);
+            let result = await Play.move(req.game, req.body.path, req.body.catID);
             res.status(result.status).send(result.result);
         }
     } catch (err) {
