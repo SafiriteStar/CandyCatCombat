@@ -17,9 +17,6 @@ Play.checkEndGame = async function(game) {
     if (playerCatCount === 0 || opponentCatCount === 0) {
         return true;
     }
-
-    console.log(playerCatCount);
-    console.log(opponentCatCount);
     
     // If we got here, the game can continue
     return false;
