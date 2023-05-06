@@ -5,14 +5,25 @@ const Play = require("../models/playsModel");
 const auth = require("../middleware/auth");
 require("../db_scripts/mapPopulate");
 
-router.get('/auth', auth.verifyAuth, async function (req, res, next) {
+router.get('/map', async function (req, res, next) {
     try {
-        console.log("Get information about the board");
+        console.log("Get information about the map");
+        let result = await Play.getMap();
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(result.status).send(result.result);
+    }
+});
+
+router.get('/auth/teams', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Get information about the game teams");
         if (!req.game) {
-            res.status(400).send({msg:"You are not at a game, please create or join a game"});
+            res.status(400).send({msg:"You are not in a game, please create or join a game"});
         }
         else {
-            let result = await Play.getBoard(req.game);
+            let result = await Play.getGameTeams(req.game);
             res.status(result.status).send(result.result);
         }
     } catch (err) {

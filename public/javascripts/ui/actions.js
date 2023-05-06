@@ -22,26 +22,35 @@ async function getGameInfo() {
 
 async function getBoardInfo() {
     // Ask the server for game and board information
-    let result = await requestGameBoard();
-
+    let resultTeams = await requestGameTeams();
+    
     // Did we get it?
-    if (!result.successful) {
+    if (!resultTeams.successful) {
         // Nope, try and login again
         alert("Something is wrong with the game please login again!");
         window.location.pathname = "index.html";
     } else {
         // Yup the server sent us something back
-        console.log(result.game);
-
-        // Actual board
+        console.log(resultTeams.teams);
+        
+        // Does the world exist?
         if (GameInfo.world) {
             // A board already exists
-            GameInfo.world.update(result.game.maps, result.game.player, result.game.opponents);
+            GameInfo.world.update(resultTeams.teams.player, resultTeams.teams.opponents);
         }
         else {
-            // Create a new board
-            //GameInfo.board = new Board(result.game.width, result.game.height, result.game.tiles, result.game.player, result.game.opponents);
-            GameInfo.world = new World(result.game.maps, result.game.player, result.game.opponents);
+            // Get the map data
+            let resultMap = await requestMap();
+            if (!resultMap.successful) {
+                // Oops
+                alert("Something is wrong with the game please login again!");
+                window.location.pathname = "index.html";
+            }
+            else {
+                // Create a new board
+                console.log(resultMap.map);
+                GameInfo.world = new World(resultMap.map.maps, resultTeams.teams.player, resultTeams.teams.opponents);
+            }
         }
 
         console.log(GameInfo.world);

@@ -53,13 +53,27 @@ async function requestPlacementReady() {
     }
 }
 
-async function requestGameBoard() {
+async function requestMap() {
     try {
-        const response = await fetch(`/api/plays/auth`);
+        const response = await fetch(`/api/plays/map`);
         let result = await response.json();
         return { successful: response.status == 200,
                  unauthenticated: response.status == 401,
-                 game: result};
+                 map: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestGameTeams() {
+    try {
+        const response = await fetch(`/api/plays/auth/teams`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 teams: result};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
