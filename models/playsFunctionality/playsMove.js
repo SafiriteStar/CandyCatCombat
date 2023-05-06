@@ -76,8 +76,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
             where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_game_id = ? and gtc_game_team_id = gt_id and gm_id = gt_game_id`,
             [x, y, map, game.id]
         );
-        console.log("Target Tile");
-        console.log("x: " + x + " y: " + y + " map: " + map);
+
         if (cats.length > 1) {
             for (let i = 0; i < cats.length; i++) {
                 // Is the cat in the tile alive
@@ -109,7 +108,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
             }
 
             let tileGroup = tileGroups[0];
-            if(tileGroup.ptg_group !== game.player.order) {
+            if(tileGroup.ptg_group !== game.player.order && tileGroup.ptg_group !== 0) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
             }
 
@@ -140,7 +139,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
                 }
 
                 let tileGroup = tileGroups[0];
-                if(tileGroup.ptg_group !== game.player.order) {
+                if(tileGroup.ptg_group !== game.player.order && tileGroup.ptg_group !== 0) {
                     return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
                 }
 
