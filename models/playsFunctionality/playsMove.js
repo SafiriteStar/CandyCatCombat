@@ -136,7 +136,7 @@ Play.moveByPath = async function(game, path, catID) {
             }
 
             // Take away a point of stamina for how far we walked
-            staminaLeftOver = staminaLeftOver - pathTiles.length - 1;
+            staminaLeftOver = staminaLeftOver - (pathTiles.length - 1);
         }
 
         // If we got here, everything is okay!
