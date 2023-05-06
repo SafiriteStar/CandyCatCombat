@@ -22,7 +22,6 @@ Play.checkEndGame = async function(game) {
     console.log(opponentCatCount);
     
     // If we got here, the game can continue
-    console.log("Keep the game going");
     return false;
 }
 
@@ -41,8 +40,21 @@ Play.endGame = async function(game) {
         let sqlScore = `Insert into scoreboard (sb_user_game_id, sb_state_id, sb_points) values (?, ?, ?)`;
         let playerScore = await Play.countDeadCats(game.opponents[0].id, game.id);
         let opponentScore = await Play.countDeadCats(game.player.id, game.id);
-        await pool.query(sqlScore, [game.player.id, 1, playerScore]);
-        await pool.query(sqlScore, [game.opponents[0].id, 1, opponentScore]);
+
+        let playerState = 1;
+        let oppState = 1;
+
+        if (playerScore > opponentScore) {
+            playerState = 3;
+            oppState = 2;
+        }
+        else if (playerScore > opponentScore) {
+            playerState = 2;
+            oppState = 3;
+        }
+
+        await pool.query(sqlScore, [game.player.id, playerState, playerScore]);
+        await pool.query(sqlScore, [game.opponents[0].id, oppState, opponentScore]);
 
         return { status: 200, result: { msg: "Game ended. Check scores." } };
     } catch (err) {
