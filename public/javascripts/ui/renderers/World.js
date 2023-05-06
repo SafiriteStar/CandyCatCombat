@@ -196,12 +196,7 @@ class World {
         return [];
     }
 
-    update(boards, playerTeam, opponentTeams) {
-        // Update the maps
-        for (let i = 0; i < this.maps.length; i++) {
-            this.maps[i].update(boards[i].tiles);
-        }
-
+    update(playerTeam, opponentTeams) {
         // Update the player team
         this.teams[0].update(playerTeam.team.cats)
 

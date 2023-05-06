@@ -109,7 +109,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
             }
 
             let tileGroup = tileGroups[0];
-            if(tileGroup.ptg_group !== game.player.order) {
+            if(tileGroup.ptg_group !== game.player.order && tileGroup.ptg_group !== 0) {
                 return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
             }
 
@@ -140,7 +140,7 @@ async function moveToTile(game, x, y, map, catID, teamID) {
                 }
 
                 let tileGroup = tileGroups[0];
-                if(tileGroup.ptg_group !== game.player.order) {
+                if(tileGroup.ptg_group !== game.player.order && tileGroup.ptg_group !== 0) {
                     return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
                 }
 
