@@ -30,8 +30,8 @@ function preload() {
     
     // Mawbreaker Cat
     GameInfo.images.cats.mawbreakerCat = {}
-    GameInfo.images.cats.mawbreakerCat.base = loadImage("../../assets/MawBreakerCat.png");
-    GameInfo.images.cats.mawbreakerCat.fainted = loadImage("../../assets/MawBreakerCat.png");
+    GameInfo.images.cats.mawbreakerCat.base = loadImage("../../assets/MawbreakerCat/Mawbreaker_Cat_Base.png");
+    GameInfo.images.cats.mawbreakerCat.fainted = loadImage("../../assets/MawbreakerCat/Mawbreaker_Cat_Fainted.png");
     
     // Gum Cat
     GameInfo.images.cats.gumCat = {}
