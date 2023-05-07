@@ -230,7 +230,7 @@ class World {
     }
 
     updateTeamCatFaces() {
-        if (this.teams.length > 0) {
+        if (this.teams.length > 1) {
             // Update the faces for both teams
             this.teams[0].updateFace(this.teams[1].cats); // Player
             this.teams[1].updateFace(this.teams[0].cats); // Opponent
