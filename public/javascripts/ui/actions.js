@@ -50,6 +50,7 @@ async function getBoardInfo() {
                 // Create a new board
                 console.log(resultMap.map);
                 GameInfo.world = new World(resultMap.map.maps, resultTeams.teams.player, resultTeams.teams.opponents);
+                GameInfo.world.updateTeamCatFaces();
             }
         }
 
