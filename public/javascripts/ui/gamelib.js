@@ -16,10 +16,6 @@ async function refresh() {
 }
 
 function preload() {
-    
-}
-
-function loadGameImages() {
     GameInfo.images.cats = {}
 
     // Vanilla Cat
@@ -68,7 +64,6 @@ async function setup() {
     canvas.parent('game');
     canvas.mouseWheel(changeScale); // Attach listener for when the mouse wheel is over the canvas 
     // preload  images
-    loadGameImages();
     
     await getGameInfo();
     await getBoardInfo();
