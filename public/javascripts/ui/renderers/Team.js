@@ -1,4 +1,18 @@
 class Team {
+    static getCatImage(catIndex) {
+        let catImageTable = [
+            GameInfo.images.cats.vanillaCat,
+            GameInfo.images.cats.candyCornCat,
+            GameInfo.images.cats.mawbreakerCat,
+            GameInfo.images.cats.gumCat,
+            GameInfo.images.cats.popCat,
+            GameInfo.images.cats.caramelCat,
+            GameInfo.images.cats.chocoDairyMilkCat,
+        ]
+
+        return catImageTable[catIndex];
+    }
+
     constructor(teamId, playerName, catList, colorArray) {
         this.id = teamId;
         this.playerName = playerName;
@@ -7,7 +21,7 @@ class Team {
 
         let unplacedIndex = 0;
         for (let i = 0; i < catList.length; i++) {
-            this.cats[i] = new Cat(catList[i], GameInfo.images.cats[catList[i].type - 1], false);
+            this.cats[i] = new Cat(catList[i], Team.getCatImage(catList[i].type - 1), false);
         }
     }
     

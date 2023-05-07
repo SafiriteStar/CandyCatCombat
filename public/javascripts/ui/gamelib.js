@@ -16,26 +16,59 @@ async function refresh() {
 }
 
 function preload() {
-    GameInfo.images.cats = [
-        loadImage("../../assets/VanillaCat.png"),
-        loadImage("../../assets/CandyCornCat.png"),
-        loadImage("../../assets/MawBreakerCat.png"),
-        loadImage("../../assets/GumCat.png"),
-        loadImage("../../assets/PopCat.png"),
-        loadImage("../../assets/CaramelCat.png"),
-        loadImage("../../assets/ChocoDairyMilkCat.png")
-    ]
+    
+}
+
+function loadGameImages() {
+    GameInfo.images.cats = {}
+
+    // Vanilla Cat
+    GameInfo.images.cats.vanillaCat = {}
+    GameInfo.images.cats.vanillaCat.base = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
+    GameInfo.images.cats.vanillaCat.fainted = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
+    
+    // Candy Corn Cat
+    GameInfo.images.cats.candyCornCat = {}
+    GameInfo.images.cats.candyCornCat.base = loadImage("../../assets/CandyCornCat/Candy_Corn_Cat_Base.png");
+    GameInfo.images.cats.candyCornCat.fainted = loadImage("../../assets/CandyCornCat/Candy_Corn_Cat_Fainted.png");
+    
+    // Mawbreaker Cat
+    GameInfo.images.cats.mawbreakerCat = {}
+    GameInfo.images.cats.mawbreakerCat.base = loadImage("../../assets/MawBreakerCat.png");
+    GameInfo.images.cats.mawbreakerCat.fainted = loadImage("../../assets/MawBreakerCat.png");
+    
+    // Gum Cat
+    GameInfo.images.cats.gumCat = {}
+    GameInfo.images.cats.gumCat.base = loadImage("../../assets/GumCat.png");
+    GameInfo.images.cats.gumCat.fainted = loadImage("../../assets/GumCat.png");
+    
+    // Pop Cat
+    GameInfo.images.cats.popCat = {}
+    GameInfo.images.cats.popCat.base = loadImage("../../assets/PopCat.png");
+    GameInfo.images.cats.popCat.fainted = loadImage("../../assets/PopCat.png");
+    
+    // Caramel Cat
+    GameInfo.images.cats.caramelCat = {}
+    GameInfo.images.cats.caramelCat.base = loadImage("../../assets/CaramelCat.png");
+    GameInfo.images.cats.caramelCat.fainted = loadImage("../../assets/CaramelCat.png");
+    
+    // Choco Diary Milk Cat
+    GameInfo.images.cats.chocoDairyMilkCat = {}
+    GameInfo.images.cats.chocoDairyMilkCat.base = loadImage("../../assets/ChocoDairyMilkCat.png");
+    GameInfo.images.cats.chocoDairyMilkCat.fainted = loadImage("../../assets/ChocoDairyMilkCat.png");
+
+    // UI
     GameInfo.images.ui = {};
     GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
     GameInfo.images.ui.stealthed = loadImage("../../assets/StealthIcon.png");
 }
-
 
 async function setup() {
     let canvas = createCanvas(GameInfo.width, GameInfo.height);
     canvas.parent('game');
     canvas.mouseWheel(changeScale); // Attach listener for when the mouse wheel is over the canvas 
     // preload  images
+    loadGameImages();
     
     await getGameInfo();
     await getBoardInfo();
