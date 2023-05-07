@@ -38,7 +38,7 @@ create table scoreboard (
     sb_id int not null auto_increment,
     sb_user_game_id int not null,
     sb_state_id int not null,
-    sb_points int not null default 0,
+    sb_points decimal(10,2) not null default 0,
     primary key (sb_id));
 
 create table scoreboard_state (
