@@ -172,6 +172,18 @@ class World {
         return this.maps[map].tiles;
     }
 
+    getFlatMapTiles(mapIndex) {
+        let tiles = [];
+
+        for (let x = 0; x < this.maps[mapIndex].tiles.length; x++) {
+            for (let y = 0; y < this.maps[mapIndex].tiles[x].length; y++) {
+                tiles.push(this.maps[mapIndex].tiles[x][y]);
+            }
+        }
+
+        return tiles;
+    }
+
     getTileInMap(x, y, map) {
         return this.maps[map].getTile(x, y);
     }
@@ -210,8 +222,18 @@ class World {
             }
         }
 
+        this.updateTeamCatFaces();
+
         if (this.mapSelector.rangeIndicator.sourceCat !== null && this.teams[this.mapSelector.team] !== undefined) {
             this.mapSelector.updateRangeIndicators(this.teams[this.mapSelector.team].cats[this.mapSelector.cat]);
+        }
+    }
+
+    updateTeamCatFaces() {
+        if (this.teams.length > 0) {
+            // Update the faces for both teams
+            this.teams[0].updateFace(this.teams[1].cats); // Player
+            this.teams[1].updateFace(this.teams[0].cats); // Opponent
         }
     }
 

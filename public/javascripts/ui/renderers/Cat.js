@@ -61,6 +61,7 @@ class Cat {
         this.opacity = calculateOpacity(cat);
 
         this.img = image
+        this.facingRight = false;
     }
 
     draw(teamColor) {
@@ -103,6 +104,9 @@ class Cat {
 
             // Stand in image for now
             push();
+                if (this.facingRight) {
+                    scale(-1, 1);
+                }
                 tint(255, 255, 255, this.opacity);
                 image(this.img.base, -this.img.base.width * 0.5, -this.img.base.height * 0.5);
             pop();
@@ -197,5 +201,43 @@ class Cat {
         this.showDebug = showDebug
 
         this.opacity = calculateOpacity(cat);
+    }
+
+    updateFace(opponentCats) {
+        // Get our starting tile
+        let shortestX = Infinity;
+        let shortestY = Infinity;
+        let closestOpponent = null;
+
+        // For each opponent
+        for (let i = 0; i < opponentCats.length; i++) {
+
+            let distXToOpponent = Math.abs(opponentCats[i].x - this.x);
+            let distYToOpponent = Math.abs(opponentCats[i].y - this.y);
+
+            // If the path is shorter than our current one
+            if (distXToOpponent < shortestX && distYToOpponent < shortestY) {
+                // We have a cat that is closer
+                // Update our shortest distance
+                shortestX = distXToOpponent;
+                shortestY = distYToOpponent;
+                // Update our closest opponent
+                closestOpponent = opponentCats[i];
+            }
+        }
+
+        // If we have a closest opponent
+        if (closestOpponent !== null && closestOpponent !== undefined) {
+            // If they are to the right and we are facing left
+            if (closestOpponent.x > this.x && !this.facingRight) {
+                // Flip
+                this.facingRight = true;
+            }
+            // If they are to the left and we are facing right
+            else if (closestOpponent.x < this.x && this.facingRight) {
+                // Flip
+                this.facingRight = false;
+            }
+        }
     }
 }

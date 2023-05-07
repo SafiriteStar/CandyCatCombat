@@ -36,6 +36,18 @@ class Team {
         return false;
     }
 
+    getLiveCats() {
+        let liveCats = [];
+
+        for (let i = 0; i < this.cats.length; i++) {
+            if (this.cats[i].current_health > 0) {
+                liveCats.push(this.cats[i]);
+            }
+        }
+
+        return liveCats;
+    }
+
     // Returns the index
     getCatAtCoord(x, y, map) {
         for (let i = 0; i < this.cats.length; i++) {
@@ -55,8 +67,15 @@ class Team {
     }
 
     update(catList) {
+        // Update all the info
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].update(catList[i], false);
+        }
+    }
+
+    updateFace(opponentList) {
+        for (let i = 0; i < this.cats.length; i++) {
+            this.cats[i].updateFace(opponentList);
         }
     }
 }
