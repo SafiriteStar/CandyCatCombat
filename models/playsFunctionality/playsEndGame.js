@@ -35,8 +35,11 @@ Play.endGame = async function(game) {
         // Insert score lines with the state and points.
         // A player has a score equal to the number of dead cats on the enemy team
         let sqlScore = `Insert into scoreboard (sb_user_game_id, sb_state_id, sb_points) values (?, ?, ?)`;
-        let playerScore = await Play.countDeadCats(game.opponents[0].id, game.id);
-        let opponentScore = await Play.countDeadCats(game.player.id, game.id);
+        let [playerDeadCats, playerTeamLength] = await Play.countDeadCats(game.opponents[0].id, game.id);
+        let [opponentDeadCats, opponentTeamLength] = await Play.countDeadCats(game.player.id, game.id);
+
+        let playerScore = playerDeadCats / playerTeamLength;
+        let opponentScore = opponentDeadCats / opponentTeamLength;
 
         let playerState = 1;
         let oppState = 1;
@@ -49,6 +52,9 @@ Play.endGame = async function(game) {
             playerState = 2;
             oppState = 3;
         }
+
+        console.log("Player Score: " + playerScore);
+        console.log("Opponent Score: " + opponentScore);
 
         await pool.query(sqlScore, [game.player.id, playerState, playerScore]);
         await pool.query(sqlScore, [game.opponents[0].id, oppState, opponentScore]);
