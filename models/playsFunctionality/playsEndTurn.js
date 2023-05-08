@@ -45,6 +45,8 @@ Play.resolveAttacks = async function(game) {
         await CatStandardAttack.rootedCheck(playerCat);
 
         await GumCatAttack.reStealthCheck(playerCat, attackSuccessful);
+
+        await ChocoDairyMilkHeal.healingFervorCheck(playerCat);
     }
     
     // For every player cat

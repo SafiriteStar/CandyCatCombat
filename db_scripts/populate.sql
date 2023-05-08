@@ -114,7 +114,7 @@ values (
 insert into game_cat_state (gcs_state) values ('Standby'), ('Acted'), ('Dead');
 
 # Conditions
-insert into cat_condition (ccn_name) values ('Stealth'), ('Rooted'), ('ReStealth');
+insert into cat_condition (ccn_name) values ('Stealth'), ('Rooted'), ('ReStealth'), ('HealingFervor');
 
 # Map Related Stuff
 insert into board (brd_name) values ("Placement Map");
