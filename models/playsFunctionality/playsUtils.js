@@ -104,7 +104,7 @@ Play.getGameCat = async function(catId) {
         cat_name as "name",           cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage",
         cat_defense as "defense",     cat_speed as "speed",           gtc_stamina as "stamina",               cat_min_range as "min_range",
         cat_max_range as "max_range", cat_cost as "cost",             gcs_state as "state",                   gtc_game_board_id as "boardID",
-        gtc_game_team_id as "team_id"
+        gtc_game_team_id as "team_id", cat_description as "description"
     from
         cat,
         game_cat_state,
@@ -132,7 +132,7 @@ Play.getGameCat = async function(catId) {
 }
 
 Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
-    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID", gtc_game_team_id as "team_id" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID", gtc_game_team_id as "team_id", cat_description as "description" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
     // Player info
     let player = {};

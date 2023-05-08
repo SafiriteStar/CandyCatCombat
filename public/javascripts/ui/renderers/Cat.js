@@ -54,6 +54,7 @@ class Cat {
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
+        this.description = cat.description;
         this.conditions = cat.conditions;
 
         this.showDebug = showDebug;

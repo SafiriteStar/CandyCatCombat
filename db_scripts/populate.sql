@@ -29,7 +29,8 @@ insert into cat (
     cat_speed,
     cat_min_range,
     cat_max_range,
-    cat_cost
+    cat_cost,
+    cat_description
 )
 values (
     'Vanilla Cat',
@@ -39,7 +40,8 @@ values (
     5,
     1,
     1,
-    1
+    1,
+    "A versatile candy cat with average stats across the board. Fights in close melee range but can fill many different roles."
 ),
 (
     'Candy Corn Cat',
@@ -49,7 +51,8 @@ values (
     3,
     3,
     6,
-    1
+    1,
+    "A bow and arrow wielding candy cat with the longest strike range of all other cats. Not suitable for melee. Can attack twice if they haven't moved."
 ),
 (
     'Mawbreaker Cat',
@@ -59,7 +62,8 @@ values (
     3,
     1,
     2,
-    2
+    2,
+    "The hardest hitting, toughest candy cat around. Cost twice as much to have in your team but has twice the impact of your average candy cat."
 ),
 (
     'Gum Cat',
@@ -69,7 +73,8 @@ values (
     6,
     1,
     1,
-    1
+    1,
+    "With cloak and dagger this candy cat is difficult to catch and loves catching opponents from a flank. Unable to be hit while in stealth mode, which is lost when attacking. Starts the game in stealth and can regain it after not attacking or being attacked for 3 turns. An attack while in stealth deals triple the damage!"
 ),
 (
     'Pop Cat',
@@ -79,7 +84,8 @@ values (
     3,
     2,
     3,
-    1
+    1,
+    "Fizzling with excitement at the opportunity of causing more explosions, this candy cat lobes sizzling explosives at enemies causing damage across an area. Be careful where you position this candy cat however, as they have little regard to distinguish friend from foe."
 ),
 (
     'Caramel Cat',
@@ -89,7 +95,8 @@ values (
     5,
     1,
     2,
-    1
+    1,
+    "Bulky and cheerful, this candy cat loves to protect their allies by keeping opponents in place. Attacks at melee range deal damage and stick enemies in place. This candy cat can also throw some caramel a short distance away at opponents to keep them in place, even if they don't deal any damage doing so. Despite their vigilant attitude this candy cat cannot hold out for long while out numbered so keep them with a partner!"
 ),
 (
     'Choco Dairy Milk Cat',
@@ -99,7 +106,8 @@ values (
     3,
     1,
     2,
-    1
+    1,
+    "Always ready to help, this ever affable candy cat can heal their allies at the cost of hurting themselves. While at have health their fervor drives them to keep going, healing them a small amount at the start of each turn. This candy cat otherwise cannot heal and is rather fragile, keep them safe."
 );
 
 # States

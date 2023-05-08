@@ -50,7 +50,8 @@ let catBrackets = [
     "speed",
     "max_range",
     "min_range",
-    "cost"
+    "cost",
+    "description"
 ]
 
 async function remakeTable() {
