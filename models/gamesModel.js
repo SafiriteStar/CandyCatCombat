@@ -20,11 +20,12 @@ class Player {
 }
 
 class Game {
-    constructor(id, turn, state, board, player, opponents) {
+    constructor(id, turn, state, board, boardName, player, opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
         this.board = board;
+        this.boardName = boardName;
         this.player = player;
         this.opponents = opponents || [];
     }
@@ -37,6 +38,7 @@ class Game {
             game.player = this.player.export();
         game.opponents = this.opponents.map(o => o.export());
         game.board = this.board;
+        game.boardName = this.boardName;
         return game;
     }
 
@@ -75,12 +77,13 @@ class Game {
                     inner join user_game on gm_id = ug_game_id 
                     inner join user_game_state on ug_state_id = ugst_id
                     inner join game_state on gm_state_id = gst_id
+                    inner join board on gm_board_id = brd_id
                     where ug_user_id=? and (gst_state IN ('Waiting','Started') 
                     or (gst_state = 'Finished' and ugst_state = 'Score')) `, [id]);
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
-            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
+            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name);
             let result = await this.fillPlayersOfGame(id,game);
             if (result.status != 200) {
                 return result;
@@ -98,10 +101,11 @@ class Game {
             let [dbGames] =
                 await pool.query(`Select * from game 
                     inner join game_state on gm_state_id = gst_id
+                    inner join board on gm_board_id = brd_id
                     where gst_state = 'Waiting'`);
             let games = [];
             for (let dbGame of dbGames) {
-                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
+                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name);
                 let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
@@ -129,7 +133,7 @@ class Game {
     static async create(userId) {
         try {
             // create the game
-            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 1]);
+            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 2]);
             let gameId = result.insertId;
             // add the user to the game
             Game.#addUserToGame(userId, gameId);
