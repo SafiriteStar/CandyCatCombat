@@ -1,31 +1,91 @@
 .catBooklet {
-    position: relative;
-    display: inline-block;
-    width: 520px;
-    padding: 10px;
-    border:5px solid burlywood;
-    margin: 10px;
+  background-color: burlywood;
+  position: relative;
+  display: block;
+  width: 47em;
 }
 
 .clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
+  content: "";
+  clear: both;
+  display: table;
 }
 
 .paginationLink {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border: 1px solid #ddd;
-  }
-  
-  .paginationLink.active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
-  }
-  
-  .paginationLink:hover:not(.active) {background-color: #ddd;}
+  background-color: white;
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+}
+
+.paginationLink.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.paginationLink:hover:not(.active) {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.catHeader { grid-area: 1 / 1 / 4 / 6; }
+.catImage { grid-area: 1 / 1 / 4 / 3; }
+.catName { grid-area: 1 / 3 / 2 / 6; }
+.catWeapons { grid-area: 2 / 3 / 4 / 6; }
+.catDescription { grid-area: 4 / 1 / 8 / 6; }
+.catStats { grid-area: 8 / 1 / 12 / 6; }
+.catPaginationWrapper { grid-area: 12 / 1 / 13 / 6; }
+
+.catInfoGridContainer {
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+  gap: 10px 10px; 
+  padding: 10px;
+  background-color: burlywood;
+}
+
+.catInfoGridContainer > .catBookletCell {
+  padding: 20px 0;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: #ddd;
+}
+
+.catPaginationWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.catPagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.catStats {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.catStats > ul {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  list-style: none;
+  justify-content: space-around;
+  margin: 0;
+}
+
+.catStats > ul > li {
+  padding: 1em;
+  text-align: left;
+}

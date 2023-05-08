@@ -7,6 +7,8 @@
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
+  <script src="./javascripts/displayTeam.js"></script>
+  <script src="./javascripts/catBooklet.js"></script>
   <script src="./javascripts/matches.js"></script>
 </head>
 
@@ -20,8 +22,39 @@
     <div id="defaultTeam">
       <h1>Default Team:</h1>
     </div>
+    
     <div id="catBooklet" class="catBooklet clearfix">
+      <div id="catInfoGridContainer" class="catInfoGridContainer">
+        <div class="catHeader"></div>
+        <div id="catImage" class="catImage catBookletCell">image</div>
+        <div id="catName" class="catName catBookletCell">name</div>
+        <div id="catWeapons" class="catWeapons catBookletCell">weapons</div>
+        <div id="catDescription" class="catDescription catBookletCell">description</div>
+        <div id="catStats" class="catStats catBookletCell">
+          <ul>
+            <li>
+              <div id="bookletHealth">Heath</div>
+            </li>
+            <li>
+              <div id="bookletDamage">Damage/Healing</div>
+            </li>
+            <li>
+              <div id="bookletDefense">Defense</div>
+            </li>
+            <li>
+              <div id="bookletRange">Range</div>
+            </li>
+            <li>
+              <div id="bookletSpeed">Speed</div>
+            </li>
+            <li>
+              <div id="bookletCost">Cost</div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+    
     <h1>Choose a match or create a new one</h1>
     <p>After creating or joining a match you cannot leave and cannot
       create/join other matches until you finish that match</p>
