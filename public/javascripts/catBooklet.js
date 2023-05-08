@@ -21,7 +21,9 @@ function setCatBookletInfo(index, baseCats) {
 
     // Health
     let healthContainer = document.getElementById('bookletHealth');
-    healthContainer.innerText = "Heath: " + (Math.floor(cat.health / 300) - 2);
+    let healthDisplay = document.createElement('p');
+    healthDisplay.appendChild(document.createTextNode((Math.floor(cat.health / 300) - 2)));
+    healthContainer.appendChild(healthDisplay);
 
     // Damage/Healing
     let damageText = "Damage";
