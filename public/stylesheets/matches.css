@@ -1,5 +1,7 @@
 .catBooklet {
-    width: 320px;
+    position: relative;
+    display: inline-block;
+    width: 520px;
     padding: 10px;
     border:5px solid burlywood;
     margin: 10px;
@@ -11,10 +13,19 @@
     display: table;
 }
 
-#leftArrowBooklet {
+.paginationLink {
+    color: black;
     float: left;
-}
-
-#rightArrowBooklet {
-    float: right;
-}
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+  }
+  
+  .paginationLink.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+  
+  .paginationLink:hover:not(.active) {background-color: #ddd;}

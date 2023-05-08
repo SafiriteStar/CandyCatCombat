@@ -18,6 +18,7 @@ window.onload = async function () {
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
         await createTeamDropDown(result.team, result.baseCats);
+        createBookletPagination(result.baseCats);
 
         // Check if any players have posted a match
         result = await requestWaitingMatches();
@@ -160,7 +161,38 @@ async function createTeamDropDown(team, baseCats) {
     }
 
     element.appendChild(defaultTeamTable);
+}
+
+function createArrowBooklet(arrowCharCode, value, id) {
+    let arrowButton = document.createElement("button");
+    arrowButton.id = id;
+    arrowButton.value = value;
+    arrowButton.classList.add("arrowBooklet");
+    arrowButton.classList.add("paginationLink");
+    let arrowButtonText = document.createTextNode(arrowCharCode);
+    arrowButton.appendChild(arrowButtonText);
+
+    return arrowButton;
+}
+
+function createBookletPagination(baseCats) {
+    let catBooklet = document.getElementById("catBooklet");
+    let catBookletPagination = document.createElement("div");
+    catBookletPagination.classList.add("pagination");
+
+    catBookletPagination.appendChild(createArrowBooklet("\u8617;", -1, "leftArrowBooklet"));
     
+    for (let i = 0; i < baseCats.length; i++) {
+        let catBookletPaginationLink = document.createElement("div");
+        catBookletPaginationLink.classList.add("paginationLink");
+        let catBookletPaginationLinkText = document.createTextNode(i + 1);
+        catBookletPaginationLink.appendChild(catBookletPaginationLinkText);
+        catBookletPagination.appendChild(catBookletPaginationLink);
+    }
+    
+    catBookletPagination.appendChild(createArrowBooklet("\u8618;", 1, "rightArrowBooklet"));
+    
+    catBooklet.appendChild(catBookletPagination);
 }
 
 function fillMatches(matches) {
