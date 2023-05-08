@@ -109,8 +109,8 @@ insert into game_cat_state (gcs_state) values ('Standby'), ('Acted'), ('Dead');
 insert into cat_condition (ccn_name) values ('Stealth'), ('Rooted'), ('ReStealth');
 
 # Map Related Stuff
-insert into board () values ();
-insert into board () values ();
+insert into board (brd_name) values ("Placement Map");
+insert into board (brd_name) values ("The Arena");
 insert into tile_type (tty_type) values ('Normal'), ('Wall'), ('Placement');
 
 # Fill the board with normal tiles

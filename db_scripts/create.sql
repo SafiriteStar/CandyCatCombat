@@ -127,6 +127,7 @@ create table tile_connection (
 # For now we only have one board;
 create table board (
     brd_id int not null auto_increment,
+    brd_name varchar(60) not null,
     primary key (brd_id));
 
 create table tile_type (
