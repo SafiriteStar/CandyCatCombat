@@ -1,14 +1,75 @@
-.catBooklet {
+#catBooklet {
   background-color: burlywood;
-  position: relative;
-  display: block;
+  position: absolute;
+  display: none;
   width: 40em;
+  height: auto;
+  cursor: grab;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .clearfix::after {
   content: "";
   clear: both;
   display: table;
+}
+
+.catBookletHeader {
+  display: block;
+  position: relative;
+  height: 3em;
+  width: auto;
+  padding: 1%;
+}
+
+.catBookletShowButton {
+  position: absolute;
+  margin: 0;
+  top: 2.5%;
+  left: 2.5%;
+  transform: translate(-2.5%, -2.5%);
+  cursor: pointer;
+}
+
+.buttonBar {
+  width: 35px;
+  height: 5px;
+  background-color: #333;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.switch .buttonBar1 {
+  transform: translate(0, 11px) rotate(-45deg);
+}
+
+.switch .buttonBar2 {
+  opacity: 0;
+}
+
+.switch .buttonBar3 {
+  transform: translate(0, -11px) rotate(45deg);
+}
+
+.catBookletHeaderText {
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.catInfoGridContainer {
+  display: block;
+  position: relative;
+  margin-left: 1.5%;
+  margin-right: 1.5%;
+  margin-top: 0%;
+  margin-bottom: 1.5%;
+  width: auto;
+  height: auto;
 }
 
 .catHeader { grid-area: 1 / 1 / 4 / 6; }
@@ -19,16 +80,15 @@
 .catPaginationWrapper { grid-area: 10 / 1 / 11 / 6; }
 .catImage { grid-area: 1 / 1 / 4 / 3; }
 
-.catInfoGridContainer {
+.catInfoGrid {
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 10px 10px;
-  padding: 10px;
-  background-color: burlywood;
 }
 
-.catInfoGridContainer > .catBookletCell {
+.catInfoGrid > .catBookletCell {
   position: relative;
   padding: 1% 0;
   text-align: center;

@@ -151,12 +151,40 @@ function createBookletPagination(baseCats) {
     return catBookletPaginationWrapper;
 }
 
+function createMouseOverFunctions(catBooklet) {
+    // If we aren't in a game
+    let p5Canvases = document.getElementsByClassName('p5Canvas');
+    if (p5Canvases.length == 0) {
+        // Then stop
+        return
+    }
+
+    catBooklet.addEventListener("mouseleave", function (event) {
+        GameInfo.isMouseOverJournal = false;
+        event.target.textContext = "mouse out";
+    }, false);
+
+    catBooklet.addEventListener("mouseover", function (event) {
+        GameInfo.isMouseOverJournal = true;
+        event.target.textContext = "mouse in";
+    }, false);
+}
+
 function createBooklet(baseCats) {
-    let catBooklet = document.getElementById("catInfoGridContainer");
+    let catBookletGrid = document.getElementById("catInfoGrid");
 
     let pagination = createBookletPagination(baseCats);
-    catBooklet.appendChild(pagination);
+    catBookletGrid.appendChild(pagination);
 
     // After creating the booklet, set the basic information based on which page is the active one
     setCatBookletInfo(1, baseCats);
+    makeDivDraggable(document.getElementById('catBooklet'));
+
+    // QOL for the journal when in game
+    let catBooklet = document.getElementById('catBooklet');
+    createMouseOverFunctions(catBooklet);
+
+    // And the button to show the journal
+    let catBookletShowButton = document.getElementById('catBookletShowButton');
+    createMouseOverFunctions(catBookletShowButton);
 }
