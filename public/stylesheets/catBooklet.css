@@ -30,6 +30,15 @@
   padding: 1%;
 }
 
+.catBookletHeaderText {
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+}
+
 .catBookletShowButton {
   position: absolute;
   margin: 0;
@@ -57,14 +66,6 @@
 
 .switch .buttonBar3 {
   transform: translate(0, -11px) rotate(45deg);
-}
-
-.catBookletHeaderText {
-  position: absolute;
-  margin: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .catInfoGridContainer {
@@ -143,6 +144,7 @@
   display: block;
   line-height: 1em;
   max-height: 100%;
+  font-size: 2em;
 }
 .catDescriptionText {
   display: block;
@@ -213,6 +215,12 @@
   height: 100%;
   width: 85%;
   margin-left: auto;
+}
+
+.bookletStatText {
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 1.6em;
 }
 
 .statImg {

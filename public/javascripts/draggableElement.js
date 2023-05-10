@@ -24,16 +24,20 @@ function makeDivDraggable(div) {
     }
 
     function elementDrag(e) {
+        let divRect = div.getBoundingClientRect();
         e = e || window.event;
         e.preventDefault();
         // calculate the new cursor position:
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
+        if (divRect.x - pos1 > 0 && divRect.x - pos1 + divRect.width < window.innerWidth &&
+            divRect.y - pos2 > 0 && divRect.y - pos2 + divRect.height < window.innerHeight) {
         pos3 = e.clientX;
         pos4 = e.clientY;
         // set the element's new position:
-        div.style.top = (div.offsetTop - pos2) + "px";
-        div.style.left = (div.offsetLeft - pos1) + "px";
+                div.style.top = (div.offsetTop - pos2) + "px";
+                div.style.left = (div.offsetLeft - pos1) + "px";
+            }
     }
 
     function closeDragElement() {

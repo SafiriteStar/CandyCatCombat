@@ -119,6 +119,12 @@ function generateCatBookletStructure() {
     // Main Container
     let catBooklet = document.getElementById('catBooklet');
 
+    // Background Image
+    let backgroundImage = createElementFull('img', 'catBookletBackgroundImage', ['catBookletBackgroundImage']);
+    backgroundImage.alt = 'Booklet Background Image';
+    backgroundImage.src = './assets/UI/OldPage.png';
+    catBooklet.appendChild(backgroundImage);
+
     // Header
     catBooklet.appendChild(generateHeader());
 
