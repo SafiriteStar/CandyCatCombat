@@ -1,3 +1,44 @@
+function generateHeader() {
+    let header = document.createElement('div');
+    header.id = 'catBookletHeader';
+    header.classList.add('catBookletHeader');
+    
+    let headerText = document.createElement('h2');
+    headerText.classList.add('catBookletHeaderText');
+    headerText.innerText = 'Candy Cats For Dummies'
+    header.appendChild(headerText);
+
+    return header;
+}
+
+function generateMainGrid() {
+    // Main Container
+    let gridContainer = document.createElement('div');
+    gridContainer.id = 'catInfoGridContainer';
+    gridContainer.classList.add('catInfoGridContainer');
+
+    // Grid
+    let grid = document.createElement('div');
+    grid.id = 'catInfoGrid';
+    grid.classList.add('catInfoGrid');
+
+    // Grid Header
+    let catHeader = document.createElement('div');
+}
+
+function generateCatBookletStructure() {
+    // Main Container
+    let catBooklet = document.createElement('div');
+    catBooklet.id = "catBooklet"
+    catBooklet.classList.add('catBooklet');
+    catBooklet.classList.add('clearfix');
+
+    // Header
+    catBooklet.appendChild(generateHeader());
+
+    // Main Grid
+}
+
 function createArrowBooklet(arrowCharCode, value, id, baseCats) {
     let arrowButton = document.createElement("button");
     arrowButton.id = id;
