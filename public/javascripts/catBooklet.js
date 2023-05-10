@@ -1,42 +1,131 @@
+function createElementFull(elementType, idName, classNames) {
+    let element = document.createElement(elementType);
+    element.id = idName;
+    for (let i = 0; i < classNames.length; i++) {
+        element.classList.add(classNames[i]);
+    }
+
+    return element;
+}
+
 function generateHeader() {
-    let header = document.createElement('div');
-    header.id = 'catBookletHeader';
-    header.classList.add('catBookletHeader');
+    let header = createElementFull('div', 'catBookletHeader', ['catBookletHeader']);
     
-    let headerText = document.createElement('h2');
-    headerText.classList.add('catBookletHeaderText');
+    let headerText = createElementFull('h2', 'catBookletHeaderText', ['catBookletHeaderText']);
     headerText.innerText = 'Candy Cats For Dummies'
     header.appendChild(headerText);
 
     return header;
 }
 
+function createRangeRange() {
+    let rangeLine = createElementFull('div', 'rangeLine', ['rangeLine']);
+    let rangeGrid = createElementFull('div', 'rangeGrid', ['rangeGrid']);
+    for (let i = 0; i < 6; i++) {
+        let rangeTick = createElementFull('div', 'rangeTick' + i, ['rangeTick']);
+        rangeGrid.appendChild(rangeTick);
+    }
+    return [rangeLine, rangeGrid];
+}
+
+function createStatListItem(itemName, extraAppends) {
+    let listItem = document.createElement('li');
+    let statDiv = createElementFull('div', 'booklet' + itemName, ['bookletStat']);
+    let statText = createElementFull('p', 'booklet' + itemName + 'Text', ['bookletStatText']);
+    statText.innerText = itemName;
+    let statRange = createElementFull('div', 'booklet' + itemName + 'Range', ['bookletStatRange']);
+    if (extraAppends) {
+        for (let i = 0; i < extraAppends.length; i++) {
+            statRange.appendChild(extraAppends[i]);
+        }
+    }
+
+    statDiv.appendChild(statText);
+    statDiv.appendChild(statRange);
+    listItem.appendChild(statDiv);
+
+    return listItem;
+}
+
 function generateMainGrid() {
     // Main Container
-    let gridContainer = document.createElement('div');
-    gridContainer.id = 'catInfoGridContainer';
-    gridContainer.classList.add('catInfoGridContainer');
+    let gridContainer = createElementFull('div', 'catInfoGridContainer', ['catInfoGridContainer']);
 
     // Grid
-    let grid = document.createElement('div');
-    grid.id = 'catInfoGrid';
-    grid.classList.add('catInfoGrid');
+    let grid = createElementFull('div', 'catInfoGrid', ['catInfoGrid']);
 
     // Grid Header
-    let catHeader = document.createElement('div');
+    let catHeader = createElementFull('div', 'catHeader', ['catHeader']);
+    grid.appendChild(catHeader);
+    // End Grid Header
+
+    // Grid Cat Image
+    let catImageContainer = createElementFull('div', 'catImage', ['catImage', 'catBookletCell']);
+    let catImage = document.createElement('img');
+    catImage.src = '/assets/UI/genericStat.png';
+    catImage.alt = 'catImage';
+    catImageContainer.appendChild(catImage);
+    grid.appendChild(catImageContainer);
+    // End Grid Cat Image
+
+    // Grid Cat Name
+    let catName = createElementFull('div', 'catName', ['catName', 'catBookletCell']);
+    let catNameText = createElementFull('h2', 'catNameText', ['catNameText']);
+    catName.appendChild(catNameText);
+    grid.appendChild(catName);
+    // End Grid Cat Name
+
+    // Grid Cat Weapons
+    let catWeapons = createElementFull('div', 'catWeapons', ['catWeapons', 'catBookletCell']);
+    let weapons1 = createElementFull('img', 'weaponImage1', ['weaponImage1']);
+    weapons1.src = './assets/UI/genericStat.png'
+    weapons1.alt = 'weapon1';
+    catWeapons.appendChild(weapons1);
+    let weapons2 = createElementFull('img', 'weaponImage2', ['weaponImage2']);
+    weapons2.src = './assets/UI/genericStat.png'
+    weapons2.alt = 'weapon2';
+    catWeapons.appendChild(weapons2);
+    grid.appendChild(catWeapons);
+    // End Grid Cat Weapons
+    
+    // Grid Cat Description
+    let catDescription = createElementFull('div', 'catDescription', ['catDescription', 'catBookletCell']);
+    let catDescriptionText = createElementFull('p', 'catDescriptionText', ['catDescriptionText']);
+    catDescription.appendChild(catDescriptionText);
+    grid.appendChild(catDescription);
+    // End Grid Cat Description
+
+    // Grid Cat Stats
+    let catStats = createElementFull('div', 'catStats', ['catStats', 'catBookletCell']);
+    let catStatsList = createElementFull('ul', 'catStatsList', ['catStatList']);
+
+    catStatsList.appendChild(createStatListItem('Health', null));
+    catStatsList.appendChild(createStatListItem('Damage', null));
+    catStatsList.appendChild(createStatListItem('Defense', null));
+    catStatsList.appendChild(createStatListItem('Range', createRangeRange()));
+    catStatsList.appendChild(createStatListItem('Speed', null));
+    catStatsList.appendChild(createStatListItem('Cost', null));
+    catStats.appendChild(catStatsList);
+    grid.appendChild(catStats);
+    // End Grid Cat Stats
+
+    // End Grid
+    gridContainer.appendChild(grid);
+
+    return gridContainer;
 }
 
 function generateCatBookletStructure() {
     // Main Container
-    let catBooklet = document.createElement('div');
-    catBooklet.id = "catBooklet"
-    catBooklet.classList.add('catBooklet');
-    catBooklet.classList.add('clearfix');
+    let catBooklet = document.getElementById('catBooklet');
 
     // Header
     catBooklet.appendChild(generateHeader());
 
     // Main Grid
+    catBooklet.appendChild(generateMainGrid());
+
+    return catBooklet;
 }
 
 function createArrowBooklet(arrowCharCode, value, id, baseCats) {
@@ -212,6 +301,8 @@ function createMouseOverFunctions(catBooklet) {
 }
 
 function createBooklet(baseCats) {
+    generateCatBookletStructure();
+
     let catBookletGrid = document.getElementById("catInfoGrid");
 
     let pagination = createBookletPagination(baseCats);

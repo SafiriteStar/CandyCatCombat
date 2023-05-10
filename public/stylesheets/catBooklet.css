@@ -1,5 +1,4 @@
 #catBooklet {
-  background-color: burlywood;
   position: absolute;
   display: none;
   width: 40em;
@@ -8,6 +7,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: 'Caveat', cursive;
+}
+
+.catBookletBackgroundImage {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
 }
 
 .clearfix::after {
@@ -92,8 +98,6 @@
   position: relative;
   padding: 1% 0;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: #ddd;
   justify-content: center;
 }
 
@@ -105,23 +109,23 @@
 }
 
 .paginationLink {
-  background-color: white;
+  background-color: transparent;
   color: black;
   float: left;
   padding: 8px 16px;
   text-decoration: none;
   transition: background-color .3s;
-  border: 1px solid #ddd;
+  border: 0px;
 }
 
 .paginationLink.active {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #4CAF50;
+  background-color: rgba(132, 91, 46, 0.3);
+  color: #000000;
+  border: 1px solid rgba(132, 91, 46, 0.3);
 }
 
 .paginationLink:hover:not(.active) {
-  background-color: #ddd;
+  background-color: rgba(95, 65, 33, 0.5);
   cursor: pointer;
 }
 
@@ -147,14 +151,22 @@
   padding-left: 5%;
   padding-right: 5%;
   width: auto;
-  height: auto;
+  height: 95%;
   text-indent: 3em;
   text-align: justify;
   letter-spacing: 0.1em;
   line-height: 1.255em;
-  font-size: 1em;
+  font-size: 1.5em;
   
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
   position: absolute;
+}
+
+.catDescriptionText::-webkit-scrollbar {
+  display: none;
 }
 
 .catPagination {
@@ -239,4 +251,22 @@
 
 .catImage img {
   width: 100%;
+}
+
+.catWeapons {
+  position: absolute;
+  display: block;
+}
+
+.catWeapons img {
+  width: 45%;
+  height: auto;
+}
+
+.weaponImage1 {
+  float: left;
+}
+
+.weaponImage2 {
+  float: right;
 }
