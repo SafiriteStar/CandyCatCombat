@@ -68,7 +68,7 @@ function createCatRowData(catRow, cat, baseCats) {
         }
         else {
             // Add all the data in between
-            cell.appendChild(document.createTextNode(baseCats[cat.cat_id][baseCatKeys[i]]));
+            cell.appendChild(document.createTextNode(baseCats[cat.cat_id - 1][baseCatKeys[i]]));
             cell.style.border = '1px solid black';
         }
     }
