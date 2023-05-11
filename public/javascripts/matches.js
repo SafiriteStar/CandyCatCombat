@@ -33,23 +33,7 @@ window.onload = async function () {
 }
 
 function fillMatches(matches) {
-    let container = document.getElementById("matches");
-    for (let match of matches) {
-
-        let section = document.createElement("section");
-        
-        let matchParagraph = document.createElement("p");
-        let matchText = document.createTextNode(`Map: ${match.boardName}`);
-        matchParagraph.appendChild(matchText);
-        section.appendChild(matchParagraph);
-
-        let joinButton = document.createElement("BUTTON");
-        let joinText = document.createTextNode(`Join ${match.opponents[0].name}`);
-        joinButton.onclick = () => join(match.id);
-        joinButton.appendChild(joinText);
-        section.appendChild(joinButton);
-        container.appendChild(section);
-    }
+    createMatchDisplayTable(matches);
 }
 
 async function join(mId) {
