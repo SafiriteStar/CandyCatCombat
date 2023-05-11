@@ -108,13 +108,13 @@ class User {
     static async getDefaultTeam(userId) {
         try {
             let [teamData] = await pool.query(
-                `Select tmc_id as "id", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost"
+                `Select tmc_id as "id", cat_id as "cat_id"
                 from team, team_cat, cat
                 where tm_id = tmc_team_id and tmc_cat_id = cat_id and tm_user_id = ?`,
                     [userId]);
 
             let [baseCats] = await pool.query(
-                `Select cat_name as "name", cat_id as "id"
+                `Select cat_id as "cat_id", cat_name as "name", cat_name as "name", cat_max_health as "health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", cat_cost as "cost", cat_min_range as "min_range", cat_max_range as "max_range", cat_description as "description"
                 from cat`
             )
 

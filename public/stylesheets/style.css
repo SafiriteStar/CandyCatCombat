@@ -12,19 +12,6 @@ a {
   font-size: larger;
 }
 
-#matches, #scores {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-#matches section, #scores section {
-  background-color: crimson;
-  color: white;
-  margin: 5px;
-  padding: 5px;
-}
-
 #scores td {
   padding: 5px 20px;
 }
