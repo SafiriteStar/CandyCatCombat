@@ -60,6 +60,7 @@ async function refresh() {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+        console.log(result.matches);
         fillMatches(result.matches);
     } catch (err) {
         console.log(err);
