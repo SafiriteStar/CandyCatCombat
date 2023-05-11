@@ -184,9 +184,21 @@ function setCatBookletInfo(index, baseCats) {
     }
 
     let cat = baseCats[index - 1];
-
+    
     document.getElementById('catNameText').innerText = cat.name;
     document.getElementById('catDescriptionText').innerText = cat.description;
+    
+    let catImages = [
+        '/assets/VanillaCat/Vanilla_Cat_Attack.png',
+        '/assets/CandyCornCat/Candy_Corn_Cat_Attack.png',
+        '/assets/MawbreakerCat/Mawbreaker_Cat_Attack.png',
+        '/assets/GumCat/Gum_Cat_Attack.png',
+        '/assets/PopCandyCat/Pop_Candy_Cat_Attack.png',
+        '/assets/CaramelCat/Caramel_Cat_Attack.png',
+        '/assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Attack.png'
+    ]
+
+    document.getElementById('catImage').src = catImages[index - 1];
 
     // Health
     let healthRange = document.getElementById('bookletHealthRange');
