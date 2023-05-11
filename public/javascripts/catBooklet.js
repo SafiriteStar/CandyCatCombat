@@ -47,6 +47,17 @@ function createStatListItem(itemName, extraAppends) {
     return listItem;
 }
 
+function generateDescriptionPage() {
+    let descriptionWrapper = createElementFull('div', 'catDescriptionPageContainer', ['catDescriptionPageContainer']);
+
+    let catDescription = createElementFull('div', 'catDescription', ['catDescription']);
+    let catDescriptionText = createElementFull('p', 'catDescriptionText', ['catDescriptionText']);
+    catDescription.appendChild(catDescriptionText);
+    descriptionWrapper.appendChild(catDescription);
+
+    return descriptionWrapper;
+}
+
 function generateMainGrid() {
     // Main Container
     let gridContainer = createElementFull('div', 'catInfoGridContainer', ['catInfoGridContainer']);
@@ -87,13 +98,6 @@ function generateMainGrid() {
     catWeapons.appendChild(weapons2);
     grid.appendChild(catWeapons);
     // End Grid Cat Weapons
-    
-    // Grid Cat Description
-    let catDescription = createElementFull('div', 'catDescription', ['catDescription', 'catBookletCell']);
-    let catDescriptionText = createElementFull('p', 'catDescriptionText', ['catDescriptionText']);
-    catDescription.appendChild(catDescriptionText);
-    grid.appendChild(catDescription);
-    // End Grid Cat Description
 
     // Grid Cat Stats
     let catStats = createElementFull('div', 'catStats', ['catStats', 'catBookletCell']);
@@ -112,6 +116,9 @@ function generateMainGrid() {
     // End Grid
     gridContainer.appendChild(grid);
 
+    // Description Page
+    gridContainer.appendChild(generateDescriptionPage());
+
     return gridContainer;
 }
 
@@ -122,7 +129,7 @@ function generateCatBookletStructure() {
     // Background Image
     let backgroundImage = createElementFull('img', 'catBookletBackgroundImage', ['catBookletBackgroundImage']);
     backgroundImage.alt = 'Booklet Background Image';
-    backgroundImage.src = './assets/UI/OldPage.png';
+    backgroundImage.src = './assets/UI/OldTwoPages.png';
     catBooklet.appendChild(backgroundImage);
 
     // Header
