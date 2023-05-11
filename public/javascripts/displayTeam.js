@@ -44,7 +44,7 @@ function createCatRowData(catRow, cat, baseCats) {
                 catOption.appendChild(document.createTextNode(baseCats[j].name));
                 catOption.index = baseCats[j].id;
                 // If this is the cat we are, then set this option as the selected one
-                if (baseCats[j].name === cat[baseCatKeys[i]]) {
+                if (baseCats[j].name === baseCats[cat.cat_id - 1][baseCatKeys[i]]) {
                     catOption.selected = "selected";
                 }
                 // Add the option to the drop down menu
