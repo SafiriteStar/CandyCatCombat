@@ -90,7 +90,7 @@
 .catWeapons { grid-area: 2 / 3 / 4 / 6; }
 .catStats { grid-area: 5 / 1 / 10 / 6; }
 .catPaginationWrapper { grid-area: 10 / 1 / 11 / 6; }
-.catImage { grid-area: 1 / 1 / 4 / 3; }
+.catImageContainer { grid-area: 1 / 1 / 4 / 3; }
 
 .catInfoGrid {
   margin: 0;
@@ -264,7 +264,7 @@
   border-left: 4px solid black;
 }
 
-.catImage img {
+.catImage {
   width: 100%;
 }
 
