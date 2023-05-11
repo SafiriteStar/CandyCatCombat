@@ -23,7 +23,7 @@ async function removeCatOnClick(teamCatID) {
 }
 
 function createCatRowData(catRow, cat, baseCats) {
-    let baseCatKeys = Object.keys(baseCats[cat.cat_id]);
+    let baseCatKeys = Object.keys(baseCats[cat.cat_id - 1]);
     let dataDisplayRangeStart = 1;
     let dataDisplayRangeEnd = baseCatKeys.length - 2;
 
