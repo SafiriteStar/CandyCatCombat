@@ -117,15 +117,15 @@ class Cat {
                     if (this.conditions[i].name == "Rooted") {
                         image(
                             GameInfo.images.ui.rooted,
-                            (-GameInfo.images.ui.rooted.width * 0.5 * (i + 1)) + (-this.img.width * 0.5),
-                            (-GameInfo.images.ui.rooted.height * 0.5) + (-this.img.height * 0.5)
+                            (-GameInfo.images.ui.rooted.width * 0.5 * (i + 1)) + (-GameInfo.images.ui.rooted.width * 0.5),
+                            (-GameInfo.images.ui.rooted.height * 0.5) + (-GameInfo.images.ui.rooted.height * 0.5)
                         );
                     }
                     else if (this.conditions[i].name == "Stealth") {
                         image(
                             GameInfo.images.ui.stealthed,
-                            (-GameInfo.images.ui.stealthed.width * 0.5 * (i + 1)) + (-this.img.width * 0.5),
-                            (-GameInfo.images.ui.stealthed.height * 0.5) + (-this.img.height * 0.5)
+                            (-GameInfo.images.ui.stealthed.width * 0.5 * (i + 1)) + (-GameInfo.images.ui.stealthed.width * 0.5),
+                            (-GameInfo.images.ui.stealthed.height * 0.5) + (-GameInfo.images.ui.stealthed.height * 0.5)
                         );
                     }
                 }
