@@ -105,6 +105,14 @@ async function setup() {
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
+    
+    for (let element of document.getElementsByClassName('catBooklet')) {
+        element.addEventListener("contextmenu", (e) => e.preventDefault());        
+    }
+    
+    for (let element of document.getElementsByClassName('catBookletShowButton')) {
+        element.addEventListener("contextmenu", (e) => e.preventDefault());        
+    }
 }
 
 function draw() {

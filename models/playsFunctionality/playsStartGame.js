@@ -64,6 +64,14 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                 `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id) values (?, ?)`,
                     [cat.id, 1]);
         }
+
+        // If its a choco dairy milk cat
+        if (cat.type === 7) {
+            // Add in the healing fervor condition (condition id: 4)
+            await pool.query(
+                `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id) values (?, ?)`,
+                    [cat.id, 4]);
+        }
     });
 }
 

@@ -46,8 +46,20 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
     async attack(targetCatData) {
         let healingDealt = this.playerCat.damage;
 
-        // APPLY DAMAGE
+        // If we are below half HP
+        if (this.playerCat.current_health < this.playerCat.max_health * 0.5) {
+            // HEAL FOR MORE
+            healingDealt = healingDealt * 2;
+        }
+
+        // APPLY HEALING
         await Play.applyDamage(healingDealt, targetCatData.id);
+
+        // If we wouldn't kill ourselves by taking damage
+        if (this.playerCat.current_health - 50 > 0) {
+            // Deal damage to self
+            await Play.applyDamage(-50, this.playerCat.id);
+        }
 
         // In case we need it, give back who we hit and for how much
         return [targetCatData.id, healingDealt];
@@ -90,6 +102,21 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
         }
 
         return targetCat;
+    }
+
+    static async healingFervorCheck(playerCat) {
+        // Do we have the healing fervor condition?
+        for (let i = 0; i < playerCat.conditions.length; i++) {
+            if (playerCat.conditions[i].id == 4) {
+                // We do
+                // Are we below half HP?
+                if (playerCat.current_health < playerCat.max_health * 0.5) {
+                    // We are
+                    // Heal self
+                    await Play.applyDamage(playerCat.damage * 0.5, playerCat.id);
+                }
+            }
+        }
     }
 }
 
