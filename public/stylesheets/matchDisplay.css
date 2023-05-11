@@ -1,3 +1,7 @@
+.matchesHeader {
+    margin-top: 2em;
+}
+
 .matchDisplay {
     position: relative;
     display: block;

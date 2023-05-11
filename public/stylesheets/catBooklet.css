@@ -46,26 +46,12 @@
   left: 2.5%;
   transform: translate(-2.5%, -2.5%);
   cursor: pointer;
+  width: 5em;
 }
 
-.buttonBar {
-  width: 35px;
-  height: 5px;
-  background-color: #333;
-  margin: 6px 0;
-  transition: 0.4s;
-}
-
-.switch .buttonBar1 {
-  transform: translate(0, 11px) rotate(-45deg);
-}
-
-.switch .buttonBar2 {
-  opacity: 0;
-}
-
-.switch .buttonBar3 {
-  transform: translate(0, -11px) rotate(45deg);
+.catBookletShowButtonImage {
+  position: absolute;
+  width: 100%;
 }
 
 .catInfoGridContainer {
