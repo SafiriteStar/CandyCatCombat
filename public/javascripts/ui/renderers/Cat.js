@@ -96,20 +96,17 @@ class Cat {
             stroke(0, 0, 0, this.opacity);
             strokeWeight(0);
             fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], this.opacity);
-            // Filler circle to represent cat
-            circle(
-                0,
-                0,
-                Cat.diameter
-            );
 
-            // Stand in image for now
+            // Main Cat Picture
             push();
                 if (this.facingRight) {
                     scale(-1, 1);
                 }
                 tint(255, 255, 255, this.opacity);
+                // Main Cat
                 image(this.img.base, -this.img.base.width * 0.5, -this.img.base.height * 0.5);
+                // Weapon
+                image(this.img.weapon, -this.img.weapon.width * 0.5, -this.img.base.height * 0.5);
             pop();
 
             // Condition images
