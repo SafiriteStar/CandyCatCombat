@@ -21,15 +21,13 @@
 
 <body>
   <header>
-    <h2><span id="player">Hello ______</span>
+    <h2 class="matchesHeader"><span id="player">Hello ______</span>
       <input type="button" value="Logout" onclick="logout()">
     </h2>
   </header>
   <main>
-      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'block')">
-      <div class="buttonBar buttonBar1"></div>
-      <div class="buttonBar buttonBar2"></div>
-      <div class="buttonBar buttonBar3"></div>
+      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')">
+        <img id="catBookletShowButtonImage" class="catBookletShowButtonImage" src="assets/UI/cat_booklet_button.png" alt="show cat booklet icon">
       </div>
     
       <div id="defaultTeam">
@@ -39,8 +37,14 @@
         <div class="matchContextWrapper">
           <h1>Choose a match or create a new one</h1>
           <p>After creating or joining a match you cannot leave and cannot create/join other matches until you finish that match</p>
-          <input class="refreshMatchButton matchContextButton" type="button" value="Refresh Matches" onclick="refresh()">
-          <input class="createMatchButton matchContextButton" type="button" value="Create my match" onclick="createMatch()">
+          <button class="refreshMatchButton matchContextButton" onclick="refresh()">
+            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
+            <p>Refresh Matches</p>
+          </button>
+          <button class="createMatchButton matchContextButton" onclick="createMatch()">
+            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
+            <p>Create My Match</p>
+          </button>
         </div>
         <table id="matches"></table>
       </div>

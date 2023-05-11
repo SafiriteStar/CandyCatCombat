@@ -72,6 +72,15 @@ Play.tickConditionDuration = async function(catConditionID, change) {
 Play.applyDamage = async function(damage, catDBID) {
     await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
         [damage, catDBID]);
+
+    let catData = Play.getGameCat(catDBID);
+
+    // Wait did the cat die?
+    if (catData.current_health <= 0) {
+        // Yes
+        // Set it to dead (id: 3)
+        await pool.query(`Update game_team_cat set gtc_state_id = 3 where gtc_id = ?`, [catDBID]);
+    }
 }
 
 Play.adjustStamina = async function(catID, staminaAdjustment) {

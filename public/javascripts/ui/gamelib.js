@@ -22,37 +22,52 @@ function preload() {
     GameInfo.images.cats.vanillaCat = {}
     GameInfo.images.cats.vanillaCat.base = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
     GameInfo.images.cats.vanillaCat.fainted = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
+    GameInfo.images.cats.vanillaCat.attack = loadImage("../../assets/VanillaCat/Vanilla_Cat_Attack.png");
+    GameInfo.images.cats.vanillaCat.weapon = loadImage("../../assets/VanillaCat/Candy_Cane_Sword.png");
     
     // Candy Corn Cat
     GameInfo.images.cats.candyCornCat = {}
     GameInfo.images.cats.candyCornCat.base = loadImage("../../assets/CandyCornCat/Candy_Corn_Cat_Base.png");
     GameInfo.images.cats.candyCornCat.fainted = loadImage("../../assets/CandyCornCat/Candy_Corn_Cat_Fainted.png");
+    GameInfo.images.cats.candyCornCat.attack = loadImage("../../assets/CandyCornCat/Candy_Corn_Cat_Attack.png");
+    GameInfo.images.cats.candyCornCat.weapon = loadImage("../../assets/CandyCornCat/Chocolate_and_Strawberry_Bow.png");
     
     // Mawbreaker Cat
     GameInfo.images.cats.mawbreakerCat = {}
     GameInfo.images.cats.mawbreakerCat.base = loadImage("../../assets/MawbreakerCat/Mawbreaker_Cat_Base.png");
     GameInfo.images.cats.mawbreakerCat.fainted = loadImage("../../assets/MawbreakerCat/Mawbreaker_Cat_Fainted.png");
+    GameInfo.images.cats.mawbreakerCat.attack = loadImage("../../assets/MawbreakerCat/Mawbreaker_Cat_Attack.png");
+    GameInfo.images.cats.mawbreakerCat.weapon = loadImage("../../assets/MawbreakerCat/Candy_Axe_NR.png");
     
     // Gum Cat
     GameInfo.images.cats.gumCat = {}
-    GameInfo.images.cats.gumCat.base = loadImage("../../assets/GumCat.png");
-    GameInfo.images.cats.gumCat.fainted = loadImage("../../assets/GumCat.png");
+    GameInfo.images.cats.gumCat.base = loadImage("../../assets/GumCat/Gum_Cat_Base.png");
+    GameInfo.images.cats.gumCat.fainted = loadImage("../../assets/GumCat/Gum_Cat_Fainted.png");
+    GameInfo.images.cats.gumCat.attack = loadImage("../../assets/GumCat/Gum_Cat_Attack.png");
+    GameInfo.images.cats.gumCat.weapon = loadImage("../../assets/GumCat/Daggers.png");
+    GameInfo.images.cats.gumCat.stealth = loadImage("../../assets/GumCat/Gum_Cat_Steath.png");
     
     // Pop Cat
     GameInfo.images.cats.popCat = {}
-    GameInfo.images.cats.popCat.base = loadImage("../../assets/PopCat.png");
-    GameInfo.images.cats.popCat.fainted = loadImage("../../assets/PopCat.png");
+    GameInfo.images.cats.popCat.base = loadImage("../../assets/PopCandyCat/Pop_Candy_Cat_Base.png");
+    GameInfo.images.cats.popCat.fainted = loadImage("../../assets/PopCandyCat/Pop_Candy_Cat_Fainted.png");
+    GameInfo.images.cats.popCat.attack = loadImage("../../assets/PopCandyCat/Pop_Candy_Cat_Attack.png");
+    GameInfo.images.cats.popCat.weapon = loadImage("../../assets/PopCandyCat/Pop_Rocks.png");
     
     // Caramel Cat
     GameInfo.images.cats.caramelCat = {}
-    GameInfo.images.cats.caramelCat.base = loadImage("../../assets/CaramelCat.png");
-    GameInfo.images.cats.caramelCat.fainted = loadImage("../../assets/CaramelCat.png");
+    GameInfo.images.cats.caramelCat.base = loadImage("../../assets/CaramelCat/Caramel_Cat_Base.png");
+    GameInfo.images.cats.caramelCat.fainted = loadImage("../../assets/CaramelCat/Caramel_Cat_Fainted.png");
+    GameInfo.images.cats.caramelCat.attack = loadImage("../../assets/CaramelCat/Caramel_Cat_Attack.png");
+    GameInfo.images.cats.caramelCat.weapon = loadImage("../../assets/CaramelCat/Sticky_Caramel.png");
     
     // Choco Diary Milk Cat
     GameInfo.images.cats.chocoDairyMilkCat = {}
-    GameInfo.images.cats.chocoDairyMilkCat.base = loadImage("../../assets/ChocoDairyMilkCat.png");
-    GameInfo.images.cats.chocoDairyMilkCat.fainted = loadImage("../../assets/ChocoDairyMilkCat.png");
-
+    GameInfo.images.cats.chocoDairyMilkCat.base = loadImage("../../assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Base.png");
+    GameInfo.images.cats.chocoDairyMilkCat.fainted = loadImage("../../assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Fainted.png");
+    GameInfo.images.cats.chocoDairyMilkCat.attack = loadImage("../../assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Attack.png");
+    GameInfo.images.cats.chocoDairyMilkCat.weapon = loadImage("../../assets/ChocoDairyMilkCat/Healing_Kit.png");
+    
     // UI
     GameInfo.images.ui = {};
     GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
