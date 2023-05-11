@@ -75,8 +75,6 @@ function createCatRowData(catRow, cat, baseCats) {
 }
 
 async function createTeamDropDown(team, baseCats) {
-    console.log(team);
-    console.log(baseCats);
 
     // Where we are going to attach the table
     const element = document.getElementById("defaultTeam"); 

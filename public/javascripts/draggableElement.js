@@ -25,13 +25,15 @@ function makeDivDraggable(div) {
 
     function elementDrag(e) {
         let divRect = div.getBoundingClientRect();
+        let xGraceSpace = divRect.width * 0.75;
+        let yGraceSpace = divRect.height * 0.75;
         e = e || window.event;
         e.preventDefault();
         // calculate the new cursor position:
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
-        if (divRect.x - pos1 > 0 && divRect.x - pos1 + divRect.width < window.innerWidth &&
-            divRect.y - pos2 > 0 && divRect.y - pos2 + divRect.height < window.innerHeight) {
+        if (divRect.x - pos1 > -xGraceSpace && divRect.x - pos1 + divRect.width < window.innerWidth + xGraceSpace &&
+            divRect.y - pos2 > -yGraceSpace && divRect.y - pos2 + divRect.height < window.innerHeight + yGraceSpace) {
         pos3 = e.clientX;
         pos4 = e.clientY;
         // set the element's new position:

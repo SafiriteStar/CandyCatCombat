@@ -47,6 +47,17 @@ function createStatListItem(itemName, extraAppends) {
     return listItem;
 }
 
+function generateDescriptionPage() {
+    let descriptionWrapper = createElementFull('div', 'catDescriptionPageContainer', ['catDescriptionPageContainer']);
+
+    let catDescription = createElementFull('div', 'catDescription', ['catDescription']);
+    let catDescriptionText = createElementFull('p', 'catDescriptionText', ['catDescriptionText']);
+    catDescription.appendChild(catDescriptionText);
+    descriptionWrapper.appendChild(catDescription);
+
+    return descriptionWrapper;
+}
+
 function generateMainGrid() {
     // Main Container
     let gridContainer = createElementFull('div', 'catInfoGridContainer', ['catInfoGridContainer']);
@@ -59,14 +70,14 @@ function generateMainGrid() {
     grid.appendChild(catHeader);
     // End Grid Header
 
-    // Grid Cat Image
-    let catImageContainer = createElementFull('div', 'catImage', ['catImage', 'catBookletCell']);
-    let catImage = document.createElement('img');
+    // Grid Cat Image Container
+    let catImageContainer = createElementFull('div', 'catImageContainer', ['catImageContainer', 'catBookletCell']);
+    let catImage = createElementFull('img', 'catImage', ['catImage']);
     catImage.src = '/assets/UI/genericStat.png';
     catImage.alt = 'catImage';
     catImageContainer.appendChild(catImage);
     grid.appendChild(catImageContainer);
-    // End Grid Cat Image
+    // End Grid Cat Image Container
 
     // Grid Cat Name
     let catName = createElementFull('div', 'catName', ['catName', 'catBookletCell']);
@@ -87,13 +98,6 @@ function generateMainGrid() {
     catWeapons.appendChild(weapons2);
     grid.appendChild(catWeapons);
     // End Grid Cat Weapons
-    
-    // Grid Cat Description
-    let catDescription = createElementFull('div', 'catDescription', ['catDescription', 'catBookletCell']);
-    let catDescriptionText = createElementFull('p', 'catDescriptionText', ['catDescriptionText']);
-    catDescription.appendChild(catDescriptionText);
-    grid.appendChild(catDescription);
-    // End Grid Cat Description
 
     // Grid Cat Stats
     let catStats = createElementFull('div', 'catStats', ['catStats', 'catBookletCell']);
@@ -112,6 +116,9 @@ function generateMainGrid() {
     // End Grid
     gridContainer.appendChild(grid);
 
+    // Description Page
+    gridContainer.appendChild(generateDescriptionPage());
+
     return gridContainer;
 }
 
@@ -122,7 +129,7 @@ function generateCatBookletStructure() {
     // Background Image
     let backgroundImage = createElementFull('img', 'catBookletBackgroundImage', ['catBookletBackgroundImage']);
     backgroundImage.alt = 'Booklet Background Image';
-    backgroundImage.src = './assets/UI/OldPage.png';
+    backgroundImage.src = './assets/UI/OldTwoPages.png';
     catBooklet.appendChild(backgroundImage);
 
     // Header
@@ -177,22 +184,50 @@ function setCatBookletInfo(index, baseCats) {
     }
 
     let cat = baseCats[index - 1];
-
+    
     document.getElementById('catNameText').innerText = cat.name;
     document.getElementById('catDescriptionText').innerText = cat.description;
+    
+    // Cat Picture
+    let catImages = [
+        'assets/VanillaCat/Vanilla_Cat_Attack.png',
+        'assets/CandyCornCat/Candy_Corn_Cat_Attack.png',
+        'assets/MawbreakerCat/Mawbreaker_Cat_Attack.png',
+        'assets/GumCat/Gum_Cat_Attack.png',
+        'assets/PopCandyCat/Pop_Candy_Cat_Attack.png',
+        'assets/CaramelCat/Caramel_Cat_Attack.png',
+        'assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Attack.png'
+    ]
+    document.getElementById('catImage').src = catImages[index - 1];
+
+    let weaponImages = [
+        ['assets/VanillaCat/Candy_Cane_Sword.png', 'assets/VanillaCat/Peppermint_Shield.png'],
+        ['assets/CandyCornCat/Chocolate_and_Strawberry_Bow.png', 'assets/CandyCornCat/Candy_Corn_Arrow.png'],
+        ['assets/MawbreakerCat/Candy_Axe_NR.png', null],
+        ['assets/GumCat/Daggers.png', null],
+        ['assets/PopCandyCat/Pop_Rocks.png', null],
+        ['assets/CaramelCat/Sticky_Caramel.png', null],
+        ['assets/ChocoDairyMilkCat/Healing_Kit.png', null]
+    ]
+
+    document.getElementById('weaponImage1').src = weaponImages[index - 1][0];
+    document.getElementById('weaponImage2').src = weaponImages[index - 1][1] !== null && weaponImages[index - 1][1] || '';
+    document.getElementById('weaponImage2').alt = weaponImages[index - 1][1] !== null && 'weapon2' || '';
 
     // Health
     let healthRange = document.getElementById('bookletHealthRange');
     // Clear all children
     healthRange.innerHTML = '';
     let healthStars = (Math.floor(cat.health / 300) - 2);
-    createStatStars(healthRange, healthStars, 'genericStat.png');
+    createStatStars(healthRange, healthStars, 'healthStat.png');
 
     // Damage/Healing
     let damageDisplayText = "Damage";
+    let damageImageSrc = 'damage'
     let damageDisplayOffset = 0;
     if (cat.cat_id == 7) {
         damageDisplayText = "Healing";
+        damageImageSrc = 'healing'
         damageDisplayOffset = 5
     }
     else if (cat.cat_id == 2) {
@@ -205,13 +240,13 @@ function setCatBookletInfo(index, baseCats) {
     // Clear all children
     damageRange.innerHTML = '';
     let damageStars = ((cat.damage / 50) + damageDisplayOffset - 6);
-    createStatStars(damageRange, damageStars, 'genericStat.png');
+    createStatStars(damageRange, damageStars, damageImageSrc + 'Stat.png');
     
     // Defense
     let defenseRange = document.getElementById('bookletDefenseRange');
     defenseRange.innerHTML = '';
     let defenseStars = (cat.defense / 100);
-    createStatStars(defenseRange, defenseStars, 'genericStat.png');
+    createStatStars(defenseRange, defenseStars, 'defenseStat.png');
     
     // Range
     let [rangeRange] = document.getElementsByClassName('rangeGrid');
@@ -230,13 +265,13 @@ function setCatBookletInfo(index, baseCats) {
     let speedRange = document.getElementById('bookletSpeedRange');
     speedRange.innerHTML = '';
     let speedStars = cat.speed;
-    createStatStars(speedRange, speedStars, 'genericStat.png');
+    createStatStars(speedRange, speedStars, 'speedStat.png');
     
     // Cost
     let costRange = document.getElementById('bookletCostRange');
     costRange.innerHTML = '';
     let costStars = cat.cost;
-    createStatStars(costRange, costStars, 'genericStat.png');
+    createStatStars(costRange, costStars, 'costStat.png');
 }
 
 function movePaginationIndex(direction, baseCats) {

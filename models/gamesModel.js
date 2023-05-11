@@ -20,12 +20,13 @@ class Player {
 }
 
 class Game {
-    constructor(id, turn, state, board, boardName, player, opponents) {
+    constructor(id, turn, state, board, boardName, maxCost, player, opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
         this.board = board;
         this.boardName = boardName;
+        this.maxCost = maxCost;
         this.player = player;
         this.opponents = opponents || [];
     }
@@ -39,6 +40,7 @@ class Game {
         game.opponents = this.opponents.map(o => o.export());
         game.board = this.board;
         game.boardName = this.boardName;
+        game.maxCost = this.maxCost;
         return game;
     }
 
@@ -83,7 +85,7 @@ class Game {
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
-            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name);
+            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.max_cost);
             let result = await this.fillPlayersOfGame(id,game);
             if (result.status != 200) {
                 return result;
@@ -105,7 +107,7 @@ class Game {
                     where gst_state = 'Waiting'`);
             let games = [];
             for (let dbGame of dbGames) {
-                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name);
+                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.max_cost);
                 let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
@@ -121,7 +123,7 @@ class Game {
     }    
 
     static async #addUserToGame(userID, gameID) {
-        let [result] = await pool.query('Insert into user_game (ug_user_id,ug_game_id, ug_state_id) values (?, ?, ?)',
+        let [result] = await pool.query('Insert into user_game (ug_user_id, ug_game_id, ug_state_id) values (?, ?, ?)',
             [userID, gameID, 1]);
         return result;
     }
@@ -132,8 +134,8 @@ class Game {
     //  - User does not have an active game
     static async create(userId) {
         try {
-            // create the game
-            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 2]);
+            // Create the game
+            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id, gm_max_cost) values (?, ?, ?)', [1, 2, 6]);
             let gameId = result.insertId;
             // add the user to the game
             Game.#addUserToGame(userId, gameId);
