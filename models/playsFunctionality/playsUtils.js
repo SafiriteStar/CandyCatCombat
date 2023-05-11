@@ -73,7 +73,7 @@ Play.applyDamage = async function(damage, catDBID) {
     await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
         [damage, catDBID]);
 
-    let catData = Play.askForCat(catDBID);
+    let catData = Play.getGameCat(catDBID);
 
     // Wait did the cat die?
     if (catData.current_health <= 0) {
