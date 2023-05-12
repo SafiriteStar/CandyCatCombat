@@ -27,11 +27,24 @@ a {
 
 button.game {
   font-size: 1.5em;
-  background-color: #2ea44f;
-  color: white;
-  border: 1px solid rgba(27, 31, 35, .15);
-  border-radius: 6px;
+  background-color: transparent;
+  background-image: url('../assets/UI/MatchJoinButton.png');
+  background-size: cover;
+  background-position: center;
+  color: black;
+  border: none;
   text-align: center;
   font-weight: bold;
+  width: 220px;
+  height: auto;
+  line-height: 46px;
 }
 
+button.game:hover {
+  color: rgb(85, 85, 85);
+}
+
+button.game:active {
+  background-image: url('../assets/UI/MatchJoinButtonPressed.png');
+  color: rgb(58, 58, 58);
+}
