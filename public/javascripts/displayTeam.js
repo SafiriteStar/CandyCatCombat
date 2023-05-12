@@ -1,12 +1,3 @@
-let headerCells = [
-    "Name",
-    "Health",
-    "Damage",
-    "Defense",
-    "Speed",
-    "Cost"
-]
-
 async function catOnChange(teamCatID, newCatID) {
     await requestChangeDefaultCat(newCatID, teamCatID);
     await remakeTable();
@@ -77,20 +68,30 @@ function createCatRowData(catRow, cat, baseCats) {
 async function createTeamDropDown(team, baseCats) {
 
     // Where we are going to attach the table
-    const element = document.getElementById("defaultTeam"); 
+    const element = document.getElementById("defaultTeamTableWrapper"); 
 
     // The table
     const defaultTeamTable = document.createElement('table');
     defaultTeamTable.id = "defaultTeamTable";
+    defaultTeamTable.classList.add('defaultTeamTable');
     defaultTeamTable.style.border = '1px solid black';
 
     // Header rows
     const headerRow = defaultTeamTable.insertRow();
 
+    let headerColumns = [
+        "Name",
+        "Health",
+        "Damage",
+        "Defense",
+        "Speed",
+        "Cost"
+    ]
+
     // Header Cells
-    for (let i = 0; i < headerCells.length; i++) {
+    for (let i = 0; i < headerColumns.length; i++) {
         const headerCell = headerRow.insertCell();
-        headerCell.appendChild(document.createTextNode([headerCells[i]]));
+        headerCell.appendChild(document.createTextNode([headerColumns[i]]));
         headerCell.style.border = '1px solid black';
     }
 
