@@ -4,19 +4,22 @@
 }
 
 .defaultTeamTable {
-    border-spacing: 0;
+    border-spacing: 2em 1em;
+    background-color: #ddbf98;
+    border: 1px solid black;
 }
 
 .defaultTeamCell {
-    border: 0;
     padding: 0;
+    border: 1px solid black;
+    background-color: #e7cba7;
 }
 
 .defaultCatDropdown {
     position: relative;
     display: inline-block;
-    width: 8em;
-    height: 6.5em;
+    width: 10em;
+    height: 8.125em;
 }
 
 .defaultCatDropdownContent {
@@ -25,14 +28,16 @@
     width: 0%;
     height: 0%;
     grid-template-areas: 'a a a a';
-    grid-auto-columns: 25%;
-    grid-auto-rows: 100%;
-    gap: 0;
+    grid-auto-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-rows: 1fr 1fr;
     transition: height 0.3s ease-out, width 0.3s ease-out;
+    background-color: #e7cba7;
+    border: 1px solid black;
+    left: -1px;
 }
 
 .defaultCatDropdown:hover .defaultCatDropdownContent {
-    height: 100%;
+    height: 200%;
     width: 400%;
 }
 
@@ -44,11 +49,23 @@
     display: grid;
     grid-template-rows: 100%;
     grid-template-columns: 100%;
-    cursor: pointer;
     width: 100%;
     height: 100%;
-    padding: 0;
-    border: 0;
+
+    /* Removing the default CSS of a button */
+	color: inherit;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    
+    background: #e7cba7;
+    border: 1px solid black;
+}
+
+.defaultCatOption:hover {
+    background: #c4a478;
+    
 }
 
 .defaultCatDropdownContent > .defaultCatOption {
