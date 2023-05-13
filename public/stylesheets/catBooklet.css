@@ -8,6 +8,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'Caveat', cursive;
+  z-index: 2;
 }
 
 .catBookletBackgroundImage {
