@@ -17,7 +17,11 @@ window.onload = async function () {
         
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
-        await createTeamDropDown(result.team, result.baseCats);
+        let tableContainers = document.getElementsByClassName('defaultTeamTableContainer');
+        
+        for (let i = 0; i < tableContainers.length; i++) {
+            tableContainers[i].appendChild(await createTeamDropDown(result.team, result.baseCats));
+        }
         createBooklet(result.baseCats);
 
         // Check if any players have posted a match
