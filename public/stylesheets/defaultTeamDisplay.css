@@ -97,18 +97,17 @@
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
     font-size: smaller;
-
-    transition: width 0.3s ease, height 0.3s ease;
 }
 
 .defaultCatDropdown:hover > .defaultCatDropdownContent > .defaultCatOption > p {
-    display: block;
     width: 100%;
     height: fit-content;
+    font-size: smaller;
 }
 
 .defaultCatDropdownContent > .defaultCatOption > p {
-    display: none;
     width: 0%;
     height: 0%;
+    font-size: 0;
+    transition: width 0.3s ease, height 0.3s ease, font-size 0.3s ease;
 }
