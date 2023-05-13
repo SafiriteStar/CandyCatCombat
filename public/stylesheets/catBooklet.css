@@ -47,11 +47,18 @@
   transform: translate(0, -2.5%);
   cursor: pointer;
   width: 5em;
+  height: 5em;
+  background-image: url('../assets/UI/Cat_Book_Button_1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.catBookletShowButtonImage {
-  position: absolute;
-  width: 100%;
+.catBookletShowButton:hover {
+  background-image: url('../assets/UI/Cat_Book_Button_2.png');
+}
+
+.switch {
+  background-image: url('../assets/UI/Cat_Book_Button_3.png');
 }
 
 .catInfoGridContainer {
