@@ -43,6 +43,8 @@
 
 .defaultCatDropdown:hover .defaultCatDropdownContent > .defaultCatOption {
     display: grid;
+    width: 100%;
+    height: 100%;
 }
 
 .defaultCatOption {
@@ -61,6 +63,8 @@
     
     background: #e7cba7;
     border: 1px solid black;
+
+    transition: width 0.3s ease, height 0.3s ease;
 }
 
 .defaultCatOption:hover {
@@ -69,7 +73,10 @@
 }
 
 .defaultCatDropdownContent > .defaultCatOption {
-    display: none;
+    display: grid;
+    width: 0%;
+    height: 0%;
+    border: 0;
 }
 
 .defaultCatImage {
@@ -90,4 +97,18 @@
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
     font-size: smaller;
+
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.defaultCatDropdown:hover > .defaultCatDropdownContent > .defaultCatOption > p {
+    display: block;
+    width: 100%;
+    height: fit-content;
+}
+
+.defaultCatDropdownContent > .defaultCatOption > p {
+    display: none;
+    width: 0%;
+    height: 0%;
 }
