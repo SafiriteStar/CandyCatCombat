@@ -119,16 +119,18 @@ async function createTeamDropDown(team, baseCats) {
     let tableRow = document.createElement('tr');
     tableRow.classList.add('defaultTeamRow');
 
+    let costCount = 0;
     // For cat in the default team
     for (let i = 0; i < team.length; i++) {
         // Make a cell for that cat
         let catCell = await createTeamCell(team[i], baseCats, catImagePaths);
+        costCount = costCount + baseCats[team[i].cat_id - 1].cost;
         // And add it to the row
         tableRow.appendChild(catCell);
     }
 
     // For each cat below 6
-    for (let i = 0; i < 6 - team.length; i++) {
+    for (let i = 0; i < 6 - costCount; i++) {
         let addCatCell = await createAddCatCell(baseCats, catImagePaths);
         tableRow.appendChild(addCatCell);
     }

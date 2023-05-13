@@ -20,17 +20,23 @@
 }
 
 .defaultCatDropdownContent {
-    display: none;
+    display: grid;
     position: absolute;
-    width: 400%;
-    height: 100%;
+    width: 0%;
+    height: 0%;
     grid-template-areas: 'a a a a';
     grid-auto-columns: 25%;
     grid-auto-rows: 100%;
     gap: 0;
+    transition: height 0.3s ease-out, width 0.3s ease-out;
 }
 
 .defaultCatDropdown:hover .defaultCatDropdownContent {
+    height: 100%;
+    width: 400%;
+}
+
+.defaultCatDropdown:hover .defaultCatDropdownContent > .defaultCatOption {
     display: grid;
 }
 
@@ -43,6 +49,10 @@
     height: 100%;
     padding: 0;
     border: 0;
+}
+
+.defaultCatDropdownContent > .defaultCatOption {
+    display: none;
 }
 
 .defaultCatImage {
