@@ -78,7 +78,7 @@ class Tile {
             stroke(0);
             strokeWeight(1);
             textSize(72)
-            //text(this.x + ", " + this.y, -60, 0);
+            text(this.x + ", " + this.y, -60, 0);
         pop();
     }
 

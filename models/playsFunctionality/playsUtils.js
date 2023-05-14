@@ -3,6 +3,8 @@ const Play = require("../playsFunctionality/playsInit");
 
 Play.setWorldData = async function(worldCreator, argv1, argv2) {
     Play.worldData = await worldCreator(argv1, argv2);
+
+    return true;
 }
 
 Play.getWorld = function() {
@@ -378,3 +380,108 @@ Play.countDeadCats = async function (playerID, gameID) {
     // Return the score and length of the team
     return [countDeadCats, playerTeam.team.cats.length];
 }
+
+async function getTile(map, x, y) {
+    if (Play.worldData.maps[map] === null || Play.worldData.maps[map] === undefined) {
+        return null;
+    }
+    if (Play.worldData.maps[map].tiles[x] === null || Play.worldData.maps[map].tiles[x] === undefined) {
+        return null;
+    }
+    if (Play.worldData.maps[map].tiles[x][y] === null || Play.worldData.maps[map].tiles[x][y] === undefined) {
+        return null;
+    }
+    return Play.worldData.maps[map].tiles[x][y];
+}
+
+async function getCommonNeighbor(tile1, tile2) {
+    // For each neighbor of tile1
+    for (let i = 0; i < tile1.connections.length; i++) {
+        // See if tile2 also has it
+        for (let j = 0; j < tile2.connections.length; j++) {
+            if (tile1.connections[i].x == tile2.connections[j].x &&
+                tile1.connections[i].y == tile2.connections[j].y &&
+                tile1.connections[i].map == tile2.connections[j].map) {
+
+                return await getTile(tile2.connections[j].map - 1, tile2.connections[j].x, tile2.connections[j].y);
+            }
+        }
+    }
+
+    return null;
+}
+
+async function getCaramelCatTile(x, y, map, cats) {
+    for (let i = 0; i < cats.length; i++) {
+        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6) {
+            return cats[i];
+        }
+    }
+
+    return null;
+}
+
+async function calculateCatCaramelWalls(cat, existingWalls, teamCats) {
+    let startTile = await getTile(cat.boardID - 1, cat.x, cat.y);
+    let catWalls = [];
+
+    // If we are in placement board or in an invalid tile (How???)
+    if (cat.boardID === 1 || startTile === null) {
+        return catWalls; // Just return empty
+    }
+
+    // Get the tile neighbors for the tile we are on
+
+    // Transformations to get straight path neighbors:
+    let transformations = [
+        [0, 2],     // Up
+        [2, 1],     // Top Right
+        [2, -1],    // Top Left
+        [-2, -1],   // Bottom Left
+        [-2, 1],    // Bottom Right
+        [0, -2],    // Down
+    ]
+    // For each transformation
+    for (let i = 0; i < transformations.length; i++) {
+        // Get the tile
+        let endTile = await getTile(cat.boardID - 1, cat.x + transformations[i][0], cat.y + transformations[i][1]);
+        let caramelCatCheck = await getCaramelCatTile(cat.x + transformations[i][0], cat.y + transformations[i][1], cat.boardID, teamCats);
+        // Does the tile exist?
+        if (endTile !== null) {
+            // Yes
+            // Is the tile a wall or is there an allied caramel cat there?
+            if (endTile.type == 2 || caramelCatCheck !== null) {
+                // Yes, which means its valid
+                // Get the common neighbor
+                let commonNeighbor = await getCommonNeighbor(startTile, endTile);
+                // If the common neighbor is not null
+                if (commonNeighbor !== null) {
+                    // And not in our list already
+                    if (existingWalls.includes(commonNeighbor) === false) {
+                        // Add it to the caramel tile list
+                        catWalls.push(commonNeighbor);
+                    }
+                }
+            }
+        }
+    }
+
+    return catWalls;
+}
+
+Play.calculateTeamCaramelWalls = async function (playerTeam) {
+
+    let caramelWalls = [];
+    // For each cat
+    for (let i = 0; i < playerTeam.length; i++) {
+        // If the cat is a caramel cat
+        if (playerTeam[i].type == 6) {
+            // Get the caramel walls it can make
+            let newWalls = await calculateCatCaramelWalls(playerTeam[i], caramelWalls, playerTeam);
+            caramelWalls = caramelWalls.concat(newWalls);
+        }
+    }
+
+    return caramelWalls;
+}
+module.exports = Play;
