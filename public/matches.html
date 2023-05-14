@@ -6,6 +6,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/defaultTeamDisplay.css">
   <link rel="stylesheet" href="/stylesheets/catBooklet.css">
   <link rel="stylesheet" href="/stylesheets/matchDisplay.css">
   <script src="./javascripts/utils/verifications.js"></script>
@@ -26,13 +27,13 @@
     </h2>
   </header>
   <main>
-      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')">
-        <img id="catBookletShowButtonImage" class="catBookletShowButtonImage" src="assets/UI/cat_booklet_button.png" alt="show cat booklet icon">
-      </div>
+      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
     
       <div id="defaultTeam">
-      <h1>Default Team:</h1>
-      </div>
+      <h1 class="defaultTeamHeader">Current Team:</h1>
+
+      <div class="defaultTeamTableContainer"></div>
+
       <div class="matchesWrapper">
         <div class="matchContextWrapper">
           <h1>Choose a match or create a new one</h1>

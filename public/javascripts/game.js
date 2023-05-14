@@ -7,6 +7,7 @@ window.onload = async function() {
         result = await requestDefaultTeam();
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
         createBooklet(result.baseCats);
+        createScoreScreen();
     } catch (err) {
         console.log(err);
     }

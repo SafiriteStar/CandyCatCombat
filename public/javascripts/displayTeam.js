@@ -1,12 +1,3 @@
-let headerCells = [
-    "Name",
-    "Health",
-    "Damage",
-    "Defense",
-    "Speed",
-    "Cost"
-]
-
 async function catOnChange(teamCatID, newCatID) {
     await requestChangeDefaultCat(newCatID, teamCatID);
     await remakeTable();
@@ -22,108 +13,141 @@ async function removeCatOnClick(teamCatID) {
     await remakeTable();
 }
 
-function createCatRowData(catRow, cat, baseCats) {
-    let baseCatKeys = Object.keys(baseCats[cat.cat_id - 1]);
-    let dataDisplayRangeStart = 1;
-    let dataDisplayRangeEnd = baseCatKeys.length - 2;
-
-    for (let i = dataDisplayRangeStart; i < dataDisplayRangeEnd; i++) {
-        // Insert a new cell
-        const cell = catRow.insertCell();
-
-        // If we are at the name
-        if (i === dataDisplayRangeStart) {
-            const catSelect = document.createElement('select');
-            catSelect.name = "catSelect";
-            catSelect.id = "catSelect";
-            // Create a drop down menu
-            for (let j = 0; j < baseCats.length; j++) {
-                // Create an option in the drop down menu
-                const catOption = document.createElement('option');
-                catOption.value = cat.id;
-                catOption.appendChild(document.createTextNode(baseCats[j].name));
-                catOption.index = baseCats[j].id;
-                // If this is the cat we are, then set this option as the selected one
-                if (baseCats[j].name === baseCats[cat.cat_id - 1][baseCatKeys[i]]) {
-                    catOption.selected = "selected";
-                }
-                // Add the option to the drop down menu
-                catSelect.appendChild(catOption);
-            }
-            // Add the functionality to actually change cats
-            catSelect.setAttribute('onChange', 'catOnChange(this.options[this.selectedIndex].value, this.options[this.selectedIndex].index + 1)')
-            // Add the drop down menu to the cell
-            cell.appendChild(catSelect);
-            cell.style.border = '1px solid black';
-        }
-        // If we are on the last cell
-        else if (i === dataDisplayRangeEnd - 1) {
-            // Add the remove button
-            const removeButton = document.createElement('button');
-            removeButton.innerText = 'Remove';
-            removeButton.value = cat.id
-            removeButton.setAttribute('onClick', 'removeCatOnClick(this.value)');
-            cell.appendChild(removeButton);
-            cell.style.border = '1px solid black';
-        }
-        else {
-            // Add all the data in between
-            cell.appendChild(document.createTextNode(baseCats[cat.cat_id - 1][baseCatKeys[i]]));
-            cell.style.border = '1px solid black';
-        }
+async function createCellButton(classList, value, onclick, catName, catImagePaths) {
+    let button = document.createElement('button');
+    for (let i = 0; i < classList.length; i++) {
+        button.classList.add(classList[i]);
     }
+
+    if (value !== null) {
+        button.value = value;
+    }
+
+    if (onclick !== null) {
+        button.setAttribute('onclick', onclick);
+    }
+
+    for (let i = 0; i < catImagePaths.length; i++) {
+        let catImage = document.createElement('img');
+        catImage.classList.add('defaultCatImage');
+        catImage.src = catImagePaths[i];
+        button.appendChild(catImage);
+    }
+    
+    let catText = document.createElement('p');
+    catText.classList.add('defaultCatText');
+    catText.innerText = catName;
+    button.appendChild(catText);
+
+    return button;
+}
+
+async function createTeamCell(cat, baseCats, catImagePaths) {
+
+    let tableCell = document.createElement('td');
+    tableCell.classList.add('defaultTeamCell');
+
+    let dropdown = document.createElement('div');
+    dropdown.classList.add('defaultCatDropdown');
+    // Button that displays our currently selected cat
+    let selectButton = await createCellButton(['defaultCatSelectedButton', 'defaultCatOption'], null, null, baseCats[cat.cat_id - 1].name, catImagePaths[cat.cat_id -1]);
+    dropdown.appendChild(selectButton);
+    // Drop down that shows all cats
+    let dropdownContent = document.createElement('div');
+    dropdownContent.classList.add('defaultCatDropdownContent');
+    // Create a button for each base cat that lets you change the selected cat into that one
+    for (let i = 0; i < baseCats.length; i++) {
+        let changeCatButton = await createCellButton(['defaultCatOption'], baseCats[i].cat_id, `catOnChange(${cat.id}, ${baseCats[i].cat_id})`, baseCats[i].name, catImagePaths[baseCats[i].cat_id - 1]);
+        dropdownContent.appendChild(changeCatButton);
+    }
+
+    // Create a button to remove the currently selected cat
+    let catRemoveButton = await createCellButton(['defaultCatOption'], null, `removeCatOnClick(${cat.id})`, `Remove Cat`, [`./assets/UI/CrossOption.png`]);
+    dropdownContent.appendChild(catRemoveButton);
+
+    dropdown.appendChild(dropdownContent);
+
+    tableCell.appendChild(dropdown);
+
+    return tableCell;
+}
+
+async function createAddCatCell(baseCats, catImagePaths) {
+
+    let tableCell = document.createElement('td');
+    tableCell.classList.add('defaultTeamCell');
+
+    let dropdown = document.createElement('div');
+    dropdown.classList.add('defaultCatDropdown');
+    
+    let addButton = await createCellButton(['defaultCatOption'], null, null, `Add Cat`, [`./assets/UI/AddOption.png`]);
+    dropdown.appendChild(addButton);
+
+    // Drop down that shows all cats
+    let dropdownContent = document.createElement('div');
+    dropdownContent.classList.add('defaultCatDropdownContent');
+    // Create a button for each baseCat to add it to the team
+    for (let i = 0; i < baseCats.length; i++) {
+        let changeCatButton = await createCellButton(['defaultCatOption'], baseCats[i].cat_id, `addCatOnClick(${baseCats[i].cat_id})`, baseCats[i].name, catImagePaths[baseCats[i].cat_id - 1]);
+        dropdownContent.appendChild(changeCatButton);
+    }
+
+    dropdown.appendChild(dropdownContent);
+
+    tableCell.appendChild(dropdown);
+
+    return tableCell;
 }
 
 async function createTeamDropDown(team, baseCats) {
+    let catImagePaths = [
+        ['./assets/VanillaCat/Peppermint_Shield.png', './assets/VanillaCat/Vanilla_Cat_Base.png', './assets/VanillaCat/Candy_Cane_Sword.png'],
+        ['./assets/CandyCornCat/Candy_Corn_Cat_Base.png', './assets/CandyCornCat/Chocolate_and_Strawberry_Bow.png'],
+        ['./assets/MawbreakerCat/Mawbreaker_Cat_Base.png', './assets/MawbreakerCat/Candy_Axe_NR.png'],
+        ['./assets/GumCat/Gum_Cat_Base.png', './assets/GumCat/Daggers.png'],
+        ['./assets/PopCandyCat/Pop_Candy_Cat_Base.png', './assets/PopCandyCat/Pop_Rocks.png'],
+        ['./assets/CaramelCat/Caramel_Cat_Base.png', './assets/CaramelCat/Sticky_Caramel.png'],
+        ['./assets/ChocoDairyMilkCat/Choco_Dairy_Milk_Cat_Base.png', './assets/ChocoDairyMilkCat/Healing_Kit.png'],
+    ];
 
-    // Where we are going to attach the table
-    const element = document.getElementById("defaultTeam"); 
+    // Create the table
+    let table = document.createElement('table');
+    table.classList.add('defaultTeamTable');
+    // Table Body
+    let tableBody = document.createElement('tbody');
+    // The row to show all team cats
+    let tableRow = document.createElement('tr');
+    tableRow.classList.add('defaultTeamRow');
 
-    // The table
-    const defaultTeamTable = document.createElement('table');
-    defaultTeamTable.id = "defaultTeamTable";
-    defaultTeamTable.style.border = '1px solid black';
-
-    // Header rows
-    const headerRow = defaultTeamTable.insertRow();
-
-    // Header Cells
-    for (let i = 0; i < headerCells.length; i++) {
-        const headerCell = headerRow.insertCell();
-        headerCell.appendChild(document.createTextNode([headerCells[i]]));
-        headerCell.style.border = '1px solid black';
+    let costCount = 0;
+    // For cat in the default team
+    for (let i = 0; i < team.length; i++) {
+        // Make a cell for that cat
+        let catCell = await createTeamCell(team[i], baseCats, catImagePaths);
+        costCount = costCount + baseCats[team[i].cat_id - 1].cost;
+        // And add it to the row
+        tableRow.appendChild(catCell);
     }
 
-    // For each cat
-    for (let i = 0; i < team.length + 1; i++) {
-        // New Cat
-        const catRow = defaultTeamTable.insertRow();
-        
-        // Add in the remove button
-        if (i === team.length) {
-            const catData = catRow.insertCell();
-            const removeButton = document.createElement('button');
-            removeButton.innerText = 'Add';
-            removeButton.setAttribute('onClick', 'addCatOnClick(this.value)');
-            removeButton.value = 1;
-            catData.appendChild(removeButton);
-            catData.style.border = '1px solid black';
-        }
-        else {
-            // All cat data
-            createCatRowData(catRow, team[i], baseCats);
-        }
+    // For each cat below 6
+    for (let i = 0; i < 6 - costCount; i++) {
+        let addCatCell = await createAddCatCell(baseCats, catImagePaths);
+        tableRow.appendChild(addCatCell);
     }
 
-    element.appendChild(defaultTeamTable);
+    tableBody.appendChild(tableRow);
+    table.appendChild(tableBody);
+
+    return table;
 }
 
 async function remakeTable() {
-    // Delete the table
-    document.getElementById("defaultTeamTable").remove();
-
     // Get default team
     result = await requestDefaultTeam();
 
-    await createTeamDropDown(result.team, result.baseCats);
+    let tableContainers = document.getElementsByClassName('defaultTeamTableContainer');
+    for (let tableContainer of tableContainers) {
+        tableContainer.innerHTML = '';
+        tableContainer.appendChild(await createTeamDropDown(result.team, result.baseCats));
+    }
 }
