@@ -426,7 +426,7 @@ async function calculateCatCaramelWalls(cat, existingWalls, teamCats) {
     let catWalls = [];
 
     // If we are in placement board or in an invalid tile (How???)
-    if (cat.boardID === 1 || startTile === null) {
+    if (cat.boardID === 1 || cat.current_health <= 0 || startTile === null) {
         return catWalls; // Just return empty
     }
 
