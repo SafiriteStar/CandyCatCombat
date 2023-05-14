@@ -82,7 +82,6 @@ class World {
     }
     
     draw() {
-        
         // Get where the mouse is
         this.mouseScreenX = (mouseX - (this.cameraX * this.scale)) / this.scale;
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
@@ -132,6 +131,15 @@ class World {
                 if (i === 0 && this.teams[0].unplacedCatsCheck() || i > 0) {
                     this.maps[i].draw();
                 }
+            }
+
+            // Draw player team caramel tiles
+            this.teams[0].drawCaramelTiles();
+
+            // Draw opponent teams caramel tiles
+            for (let i = 1; i < this.teams.length; i++) {
+                // The opponent information shouldn't be sent on the wrong state
+                this.teams[i].drawCaramelTiles();
             }
             
             // Draw the player team

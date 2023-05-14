@@ -1,29 +1,31 @@
 class RangeHighlighter {
 
-    constructor(ignoreWalls, ignoreAliveCats, color) {
+    constructor(ignoreWalls, ignoreAliveCats, fillColor, strokeColor, tileScale) {
         this.sourceCat = null; // An object with x and y
         this.sourceCatTeamIndex = null;
         this.tiles = [];
         this.tilesToHighlight = []; // We will store the tiles to highlight here
         this.ignoreWalls = ignoreWalls;
         this.ignoreAliveCats = ignoreAliveCats;
-        this.color = color
+        this.fillColor = fillColor;
+        this.strokeColor = strokeColor;
+        this.tileScale = tileScale;
         this.map = null;
     }
 
     draw() {
         if (this.sourceCat) {
-            let [red, green, blue] = this.color;
-            stroke(red, green, blue, 150);
+            let [redFill, greenFill, blueFill, alphaFill] = this.fillColor;
+            let [redStroke, greenStroke, blueStroke, alphaStroke] = this.strokeColor;
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
                 push();
                 if ((!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) || this.ignoreAliveCats) {                    
                     translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
-                    fill(red, green, blue, 100);
-                    strokeWeight(12);
-                    stroke(red, green, blue, 150);
-                    Tile.drawSimpleTile(tile.screenX, tile.screenY);
+                    fill(redFill, greenFill, blueFill, alphaFill);
+                    strokeWeight(24);
+                    stroke(redStroke, greenStroke, blueStroke, alphaStroke);
+                    Tile.drawScaledTile(tile.screenX, tile.screenY, this.tileScale);
                 }
                 pop();
             });

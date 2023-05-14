@@ -18,7 +18,12 @@ Play.getGameTeams = async function(game) {
         player.state = game.player.state;
 
         // Get the player caramel walls
-        player.caramelWalls = await Play.calculateTeamCaramelWalls(player.team.cats);
+        if (game.player.state.name == "Playing" || game.player.state.name == "Waiting") {
+            player.caramelWalls = await Play.calculateTeamCaramelWalls(player.team.cats);
+        }
+        else {
+            player.caramelWalls = [];
+        }
 
         // Opponents
         let opponents = [];

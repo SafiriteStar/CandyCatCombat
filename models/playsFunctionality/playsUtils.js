@@ -413,7 +413,7 @@ async function getCommonNeighbor(tile1, tile2) {
 
 async function getCaramelCatTile(x, y, map, cats) {
     for (let i = 0; i < cats.length; i++) {
-        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6) {
+        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6 && cats[i].current_health > 0) {
             return cats[i];
         }
     }
@@ -426,7 +426,7 @@ async function calculateCatCaramelWalls(cat, existingWalls, teamCats) {
     let catWalls = [];
 
     // If we are in placement board or in an invalid tile (How???)
-    if (cat.boardID === 1 || startTile === null) {
+    if (cat.boardID === 1 || cat.current_health <= 0 || startTile === null) {
         return catWalls; // Just return empty
     }
 

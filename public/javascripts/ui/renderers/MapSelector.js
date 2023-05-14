@@ -20,8 +20,8 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30]);
-        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255]);
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 150], 1);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 100], [164, 149, 255, 100], 0.5);
 
         //
         this.path = null;
@@ -116,10 +116,10 @@ class MapSelector {
             else {
                 // There was no cat in that tile
                 // Do we have *a* cat already and was that tile not a caramel tile?
-                if (this.team !== null && this.team !== undefined && GameInfo.world.checkTeamsCaramelTile(this.coordX, this.coordY, this.map + 1) === false) {
+                if (this.team !== null && this.team !== undefined) {
                     // We do
                     // Do we have a player cat?
-                    if (this.team == 0 && !GameInfo.world.teams[this.team].cats[this.cat].isRooted()) {
+                    if (this.team == 0 && !GameInfo.world.teams[this.team].cats[this.cat].isRooted() && GameInfo.world.checkOtherTeamsCaramelTile(this.team, this.coordX, this.coordY, this.map + 1) === false) {
                         // We do
                         // Lets try to move to the tile we just clicked
                         let startingTile = GameInfo.world.getTileInMap(
