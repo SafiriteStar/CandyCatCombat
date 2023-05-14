@@ -48,17 +48,19 @@
   cursor: pointer;
   width: 5em;
   height: 5em;
-  background-image: url('../assets/UI/Cat_Book_Button_1.png');
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-image: url('../assets/UI/Cat_Book_Button_1.png'), url('../assets/UI/Cat_Book_Button_1_Back.png');
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  /* Hey kid you like color math? */
+  filter: invert(28%) sepia(100%) hue-rotate(-180deg) saturate(3);
 }
 
 .catBookletShowButton:hover {
-  background-image: url('../assets/UI/Cat_Book_Button_2.png');
+  background-image: url('../assets/UI/Cat_Book_Button_2.png'), url('../assets/UI/Cat_Book_Button_2_Back.png');
 }
 
 .switch {
-  background-image: url('../assets/UI/Cat_Book_Button_3.png');
+  background-image: url('../assets/UI/Cat_Book_Button_3.png'), url('../assets/UI/Cat_Book_Button_3_Back.png');
 }
 
 .catInfoGridContainer {

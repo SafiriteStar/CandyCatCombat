@@ -2,6 +2,7 @@ class RangeHighlighter {
 
     constructor(ignoreWalls, ignoreAliveCats, color) {
         this.sourceCat = null; // An object with x and y
+        this.sourceCatTeamIndex = null;
         this.tiles = [];
         this.tilesToHighlight = []; // We will store the tiles to highlight here
         this.ignoreWalls = ignoreWalls;
@@ -49,6 +50,10 @@ class RangeHighlighter {
             }
         }
 
+        if (GameInfo.world.checkOtherTeamsCaramelTile(this.sourceCatTeamIndex, currentTile.x, currentTile.y, currentTile. map)) {
+            return false;
+        }
+
         // We passed it all
         return true;
     }
@@ -77,18 +82,6 @@ class RangeHighlighter {
         return newNeighbors
     }
 
-    getPath(tile) {
-        let graph = GameInfo.world.getMap(this.sourceCat.map);
-        // Are we trying to get somewhere impossible
-        if (graph.checkTileExists(tile.x, tile.y) === false) {
-            return null
-        }
-
-        // Generate a list of nodes to ignore
-
-        return graph;
-    }
-
     newSource(sourceCat, minRange, maxRange) {
         // Set our cat
         this.sourceCat = sourceCat;
@@ -101,12 +94,16 @@ class RangeHighlighter {
         if (this.sourceCat === null) {
             // Alright, erase everything
             this.map = null;
+            this.sourceCatTeamIndex = null;
             // And get out
             return
         }
 
         // Update our map
         this.map = sourceCat.map;
+
+        // What team are we on?
+        this.sourceCatTeamIndex = GameInfo.world.getCatTeamIndex(this.sourceCat);
 
         // If we aren't in the placement map
         if (this.map !== 0) {

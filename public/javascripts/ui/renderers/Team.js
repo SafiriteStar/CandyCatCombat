@@ -13,11 +13,16 @@ class Team {
         return catImageTable[catIndex];
     }
 
-    constructor(teamId, playerName, catList, colorArray) {
+    constructor(teamId, playerName, catList, caramelWalls, colorArray) {
         this.id = teamId;
         this.playerName = playerName;
         this.cats = [];
         this.color = colorArray;
+
+        this.caramelWalls = [];
+        for (let i = 0; i < caramelWalls.length; i++) {
+            this.caramelWalls.push(new Tile(caramelWalls[i]));
+        }
 
         let unplacedIndex = 0;
         for (let i = 0; i < catList.length; i++) {
@@ -60,16 +65,40 @@ class Team {
         return null;
     }
 
+    checkCaramelTile(x, y, map) {
+        for (let i = 0; i < this.caramelWalls.length; i++) {
+            if (this.caramelWalls[i].x == x && this.caramelWalls[i].y == y && this.caramelWalls[i].map == map) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     draw() {
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].draw(this.color);
         }
+
+        push();
+        fill('burlywood');
+        for (let i = 0; i < this.caramelWalls.length; i++) {
+            push();
+            Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
+            pop();
+        }
+        pop();
     }
 
-    update(catList) {
+    update(catList, caramelWalls) {
         // Update all the info
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].update(catList[i], false);
+        }
+
+        this.caramelWalls = [];
+        for (let i = 0; i < caramelWalls.length; i++) {
+            this.caramelWalls.push(new Tile(caramelWalls[i]));
         }
     }
 

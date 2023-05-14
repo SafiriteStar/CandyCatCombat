@@ -43,7 +43,7 @@ class World {
         
         // -- Player --
         // Create team for the player
-        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, World.teamColors[0]);
+        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, player.caramelWalls, World.teamColors[0]);
         this.teams[0].state = player.state.name;
         
         // See if the player still needs to place cats
@@ -52,7 +52,7 @@ class World {
         // -- Opponents --
         // Create teams for the opponent
         for (let i = 0; i < opponents.length; i++) {
-            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, World.teamColors[1]);
+            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, opponents[i].caramelWalls, World.teamColors[1]);
             this.teams[i].state = player.state.name;
         }
 
@@ -211,17 +211,49 @@ class World {
         return [];
     }
 
+    checkTeamsCaramelTile(x, y, map) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (this.teams[i].checkCaramelTile(x, y, map)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    getCatTeamIndex(cat) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (this.teams[i].cats.includes(cat)) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    checkOtherTeamsCaramelTile(ignoreIndex, x, y, map) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (i !== ignoreIndex) {
+                if (this.teams[i].checkCaramelTile(x, y, map)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     update(playerTeam, opponentTeams) {
         // Update the player team
-        this.teams[0].update(playerTeam.team.cats)
+        this.teams[0].update(playerTeam.team.cats, playerTeam.caramelWalls)
 
         // Update the opponent teams
         for (let i = 0; i < opponentTeams.length; i++) {
             if (this.teams[i + 1] !== undefined) {
-                this.teams[i + 1].update(opponentTeams[i].team.cats);
+                this.teams[i + 1].update(opponentTeams[i].team.cats, opponentTeams[i].caramelWalls);
             }
             else {
-                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, World.teamColors[1]);
+                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, opponentTeams[i].caramelWalls, World.teamColors[1]);
             }
         }
 

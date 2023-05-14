@@ -66,11 +66,20 @@ Play.moveByPath = async function(game, path, catID) {
             return { status: 400, result: { msg: "You cannot move the character, the path had a nonexistent tile!" } };
         }
 
+        // Get the caramel tile of the other teams
+        let caramelTiles = [];
+        for (let i = 0; i < game.opponents.length; i++) {
+            // For each opponent team
+            let oppCats = await Play.getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+            // Add their caramel tiles to the list
+            caramelTiles = caramelTiles.concat(Play.calculateTeamCaramelWalls(oppCats.team.cats));
+        }
+
         // For each one of those tiles (except the one we start at), append any living cats to those tiles
         // Also check for walls
         for (let i = 0; i < pathTiles.length - 1; i++) {
-            // Is that tile a wall?
-            if (pathTiles[i].type == 2) {
+            // Is that tile a wall or is it filled with caramel?
+            if (pathTiles[i].type == 2 || caramelTiles.includes(pathTiles[i])) {
                 // Yup
                 return { status: 400, result: { msg: "You cannot move the character, a path tile was a wall!" } };
             }
