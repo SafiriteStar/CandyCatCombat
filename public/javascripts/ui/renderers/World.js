@@ -82,7 +82,6 @@ class World {
     }
     
     draw() {
-        
         // Get where the mouse is
         this.mouseScreenX = (mouseX - (this.cameraX * this.scale)) / this.scale;
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
