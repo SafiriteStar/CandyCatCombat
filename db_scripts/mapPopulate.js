@@ -223,11 +223,11 @@ async function getMapData(mapID) {
     // Add all tile connections
     for (let i = 0; i < dbTileConnections.length; i++) {
         // At the tile at originX and originY, add a new connection to the array
-        map.tiles[dbTileConnections[i].originX][dbTileConnections[i].originY].connections[map.tiles[dbTileConnections[i].originX][dbTileConnections[i].originY].connections.length] = {
+        map.tiles[dbTileConnections[i].originX][dbTileConnections[i].originY].connections.push({
             x:dbTileConnections[i].targetX,
             y:dbTileConnections[i].targetY,
             map:mapID
-        }
+        });
     }
 
     // After adding all the tiles we need to adjust the placement tiles so that they know what group they are in

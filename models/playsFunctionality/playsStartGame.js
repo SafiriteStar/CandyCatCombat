@@ -77,7 +77,7 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
 
 Play.startGame = async function(game) {
     try {
-        // Randomly determines who starts    
+        // Randomly determines who starts
         let myTurn = (Math.random() < 0.5);
         let p1Id = myTurn ? game.player.id : game.opponents[0].id;
         let p2Id = myTurn ? game.opponents[0].id : game.player.id;

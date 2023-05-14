@@ -13,9 +13,12 @@ Play.getMap = async function() {
 
 Play.getGameTeams = async function(game) {
     try {
-        // Player info
+        // Player Info
         let player = await Play.getGameCatTeam("player", game.player.id, game.id);
         player.state = game.player.state;
+
+        // Get the player caramel walls
+        player.caramelWalls = await Play.calculateTeamCaramelWalls(player.team.cats);
 
         // Opponents
         let opponents = [];
@@ -25,6 +28,7 @@ Play.getGameTeams = async function(game) {
             for (let i = 0; i < game.opponents.length; i++) {
                 opponents[i] = await Play.getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
                 opponents[i].state = game.opponents[i].state;
+                opponents[i].caramelWalls = await Play.calculateTeamCaramelWalls(opponents[i].team.cats);
             }
         }
         
