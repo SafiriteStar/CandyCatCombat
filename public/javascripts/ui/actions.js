@@ -15,7 +15,8 @@ async function getGameInfo() {
         // if game ended we get the scores and prepare the ScoreWindow
         if (GameInfo.game.state == "Finished") {
             let result = await requestScore();
-            GameInfo.scoreWindow = new ScoreWindow(50, 50, GameInfo.width-100, GameInfo.height-100, result.score, closeScore);
+            await getBoardInfo();
+            formatPlayerScores(result.score.playerScores, GameInfo.game.player, GameInfo.game.opponents, GameInfo.world.teams);
         }
     }
 }
@@ -31,7 +32,6 @@ async function getBoardInfo() {
         window.location.pathname = "index.html";
     } else {
         // Yup the server sent us something back
-        console.log(resultTeams.teams);
         
         // Does the world exist?
         if (GameInfo.world) {
@@ -48,32 +48,39 @@ async function getBoardInfo() {
             }
             else {
                 // Create a new board
-                console.log(resultMap.map);
                 GameInfo.world = new World(resultMap.map.maps, resultTeams.teams.player, resultTeams.teams.opponents);
                 GameInfo.world.updateTeamCatFaces();
             }
         }
-
-        console.log(GameInfo.world);
     }
 }
 
 async function endturnAction() {
+    GameInfo.endturnButton.hide();
     let result = await requestEndTurn();
     if (result.successful) {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
-    } else alert("Something went wrong when ending the turn.");
+    }
+    else {
+        alert("Something went wrong when ending the turn.");
+        GameInfo.endturnButton.show();
+    }
 }
 
 async function placementReadyAction() {
+    GameInfo.placementReadyButton.hide();
     let result = await requestPlacementReady();
     if (result.successful) {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
-    } else alert("Something went wrong when readying up.");
+    }
+    else {
+        alert("Something went wrong when readying up.");
+        GameInfo.placementReadyButton.show();
+    }
 }
 
 async function moveCatAction(path, catID) {

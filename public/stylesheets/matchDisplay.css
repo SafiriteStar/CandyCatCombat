@@ -44,6 +44,7 @@
 	border: none;
 	font: inherit;
 	outline: inherit;
+    cursor: pointer;
 }
 
 .refreshMatchButton {
@@ -82,8 +83,7 @@
     position: absolute;
     height: fit-content;
     width: fit-content;
-    left: 45%;
-    transform: translate(-55%, 0);
+    left: 0;
     margin-top: 1em;
 
     border: 1px solid black;
@@ -163,6 +163,7 @@
 	border: none;
 	font: inherit;
 	outline: inherit;
+    cursor: pointer;
 }
 
 .matchJoinButton:hover > p {

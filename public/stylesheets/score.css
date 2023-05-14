@@ -1,0 +1,128 @@
+.scoreContainer {
+    display: block;
+    position: absolute;
+    width: 99em;
+    height: 54em;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    margin: 0;
+    padding: 0;
+}
+
+.scoreSwitch {
+    display: none;
+}
+
+.scoreFrameImage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.scoreFrame {
+    display: block;
+    position: absolute;
+    margin: 1em;
+    padding: 5%;
+
+    bottom:0;
+    top:0;
+    left:0;
+    right:0;
+
+    width: auto;
+    height: auto;
+}
+
+.scoreStateText {
+    text-align: center;
+    font-size: 3.5em;
+    text-transform: uppercase;
+}
+
+.scoreRow {
+    display: table;
+    width: 100%;
+}
+
+.scoreRow::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.scoreColumn {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 5em;
+}
+
+.scoreColumn.text {
+    width: 20%;
+}
+
+.scoreColumn.cats {
+    width: 60%;
+}
+
+.scoreColumn.text.header, .scoreColumn.cats.header {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.scoreColumn.text.content {
+    font-size: x-large;
+}
+
+.scoreCats {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.scoreCats > img {
+    position: relative;
+    height: 100%;
+    width: auto;
+}
+
+.scoreCloseButton {
+    position: absolute;
+    bottom: 5;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    width: 20em;
+    height: 3em;
+    cursor: pointer;
+}
+
+.scoreCloseButtonImage {
+    width: 100%;
+    height: 100%;
+}
+
+.scoreCloseButtonText {
+    position: absolute;
+    margin: 0;
+    width: 100%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+    color: #ffcbb2;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+.scoreCloseButtonText:hover {
+    color: #9d7b6b;
+}

@@ -137,7 +137,7 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
+    } else if (GameInfo.game.state == "Finished") {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.world.draw();

@@ -42,6 +42,7 @@ button.game {
 
 button.game:hover {
   color: rgb(85, 85, 85);
+  cursor: pointer;
 }
 
 button.game:active {

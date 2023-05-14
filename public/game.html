@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="/stylesheets/catBooklet.css">
+  <link rel="stylesheet" href="/stylesheets/score.css">
   <script src="javascripts/utils/p5.min.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
@@ -16,6 +17,7 @@
   <script src="javascripts/ui/gameInfo.js"></script> 
   <script src="javascripts/ui/actions.js"></script>
 
+  <script src="./javascripts/gameScoreboard.js"></script>
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
   <script src="./javascripts/catBooklet.js"></script>
@@ -40,10 +42,9 @@
 
 <body>
   <main id="game">
-    <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'block')">
-      <img id="catBookletShowButtonImage" class="catBookletShowButtonImage" src="assets/UI/cat_booklet_button.png" alt="show cat booklet icon">
-    </div>
+    <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
     <div id="catBooklet" class="catBooklet clearfix"></div>
+    
   </main>
 </body>
 
