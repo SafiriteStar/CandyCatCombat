@@ -77,22 +77,17 @@ class Cat {
         
         push();
             // Outline the hexagon with the team color
-            stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
-            strokeWeight(24);
-            fill(0, 0, 0, 0);
             translate(
                 (Tile.width * 1.5 * currentX) + xOffset,
                 (-Tile.height * 2 * currentY) + yOffset + evenOffset
             );
-            beginShape();
-            vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
-            vertex(Tile.width * 0.5, -Tile.height);   // Top Right
-            vertex(Tile.width, 0);                    // Middle Right
-            vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
-            vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
-            vertex(-Tile.width, 0);                   // Middle Left
-            endShape(CLOSE);
-            
+            push();
+            stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
+            strokeWeight(24);
+            fill(0, 0, 0, 0);
+            Tile.drawScaledTile(0, 0, 0.8);
+            pop();
+
             stroke(0, 0, 0, this.opacity);
             strokeWeight(0);
             fill(Cat.catColor[this.type - 1][0], Cat.catColor[this.type - 1][1], Cat.catColor[this.type - 1][2], this.opacity);
@@ -156,7 +151,7 @@ class Cat {
                 // Health Bar Outline
                 fill(255, 255, 255, 0);
                 stroke(0, 0, 0, this.opacity);
-                strokeWeight(12);
+                strokeWeight(5);
                 rect(
                     -Cat.healthBarLength * 0.5,
                     Tile.height - (Cat.healthBarHeight * 2),

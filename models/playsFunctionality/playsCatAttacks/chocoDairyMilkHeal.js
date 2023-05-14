@@ -109,8 +109,8 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
         for (let i = 0; i < playerCat.conditions.length; i++) {
             if (playerCat.conditions[i].id == 4) {
                 // We do
-                // Are we below half HP?
-                if (playerCat.current_health < playerCat.max_health * 0.5) {
+                // Are we below half HP and alive?
+                if (playerCat.current_health < playerCat.max_health * 0.5 && playerCat.current_health > 0) {
                     // We are
                     // Heal self
                     await Play.applyDamage(playerCat.damage * 0.5, playerCat.id);

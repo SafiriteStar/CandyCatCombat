@@ -44,6 +44,20 @@ class Tile {
         endShape(CLOSE);
     }
 
+    static drawScaledTile(x, y, scaler) {
+        // Some short circuiting "magic"
+        translate(x, y);
+        scale(scaler);
+        beginShape();
+            vertex(-Tile.width * 0.5, -Tile.height);  // Top Left
+            vertex(Tile.width * 0.5, -Tile.height);   // Top Right
+            vertex(Tile.width, 0);                    // Middle Right
+            vertex(Tile.width * 0.5, Tile.height);    // Bottom Right
+            vertex(-Tile.width * 0.5, Tile.height);   // Bottom Left
+            vertex(-Tile.width, 0);                   // Middle Left
+        endShape(CLOSE);
+    }
+
     draw() {
 
         // Placement
@@ -78,7 +92,7 @@ class Tile {
             stroke(0);
             strokeWeight(1);
             textSize(72)
-            text(this.x + ", " + this.y, -60, 0);
+            //text(this.x + ", " + this.y, -60, 0);
         pop();
     }
 
