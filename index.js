@@ -71,7 +71,7 @@ function worldStart() {
     resolve(Play.setWorldData(World.createWorld, validArguments[0].execute, validArguments[1].execute, validArguments[2].execute));
   }).then(() => {
     if (validArguments[2].execute) {
-      process.kill(0);
+      process.kill(process.pid, "SIGINT");
     }
     else {
       const port = parseInt(process.env.port || '8080');
