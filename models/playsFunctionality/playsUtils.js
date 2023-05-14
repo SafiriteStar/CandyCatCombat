@@ -413,7 +413,7 @@ async function getCommonNeighbor(tile1, tile2) {
 
 async function getCaramelCatTile(x, y, map, cats) {
     for (let i = 0; i < cats.length; i++) {
-        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6) {
+        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6 && cats[i].current_health > 0) {
             return cats[i];
         }
     }

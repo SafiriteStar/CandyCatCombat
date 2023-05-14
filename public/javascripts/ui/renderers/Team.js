@@ -75,11 +75,13 @@ class Team {
         return false;
     }
 
-    draw() {
+    draw() {        
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].draw(this.color);
         }
+    }
 
+    drawCaramelTiles() {
         push();
         fill('burlywood');
         for (let i = 0; i < this.caramelWalls.length; i++) {
@@ -87,7 +89,6 @@ class Team {
             Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
             pop();
         }
-        pop();
     }
 
     update(catList, caramelWalls) {

@@ -133,6 +133,15 @@ class World {
                     this.maps[i].draw();
                 }
             }
+
+            // Draw player team caramel tiles
+            this.teams[0].drawCaramelTiles();
+
+            // Draw opponent teams caramel tiles
+            for (let i = 1; i < this.teams.length; i++) {
+                // The opponent information shouldn't be sent on the wrong state
+                this.teams[i].drawCaramelTiles();
+            }
             
             // Draw the player team
             this.teams[0].draw();
