@@ -3,6 +3,8 @@ const Play = require("../playsFunctionality/playsInit");
 
 Play.setWorldData = async function(worldCreator, argv1, argv2) {
     Play.worldData = await worldCreator(argv1, argv2);
+
+    return true;
 }
 
 Play.getWorld = function() {
