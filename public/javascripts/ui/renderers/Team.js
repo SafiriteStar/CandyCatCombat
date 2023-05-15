@@ -85,7 +85,9 @@ class Team {
         push();
         fill('burlywood');
         for (let i = 0; i < this.caramelWalls.length; i++) {
+            push();
             Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
+            pop();
         }
         pop();
     }
