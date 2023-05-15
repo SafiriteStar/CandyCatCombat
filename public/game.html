@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="/stylesheets/catBooklet.css">
   <link rel="stylesheet" href="/stylesheets/score.css">
+  <link rel="stylesheet" href="/stylesheets/pauseMenu.css">
   <script src="javascripts/utils/p5.min.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
@@ -17,6 +18,7 @@
   <script src="javascripts/ui/gameInfo.js"></script> 
   <script src="javascripts/ui/actions.js"></script>
 
+  <script src="./javascripts/pauseMenu.js"></script>
   <script src="./javascripts/gameScoreboard.js"></script>
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
@@ -45,6 +47,19 @@
   <main id="game">
     <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
     <div id="catBooklet" class="catBooklet clearfix"></div>
+    <div class="pauseMenuFrame">
+      <h1 class="pauseMenuTitle">Game Paused</h1>
+      <button class="pauseResumeButton pauseButton pauseMenuText" onclick="togglePauseMenu()">Resume</button>
+      <button class="pauseQuitButton pauseButton pauseMenuText" onclick="quitGame()">Quit</button>
+      <div class="pauseSliderContextContainer">
+        <div class="pauseSliderWrapper">
+          <p class="pauseMenuText">Volume</p>
+          <div class="pauseSliderContainer">
+            <input type="range" min="1" max="100" value="50" class="pauseSlider volumeSlider">
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 

@@ -47,7 +47,7 @@ class World {
         this.teams[0].state = player.state.name;
 
         let playerStatusWidth = 400;
-        let playerStatusHeight = 80;
+        let playerStatusHeight = 100;
         let playerStatusMargin = 25;
         this.playerStatus = new teamStatus(playerStatusMargin, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
         
@@ -289,10 +289,7 @@ class World {
 
     async keyPressed() {
         if (keyCode === ESCAPE) {
-            if(confirm("Are you sure you want to quit?")) {
-                await cancelGame();
-                window.location.reload();
-            }
+            togglePauseMenu();
         }
     }
 

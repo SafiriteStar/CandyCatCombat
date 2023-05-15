@@ -59,8 +59,8 @@ class Tile {
     }
 
     draw() {
-        //push();
-        //translate(this.screenX, this.screenY);
+        push();
+        translate(this.screenX, this.screenY);
         // Placement
         if (this.type == 3) {
             if (GameInfo.game.player.state == "Placement") {
@@ -69,27 +69,29 @@ class Tile {
             else {
                 fill('rgba(246, 255, 253, 1)');
             }
+            image(GameInfo.images.tiles.placement, -GameInfo.images.tiles.normal.width * 0.5, -GameInfo.images.tiles.normal.height * 0.5);
         }
         // Wall
         else if (this.type == 2) {
             fill('rgba(220, 135, 255, 1)');
+            image(GameInfo.images.tiles.wall, -GameInfo.images.tiles.wall.width * 0.5, -GameInfo.images.tiles.wall.height * 0.5);
         }
         // Normal
         else if (this.type == 1) {
             fill('rgba(246, 255, 253, 1)');
             
-            //image(GameInfo.images.tiles.normal, -GameInfo.images.tiles.normal.width * 0.5, -GameInfo.images.tiles.normal.height * 0.5);
+            image(GameInfo.images.tiles.normal, -GameInfo.images.tiles.normal.width * 0.5, -GameInfo.images.tiles.normal.height * 0.5);
         }
         // If something went wrong, print black
         else {
             fill('rgba(0, 0, 0, 1)');
         }
-        //pop();
+        pop();
         // Outline
         stroke(0);
         strokeWeight(5);
         push();
-            Tile.drawSimpleTile(this.screenX, this.screenY);
+            //Tile.drawSimpleTile(this.screenX, this.screenY);
 
             // Debug Text Inside
             fill(0, 0, 0);

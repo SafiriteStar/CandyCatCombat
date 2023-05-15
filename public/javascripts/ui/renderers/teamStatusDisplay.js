@@ -21,9 +21,13 @@ class teamStatus {
         fill("lightgray");
         rect(this.x, this.y, this.width, this.height);
         
+        let totalTeamMaxHealth = 0;
+        let totalTeamCurrentHealth = 0;
         for (let i = 0; i < this.team.length; i++) {
+            totalTeamMaxHealth = totalTeamMaxHealth + this.team[i].max_health;
+            totalTeamCurrentHealth = totalTeamCurrentHealth + this.team[i].current_health;
             push();
-            translate(this.x + ((this.width / this.team.length) * (i + 0.5)), this.y + (this.height * 0.4));
+            translate(this.x + ((this.width / this.team.length) * (i + 0.5)), this.y + (this.height * 0.55));
             scale(this.scaler);
             image(this.team[i].img.base, -this.team[i].img.base.width * 0.5, -this.team[i].img.base.height * 0.5);
             
@@ -46,6 +50,20 @@ class teamStatus {
             pop();
         }
         
+        push();
+        fill("black");
+        stroke("black");
+        strokeWeight(1);
+        rect(this.x + (this.width * 0.05), this.y + (this.height * 0.125), this.width * 0.9, this.height * 0.1);
+        pop();
+
+        push();
+        fill("lightgreen");
+        stroke("black");
+        strokeWeight(1);
+        rect(this.x + (this.width * 0.05), this.y + (this.height * 0.125), this.width * 0.9 * (totalTeamCurrentHealth / totalTeamMaxHealth), this.height * 0.1);
+        pop();
+
         pop();
     }
 }
