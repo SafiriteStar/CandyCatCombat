@@ -33,6 +33,9 @@
     text-align: center;
     margin-top: 15%;
     margin-bottom: 5%;
+    font-size: 3em;
+    color: lightgoldenrodyellow;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .pauseButton {
@@ -123,6 +126,7 @@
 .pauseMenuText {
     text-align: center;
     color: lightgoldenrodyellow;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     font-size: large;
 }
 

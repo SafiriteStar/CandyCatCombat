@@ -47,10 +47,10 @@
   <main id="game">
     <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
     <div id="catBooklet" class="catBooklet clearfix"></div>
-    <div class="pauseMenuFrame pauseSwitch">
+    <div class="pauseMenuFrame">
       <h1 class="pauseMenuTitle">Game Paused</h1>
       <button class="pauseResumeButton pauseButton pauseMenuText" onclick="togglePauseMenu()">Resume</button>
-      <button class="pauseQuitButton pauseButton pauseMenuText">Quit</button>
+      <button class="pauseQuitButton pauseButton pauseMenuText" onclick="quitGame()">Quit</button>
       <div class="pauseSliderContextContainer">
         <div class="pauseSliderWrapper">
           <p class="pauseMenuText">Volume</p>
