@@ -17,12 +17,15 @@ async function refresh() {
 
 function preload() {
 
+    // Background
+    GameInfo.images.backgrounds = {};
+    GameInfo.images.backgrounds.arena = loadImage("../../assets/Backgrounds/ArenaBackgroundx2.png");
+
     // Map
     GameInfo.images.tiles = {};
     GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_Full.png");
     GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_1_Full.png");
     GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_Full.png");
-    
 
     // Cats
     GameInfo.images.cats = {};
@@ -84,6 +87,7 @@ function preload() {
 }
 
 async function resizeImages() {
+    GameInfo.images.backgrounds.arena.resize(GameInfo.images.backgrounds.arena.width * 4, 0)
     GameInfo.images.tiles.normal.resize(GameInfo.images.tiles.normal.width * 2, 0);
     GameInfo.images.tiles.wall.resize(GameInfo.images.tiles.wall.width * 2, 0);
     GameInfo.images.tiles.placement.resize(GameInfo.images.tiles.placement.width * 2, 0);
