@@ -56,8 +56,14 @@ class Map {
         push();
         translate(this.drawStartX, this.drawStartY);
 
-        for (let i = 0; i < this.tiles.length; i++) {
-            for (let j = this.tiles[i].length - 1; j >= 0; j--) {
+        for (let j = this.height - 1; j >= 0; j--) {
+            for (let i = 0; i < this.width; i = i + 2) {
+                if (this.tiles[i][j].type != 2) {
+                    this.tiles[i][j].draw();
+                }
+            }
+            
+            for (let i = 1; i < this.width; i = i + 2) {
                 if (this.tiles[i][j].type != 2) {
                     this.tiles[i][j].draw();
                 }
