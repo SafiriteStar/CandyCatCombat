@@ -289,10 +289,7 @@ class World {
 
     async keyPressed() {
         if (keyCode === ESCAPE) {
-            if(confirm("Are you sure you want to quit?")) {
-                await cancelGame();
-                window.location.reload();
-            }
+            togglePauseMenu();
         }
     }
 
