@@ -43,7 +43,8 @@
 .catBookletShowButton {
   position: absolute;
   margin: 0;
-  top: 2.5%;
+  top: 1em;
+  left: 1em;
   transform: translate(0, -2.5%);
   cursor: pointer;
   width: 5em;
