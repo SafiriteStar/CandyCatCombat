@@ -177,7 +177,7 @@ class World {
         pop();
 
         // Draw the Select Info Boxes
-        this.mapSelector.drawInfoBoxes();
+        //this.mapSelector.drawInfoBoxes();
         this.playerStatus.draw();
     }
 
