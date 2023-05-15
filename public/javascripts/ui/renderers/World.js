@@ -45,6 +45,11 @@ class World {
         // Create team for the player
         this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, player.caramelWalls, World.teamColors[0]);
         this.teams[0].state = player.state.name;
+
+        let playerStatusWidth = 400;
+        let playerStatusHeight = 80;
+        let playerStatusMargin = 25;
+        this.playerStatus = new teamStatus(playerStatusMargin, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();
@@ -173,6 +178,7 @@ class World {
 
         // Draw the Select Info Boxes
         this.mapSelector.drawInfoBoxes();
+        this.playerStatus.draw();
     }
 
     getMap(map) {
