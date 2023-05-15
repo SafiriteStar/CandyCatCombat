@@ -129,6 +129,11 @@ class World {
             // Where we want to be looking at the start 
             translate(World.startPosX / this.scale, World.startPosY / this.scale);
 
+            push();
+            scale(2.5);
+            image(GameInfo.images.backgrounds.arena, -GameInfo.images.backgrounds.arena.width * 0.35, -GameInfo.images.backgrounds.arena.height * 0.575);
+            pop();
+
             // Draw the maps
             // We need to reverse the order so that the placement map is
             // always the first being drawn
