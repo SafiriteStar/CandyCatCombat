@@ -52,7 +52,7 @@ class RangeHighlighter {
             }
         }
 
-        if (GameInfo.world.checkOtherTeamsCaramelTile(this.sourceCatTeamIndex, currentTile.x, currentTile.y, currentTile. map)) {
+        if (GameInfo.world.checkOtherTeamsCaramelTile(this.sourceCatTeamIndex, currentTile.x, currentTile.y, currentTile. map) && !this.ignoreWalls) {
             return false;
         }
 

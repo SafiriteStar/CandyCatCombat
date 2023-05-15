@@ -59,7 +59,8 @@ class Tile {
     }
 
     draw() {
-
+        //push();
+        //translate(this.screenX, this.screenY);
         // Placement
         if (this.type == 3) {
             if (GameInfo.game.player.state == "Placement") {
@@ -76,11 +77,14 @@ class Tile {
         // Normal
         else if (this.type == 1) {
             fill('rgba(246, 255, 253, 1)');
+            
+            //image(GameInfo.images.tiles.normal, -GameInfo.images.tiles.normal.width * 0.5, -GameInfo.images.tiles.normal.height * 0.5);
         }
         // If something went wrong, print black
         else {
             fill('rgba(0, 0, 0, 1)');
         }
+        //pop();
         // Outline
         stroke(0);
         strokeWeight(5);

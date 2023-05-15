@@ -20,8 +20,8 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 150], 1);
-        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 100], [164, 149, 255, 100], 0.5);
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 200], 1);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 200], [164, 149, 255, 0], 0.5);
 
         //
         this.path = null;

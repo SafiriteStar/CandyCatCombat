@@ -52,6 +52,12 @@ class ChocoDairyMilkHeal extends CatStandardAttack {
             healingDealt = healingDealt * 2;
         }
 
+        // We cannot heal above the maximum
+        if (targetCatData.current_health + healingDealt > targetCatData.max_health) {
+            // If we would heal above the maximum, then heal only to the maximum
+            healingDealt = targetCatData.max_health - (targetCatData.max_health - healingDealt);
+        }
+
         // APPLY HEALING
         await Play.applyDamage(healingDealt, targetCatData.id);
 
