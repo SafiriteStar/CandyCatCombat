@@ -81,14 +81,9 @@ Play.startGame = async function(game) {
         let myTurn = (Math.random() < 0.5);
         let p1Id = myTurn ? game.player.id : game.opponents[0].id;
         let p2Id = myTurn ? game.opponents[0].id : game.player.id;
-
-        // Player
-        await Play.addDBGameCatTeam(game.id, game.player.id);
         
-        // Opponents (can do multiple but you should only have one)
-        for (let i = 0; i < game.opponents.length; i++) {
-            await Play.addDBGameCatTeam(game.id, game.opponents[i].id);
-        }
+        // Teams were made when the game was created and when the user joined
+        // This is to avoid someone changing teams while waiting for an opponent
 
         // Player that start changes to order 1 
         await pool.query(`Update user_game set ug_order=? where ug_id = ?`, [1, p1Id]);
