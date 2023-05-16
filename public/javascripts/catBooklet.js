@@ -323,25 +323,6 @@ function createBookletPagination(baseCats) {
     return catBookletPaginationWrapper;
 }
 
-function createMouseOverFunctions(catBooklet) {
-    // If we aren't in a game
-    let p5Canvases = document.getElementsByClassName('p5Canvas');
-    if (p5Canvases.length == 0) {
-        // Then stop
-        return
-    }
-
-    catBooklet.addEventListener("mouseleave", function (event) {
-        GameInfo.isMouseOverJournal = false;
-        event.target.textContext = "mouse out";
-    }, false);
-
-    catBooklet.addEventListener("mouseover", function (event) {
-        GameInfo.isMouseOverJournal = true;
-        event.target.textContext = "mouse in";
-    }, false);
-}
-
 function createBooklet(baseCats) {
     generateCatBookletStructure();
 

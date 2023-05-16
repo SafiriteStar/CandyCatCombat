@@ -48,3 +48,22 @@ function makeDivDraggable(div) {
         document.onmousemove = null;
     }
 }
+
+function createMouseOverFunctions(element) {
+    // If we aren't in a game
+    let p5Canvases = document.getElementsByClassName('p5Canvas');
+    if (p5Canvases.length == 0) {
+        // Then stop
+        return
+    }
+
+    element.addEventListener("mouseleave", function (event) {
+        GameInfo.isMouseOverMenu = false;
+        event.target.textContext = "mouse out";
+    }, false);
+
+    element.addEventListener("mouseover", function (event) {
+        GameInfo.isMouseOverMenu = true;
+        event.target.textContext = "mouse in";
+    }, false);
+}
