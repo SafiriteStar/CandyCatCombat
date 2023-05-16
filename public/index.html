@@ -2,7 +2,11 @@
 
 <head>
   <title>Candy Cat Combat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/login.css">
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
@@ -11,28 +15,38 @@
 
 <body>
   <header>
-    <h1>Login</h1>
+    <ul>
+      <li>
+        <h1 class="fancyHeader">Candy</h1>
+      </li>
+      <li>
+        <h1 class="fancyHeader">Cat</h1>
+      </li>
+      <li>
+        <h1 class="fancyHeader">Combat</h1>
+      </li>
+    </ul>
+    <p>Battle to your hearts content!</p>
   </header>
   <main>
-    <p> If you have a match running you will enter that match.
-      Otherwise it will go to the match making page.
-    </p>
-    <form action="javascript:login()">
-      <table>
-        <tr>
-          <td>Name:</td>
-          <td><input type="text" autocomplete="username" id="name"></td>
-        </tr>
-        <tr>
-          <td>Password:</td>
-          <td><input type="password" autocomplete="current-password" id="password"></td>
-        </tr>
-      </table>
-      <p id="msg" class="warning"></p>
-      <p><input type="submit" value="Login"></p>
-      <p><a href="register.html">Create a new account</a></p>
-      <p><a href="scoreboard.html">See previous games Score Board</a></p>
-    </form>
+    <div class="loginContainer">
+      <form action="javascript:login()">
+        <table>
+          <tr>
+            <td>Name:</td>
+            <td><input type="text" autocomplete="username" id="name"></td>
+          </tr>
+          <tr>
+            <td>Password:</td>
+            <td><input type="password" autocomplete="current-password" id="password"></td>
+          </tr>
+        </table>
+        <p id="msg" class="warning"></p>
+        <p><input type="submit" value="Login"></p>
+        <p class="loginLink"><a href="register.html">Create a new account</a></p>
+        <p class="loginLink"><a href="scoreboard.html">See previous games Score Board</a></p>
+      </form>
+    </div>
   </main>
 </body>
 
