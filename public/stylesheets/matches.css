@@ -17,6 +17,7 @@ body {
     width: fit-content;
     border-top-right-radius: 1em;
     margin: 0;
+    padding-left: 1em;
 }
 
 .matchesButton {
