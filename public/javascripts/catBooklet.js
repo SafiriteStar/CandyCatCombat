@@ -211,6 +211,7 @@ function setCatBookletInfo(index, baseCats) {
     ]
 
     document.getElementById('weaponImage1').src = weaponImages[index - 1][0];
+    document.getElementById('weaponImage2').style.visibility = weaponImages[index - 1][1] !== null && 'visible' || 'hidden'
     document.getElementById('weaponImage2').src = weaponImages[index - 1][1] !== null && weaponImages[index - 1][1] || '';
     document.getElementById('weaponImage2').alt = weaponImages[index - 1][1] !== null && 'weapon2' || '';
 
