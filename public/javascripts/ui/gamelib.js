@@ -6,6 +6,10 @@ async function refresh() {
         await getGameInfo();
         await getBoardInfo();
 
+        if (GameInfo.game.player.state == "Canceled") {
+            window.location.reload();
+        }
+
         if (GameInfo.game.player.state != "Waiting" || GameInfo.game.player.state != "PlacementReady") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();

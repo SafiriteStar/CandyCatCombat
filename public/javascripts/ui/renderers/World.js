@@ -71,7 +71,7 @@ class World {
             );
         }
     }
-    
+
     draw() {
         
         // Get where the mouse is
@@ -177,6 +177,7 @@ class World {
         if (keyCode === ESCAPE) {
             if(confirm("Are you sure you want to quit?")) {
                 cancelGame();
+                window.location.reload();
             }
         }
     }
