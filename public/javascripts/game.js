@@ -8,6 +8,11 @@ window.onload = async function() {
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
         createBooklet(result.baseCats);
         createScoreScreen();
+
+        let pauseMenus = document.getElementsByClassName('pauseMenuFrame');
+        for (let i = 0; i < pauseMenus.length; i++) {
+            createMouseOverFunctions(pauseMenus[i]);
+        }
     } catch (err) {
         console.log(err);
     }

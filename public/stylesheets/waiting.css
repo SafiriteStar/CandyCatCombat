@@ -1,0 +1,24 @@
+header {
+    background-color: #ddbf98;
+    width: fit-content;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em 1em;
+    margin: 0;
+    padding: 0.5em;
+}
+
+body {
+    background-image: url('/assets/Backgrounds/WaitingForMatchFull.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.waitingContainer {
+    background-color: #ddbf98;
+    width: fit-content;
+    padding: 1em;
+
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+}

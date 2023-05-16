@@ -26,6 +26,7 @@ function preload() {
     GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_Full.png");
     GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_1_Full.png");
     GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_Full.png");
+    GameInfo.images.tiles.caramel = loadImage("../../assets/Tiles/Caramel_web_4.png");
 
     // Cats
     GameInfo.images.cats = {};
@@ -91,6 +92,7 @@ async function resizeImages() {
     GameInfo.images.tiles.normal.resize(GameInfo.images.tiles.normal.width * 2, 0);
     GameInfo.images.tiles.wall.resize(GameInfo.images.tiles.wall.width * 2, 0);
     GameInfo.images.tiles.placement.resize(GameInfo.images.tiles.placement.width * 2, 0);
+    GameInfo.images.tiles.caramel.resize(GameInfo.images.tiles.caramel.width * 2, 0);
 }
 
 async function setup() {
