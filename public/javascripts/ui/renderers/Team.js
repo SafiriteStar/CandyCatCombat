@@ -86,7 +86,10 @@ class Team {
         fill('burlywood');
         for (let i = 0; i < this.caramelWalls.length; i++) {
             push();
-            Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
+            translate(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY);
+            tint(255, 255, 255, 125);
+            image(GameInfo.images.tiles.caramel, -GameInfo.images.tiles.caramel.width * 0.5, -GameInfo.images.tiles.caramel.height * 0.5);
+            //Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
             pop();
         }
         pop();
