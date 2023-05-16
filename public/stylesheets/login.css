@@ -39,7 +39,7 @@ header > ul > li {
     display: inline-block;
 }
 
-header > ul > li > h1, h1  {
+.fancyHeader  {
     margin-left: 0.1em;
     margin-right: 0.1em;
     margin-top: 0;

@@ -1,0 +1,13 @@
+body {
+    background-image: url('/assets/Backgrounds/LoginScreenWithCats.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.defaultTeamHeader {
+    background-color: #ddbf98;
+    width: fit-content;
+    border-radius: 1em, 1em;
+    margin: 0;
+    padding: 0.5em;
+}
