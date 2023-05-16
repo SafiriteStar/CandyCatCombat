@@ -211,6 +211,7 @@ function setCatBookletInfo(index, baseCats) {
     ]
 
     document.getElementById('weaponImage1').src = weaponImages[index - 1][0];
+    document.getElementById('weaponImage2').style.visibility = weaponImages[index - 1][1] !== null && 'visible' || 'hidden'
     document.getElementById('weaponImage2').src = weaponImages[index - 1][1] !== null && weaponImages[index - 1][1] || '';
     document.getElementById('weaponImage2').alt = weaponImages[index - 1][1] !== null && 'weapon2' || '';
 
@@ -320,25 +321,6 @@ function createBookletPagination(baseCats) {
     catBookletPaginationWrapper.appendChild(catBookletPagination);
     
     return catBookletPaginationWrapper;
-}
-
-function createMouseOverFunctions(catBooklet) {
-    // If we aren't in a game
-    let p5Canvases = document.getElementsByClassName('p5Canvas');
-    if (p5Canvases.length == 0) {
-        // Then stop
-        return
-    }
-
-    catBooklet.addEventListener("mouseleave", function (event) {
-        GameInfo.isMouseOverJournal = false;
-        event.target.textContext = "mouse out";
-    }, false);
-
-    catBooklet.addEventListener("mouseover", function (event) {
-        GameInfo.isMouseOverJournal = true;
-        event.target.textContext = "mouse in";
-    }, false);
 }
 
 function createBooklet(baseCats) {

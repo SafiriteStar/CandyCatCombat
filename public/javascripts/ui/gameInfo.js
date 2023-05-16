@@ -11,7 +11,7 @@ class GameInfo  {
     static game;
     static images = {};
     static sounds = {};
-    static isMouseOverJournal = false;
+    static isMouseOverMenu = false;
 
     // rendererers
     static scoreBoard;

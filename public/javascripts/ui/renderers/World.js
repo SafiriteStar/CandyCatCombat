@@ -92,7 +92,7 @@ class World {
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
         
         // Calculate the camera translation if we are dragging with the cursor
-        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag && GameInfo.isMouseOverJournal === false) { // Do this to avoid JS shenanigans
+        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag && GameInfo.isMouseOverMenu === false) { // Do this to avoid JS shenanigans
             // TODO: Potentially add arrow key support?
             this.mouseXDragDelta = this.cameraMouseStartX - mouseX;
             this.mouseYDragDelta = this.cameraMouseStartY - mouseY;
@@ -117,7 +117,7 @@ class World {
                 this.mouseCameraDrag = false;
             }
         }
-        else if (GameInfo.isMouseOverJournal) {
+        else if (GameInfo.isMouseOverMenu) {
             this.canDrag = false;
         }
 
@@ -307,7 +307,7 @@ class World {
     mouseReleased() {
 
         // If we weren't dragging the camera
-        if (!this.mouseCameraDrag && GameInfo.isMouseOverJournal === false) {
+        if (!this.mouseCameraDrag && GameInfo.isMouseOverMenu === false) {
             // We were hovering over a valid tile
             // and not the same tile we were before
             if (this.hoverTile.map !== null

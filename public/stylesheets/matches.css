@@ -7,7 +7,40 @@ body {
 .defaultTeamHeader {
     background-color: #ddbf98;
     width: fit-content;
-    border-radius: 1em, 1em;
+    border-top-right-radius: 1em 1em;
     margin: 0;
     padding: 0.5em;
+}
+
+.matchesHeader {
+    background-color: #ddbf98;
+    width: fit-content;
+    border-top-right-radius: 1em;
+    margin: 0;
+    padding-left: 1em;
+}
+
+.matchesButton {
+    margin: 1em;
+    width: 6em;
+    height: 1.5em;
+
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    
+    background: none;
+    background-image: url("../assets/UI/NormalButton.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+	color: lightgoldenrodyellow;
+
+    font-size: small;
+}
+
+.matchesButton:hover {
+    color: burlywood;
+    text-decoration: underline;
 }
