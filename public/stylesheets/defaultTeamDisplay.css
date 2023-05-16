@@ -6,8 +6,10 @@
 .defaultTeamTable {
     border-spacing: 2em 1em;
     background-color: #ddbf98;
-    border: 1px solid black;
-    border-radius: 1em;
+    border: none;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
 }
 
 .defaultTeamTable * {
