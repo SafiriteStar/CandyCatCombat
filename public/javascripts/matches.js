@@ -43,12 +43,15 @@ function fillMatches(matches) {
 async function join(mId) {
     try {
         let result = await requestJoinMatch(mId);
-        if (!result.successful || result.err)
-            throw result.err || { err: "Not successfull" }
-        window.location.pathname = "/game.html"
+        if (!result.successful || result.err) {
+            throw result.msg || { err: "Not successful" }
+        }
+        else if (result.successful) {
+            window.location.pathname = "/game.html"
+        }
     } catch (err) {
         console.log(err);
-    //  alert("Something is not working");
+        alert(err);
     }
 }
 
@@ -57,7 +60,7 @@ async function refresh() {
         result = await requestWaitingMatches();
 
         if (!result.successful || result.err)
-            throw result.err || { err: "Not successfull" }
+            throw result.err || { err: "Not successful" }
 
         // remove everything to fill again:
         let parent = document.getElementById("matches");
