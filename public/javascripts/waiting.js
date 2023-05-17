@@ -45,22 +45,27 @@ function setTeamCatImages(team) {
     let catMaxIndex = 0;
     for (let i = 0; i < team.length; i++) {
         let catDiv = document.getElementById("waitingCat" + (i + 1));
-        catDiv.innerHTML = '';
+        if (catDiv !== null && catDiv !== undefined) {
+            catDiv.innerHTML = '';
 
-        for (let j = 0; j < catImagePaths[team[i].type - 1].length; j++) {
-            let catImage = document.createElement('img');
-            catImage.src = catImagePaths[team[i].type - 1][j];
-            catDiv.appendChild(catImage);
+            for (let j = 0; j < catImagePaths[team[i].type - 1].length; j++) {
+                let catImage = document.createElement('img');
+                catImage.src = catImagePaths[team[i].type - 1][j];
+                catDiv.appendChild(catImage);
+            }
+    
+    
+            catDiv.style.visibility = 'visible';
+            catMaxIndex = i + 1;
         }
-
-
-        catDiv.style.visibility = 'visible';
-        catMaxIndex = i + 1;
     }
     // For the rest of the images, make them invisible
     for (; catMaxIndex < 6; catMaxIndex++) {
         let catDiv = document.getElementById("waitingCat" + catMaxIndex + 1);
-        catDiv.innerHTML = '';
-        catDiv.style.visibility = 'hidden';
+        
+        if (catDiv !== null && catDiv !== undefined) {
+            catDiv.innerHTML = '';
+            catDiv.style.visibility = 'hidden';
+        }
     }
 }
