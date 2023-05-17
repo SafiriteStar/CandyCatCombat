@@ -10,7 +10,18 @@ window.onload = async function() {
     }
 }
 
-setInterval(checkGameStarted,1000);
+function waitingQuery() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(checkGameStarted(), 1000));
+    });
+}
+
+async function makeWaitingCall() {
+    await waitingQuery();
+    setTimeout(() => makeWaitingCall(), 100);
+}
+
+makeWaitingCall();
 
 async function checkGameStarted() {
     try {
