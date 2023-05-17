@@ -43,7 +43,6 @@ async function checkGame(verbose) {
                 if (window.location.pathname != "/waiting.html") {
                     changePage("waiting.html","You have created a game, going for the waiting for players page",verbose);
                 }
-
                 if (window.playerTeam === undefined || window.playerTeam === null) {
                     let resultTeams = await requestGameTeams();
                     window.playerTeam = resultTeams.teams.player.team.cats;

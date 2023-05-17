@@ -53,8 +53,6 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                     i,                          // gtc_y
                     1                           // gtc_game_board_id
                 ]);
-
-        return true;
     }
 
     // After adding all the cats, add in any special conditions
@@ -79,6 +77,8 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                     [cat.id, 4]);
         }
     });
+
+    return true;
 }
 
 Play.startGame = async function(game) {
