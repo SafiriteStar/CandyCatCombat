@@ -36,11 +36,21 @@ async function checkGame(verbose) {
         else if (!result.game){
             if (window.location.pathname != "/matches.html") 
                 changePage("matches.html","Not in a game. Going to matches page",verbose);
-        } else {
+        }
+        else {
             window.game = result.game;
             if (result.game.state == "Waiting") {
-              if (window.location.pathname != "/waiting.html")
-                changePage("waiting.html","You have created a game, going for the waiting for players page",verbose);
+                if (window.location.pathname != "/waiting.html") {
+                    changePage("waiting.html","You have created a game, going for the waiting for players page",verbose);
+                }
+
+                if (window.playerTeam === undefined || window.playerTeam === null) {
+                    let resultTeams = await requestGameTeams();
+                    window.playerTeam = resultTeams.teams.player.team.cats;
+                    if (resultTeams.successful) {
+                    setTeamCatImages(resultTeams.teams.player.team.cats);
+                    }
+                }
             } else if (window.location.pathname != "/game.html") {
                 changePage("game.html","You are in a game. Going to the game page",verbose);
             }
