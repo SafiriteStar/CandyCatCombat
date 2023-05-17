@@ -55,7 +55,8 @@ async function requestCreateMatch() {
             },
           method: "POST"
         });
-        return {successful: response.status == 200};
+        let result = await response.json();
+        return {successful: response.status == 200, msg:result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
