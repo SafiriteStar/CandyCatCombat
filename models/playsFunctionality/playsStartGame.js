@@ -4,6 +4,19 @@ const Play = require("../playsFunctionality/playsInit");
 // Load in a team for the player or opponents using their default teams
 Play.addDBGameCatTeam = async function(gameId, playerId) {
 
+    // Get the player's user id
+    let [[userData]] = await pool.query(`Select ug_user_id as "id" from user_game where ug_id = ?`, [playerId]);
+
+    // Get the players default team
+    let [playerDefaultTeam] = await pool.query(
+        "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+            [userData.id]
+    );
+
+    if (playerDefaultTeam.length <= 0) {
+        return false;
+    }
+
     // Add in a new game team
     await pool.query(
         'Insert into game_team (gt_game_id, gt_user_game_id) values (?, ?)',
@@ -12,15 +25,6 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
     // Get the game_team ID made for the player
     let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_game_id = ?",
         [gameId, playerId]
-    );
-
-    // Get the player's user id
-    let [[userData]] = await pool.query(`Select ug_user_id as "id" from user_game where ug_id = ?`, [playerId]);
-
-    // Get the players default team
-    let [playerDefaultTeam] = await pool.query(
-        "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
-            [userData.id]
     );
     
     // Add the cats in the default team to game_team_cat
@@ -49,6 +53,8 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                     i,                          // gtc_y
                     1                           // gtc_game_board_id
                 ]);
+
+        return true;
     }
 
     // After adding all the cats, add in any special conditions

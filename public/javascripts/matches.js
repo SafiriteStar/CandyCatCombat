@@ -22,7 +22,14 @@ window.onload = async function () {
         for (let i = 0; i < tableContainers.length; i++) {
             tableContainers[i].appendChild(await createTeamDropDown(result.team, result.baseCats));
         }
+        // Make the booklet
         createBooklet(result.baseCats);
+
+        // Set the create match button
+        let createMatchButtons = document.getElementsByClassName('createMatchButton');
+        for (let i = 0; i < createMatchButtons.length; i++) {
+            createMatchButtons[i].onclick = async () => await createMatch();
+        }
 
         // Check if any players have posted a match
         result = await requestWaitingMatches();
@@ -78,12 +85,15 @@ async function refresh() {
 async function createMatch() {
     try {
         let result = await requestCreateMatch();
-        if (!result.successful || result.err)
-            throw result.err || { err: "Not successfull" }
-        window.location.pathname = "/waiting.html"
+        if (!result.successful || result.err) {
+            throw result.msg || { err: "Not successfull" }
+        }
+        else {
+            window.location.pathname = "/waiting.html"
+        }
     } catch (err) {
         console.log(err);
-      //  alert("Something is not working");
+        alert(err);
     }
 }
 
