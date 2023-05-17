@@ -139,6 +139,10 @@ class Game {
             let [[userTeamCost]] = await pool.query(
                 `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
                     [userId]);
+            
+            if (userTeamCost.maxCost === null || userTeamCost === undefined) {
+                return {status:400, result:{msg:"You need cats in your team!"} }
+            }
 
             // Create the game
             let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id, gm_max_cost) values (?, ?, ?)', [1, 2, userTeamCost.maxCost]);
@@ -197,8 +201,12 @@ class Game {
 
             let [[userTeamCost]] = await pool.query(
                 `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
-                    [userId]);
-            
+                [userId]);
+
+            if (userTeamCost <= 0) {
+                return {status:400, result: {msg: "You need candy cats in your team!"}};
+            }
+                
             if (userTeamCost.maxCost > dbGame.gm_max_cost) {
                 return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
             }
@@ -210,6 +218,10 @@ class Game {
             let [[userGame]] = await pool.query(`Select * from user_game where ug_user_id = ? and ug_game_id = ?`, [userId, gameId]);
             // Add the user's team to the game
             await Play.addDBGameCatTeam(gameId, userGame.ug_id);
+
+            if (!teamCreation) {
+                return { status:200, result: { msg: "You have no cats in your default team!" }};
+            }
          
             return {status:200, result: {msg: "You joined the game."}};
         } catch (err) {
