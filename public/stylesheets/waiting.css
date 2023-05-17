@@ -11,6 +11,30 @@ body {
     background-image: url('/assets/Backgrounds/WaitingForMatchFull.png');
     background-size: cover;
     background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.waitingButton {
+
+    width: 8em;
+    height: 2em;
+
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    
+    background: none;
+    background-image: url("../assets/UI/NormalButton.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+	color: lightgoldenrodyellow;
+}
+
+.waitingButton:hover {
+    color: burlywood;
+    text-decoration: underline;
 }
 
 .waitingContainer {
@@ -21,4 +45,47 @@ body {
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
     border-bottom-left-radius: 1em;
+}
+
+.waitingCat {
+    position: absolute;
+    width: 12vw;
+    height: 9vw;
+    transform: scaleX(-1);
+}
+
+.waitingCat > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#waitingCat1 {
+    top: 20vw;
+    left: 54vw;
+}
+
+#waitingCat2 {
+    top: 26vw;
+    left: 50vw;
+}
+
+#waitingCat3 {
+    top: 31vw;
+    left: 44vw;
+}
+
+#waitingCat4 {
+    top: 36vw;
+    left: 38vw;
+}
+
+#waitingCat5 {
+    top: 40vw;
+    left: 32vw;
+}
+
+#waitingCat6 {
+    top: 42vw;
+    left: 24vw;
 }
