@@ -15,7 +15,6 @@ Play.getGameTeams = async function(game) {
     try {
         // Player Info
         let player = await Play.getGameCatTeam("player", game.player.id, game.id);
-        console.log(player.team.cats);
         player.state = game.player.state;
 
         // Get the player caramel walls

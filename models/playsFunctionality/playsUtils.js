@@ -160,7 +160,8 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     player.team.cats = [];
 
     [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
-
+    console.log("Player Cat Team")
+    console.log(player.team.cats);
     // Ask for the conditions for that cat (even if empty)
     // For each cat
     for (let i = 0; i < player.team.cats.length; i++) {
