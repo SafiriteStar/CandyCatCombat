@@ -219,7 +219,7 @@ function setCatBookletInfo(index, baseCats) {
     let healthRange = document.getElementById('bookletHealthRange');
     // Clear all children
     healthRange.innerHTML = '';
-    let healthStars = (Math.floor(cat.health / 300) - 2);
+    let healthStars = (Math.floor(cat.health / 300) - 1);
     createStatStars(healthRange, healthStars, 'healthStat.png');
 
     // Damage/Healing
@@ -229,7 +229,7 @@ function setCatBookletInfo(index, baseCats) {
     if (cat.cat_id == 7) {
         damageDisplayText = "Healing";
         damageImageSrc = 'healing'
-        damageDisplayOffset = 5
+        damageDisplayOffset = 6
     }
     else if (cat.cat_id == 2) {
         damageDisplayOffset = 1;
@@ -240,7 +240,7 @@ function setCatBookletInfo(index, baseCats) {
     let damageRange = document.getElementById('bookletDamageRange');
     // Clear all children
     damageRange.innerHTML = '';
-    let damageStars = ((cat.damage / 50) + damageDisplayOffset - 6);
+    let damageStars = ((cat.damage / 50) + damageDisplayOffset - 5);
     createStatStars(damageRange, damageStars, damageImageSrc + 'Stat.png');
     
     // Defense
