@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/waiting.css">
     <link rel="stylesheet" href="./stylesheets/style.css">
     <script src="./javascripts/utils/verifications.js"></script>
+    <script src="./javascripts/requests/gameRequests.js"></script>
     <script src="./javascripts/requests/matchesRequests.js"></script>
     <script src="./javascripts/requests/usersRequests.js"></script>
     <script src="./javascripts/waiting.js"></script>
@@ -14,12 +15,19 @@
     <header>
         <h1 id="player"> Hello ______ </h1>
     </header>
-    <body>
+    <main>
         <div class="waitingContainer">
             <h1> You started a game!</h1>
-            <h2> Waiting for other player to join ...</h2>
-            <input type="button" value="Cancel game" onclick="cancel()">
+            <h2> Waiting for another player to join ...</h2>
+            <input class="waitingButton" type="button" value="Cancel Game" onclick="cancel()">
         </div>
-    </body>
-</body>
+        <div class="teamContainer">
+            <div id="waitingCat1" style="visibility: hidden;" class="waitingCat"></div>
+            <div id="waitingCat2" style="visibility: hidden;" class="waitingCat"></div>
+            <div id="waitingCat3" style="visibility: hidden;" class="waitingCat"></div>
+            <div id="waitingCat4" style="visibility: hidden;" class="waitingCat"></div>
+            <div id="waitingCat5" style="visibility: hidden;" class="waitingCat"></div>
+            <div id="waitingCat6" style="visibility: hidden;" class="waitingCat"></div>
+        </div>
+    </main>
 </html>

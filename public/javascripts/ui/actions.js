@@ -1,6 +1,7 @@
 
 async function getGameInfo() {
     let result = await requestPlayerGame();
+
     if (!result.successful) {
         alert("Something is wrong with the game please login again!");
         window.location.pathname = "index.html";
