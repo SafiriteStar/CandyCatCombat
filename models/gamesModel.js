@@ -135,8 +135,13 @@ class Game {
     //  - User does not have an active game
     static async create(userId) {
         try {
+            // Get the players default team
+            let [[userTeamCost]] = await pool.query(
+                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
+                    [userId]);
+
             // Create the game
-            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id, gm_max_cost) values (?, ?, ?)', [1, 2, 6]);
+            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id, gm_max_cost) values (?, ?, ?)', [1, 2, userTeamCost.maxCost]);
             let gameId = result.insertId;
             // add the user to the game
             await Game.#addUserToGame(userId, gameId);
@@ -181,11 +186,22 @@ class Game {
     static async join(userId, gameId) {
         try {
             let [dbGames] = await pool.query(`Select * from game where gm_id=?`, [gameId]);
-            if (dbGames.length==0)
+            if (dbGames.length==0) {
                 return {status:404, result:{msg:"Game not found"}};
+            }
             let dbGame = dbGames[0];
-            if (dbGame.gm_state_id != 1) 
+
+            if (dbGame.gm_state_id != 1) {
                 return {status:400, result:{msg:"Game not waiting for other players"}};
+            }
+
+            let [[userTeamCost]] = await pool.query(
+                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
+                    [userId]);
+            
+            if (userTeamCost.maxCost > dbGame.gm_max_cost) {
+                return {status:400, result:{msg:"Your team has above the maximum allowed cost!"}};
+            }
 
             // We join the game but the game still has not started, that will be done outside
             let result = await Game.#addUserToGame(userId, gameId);
