@@ -50,7 +50,7 @@ function createMatchDisplayItem(match) {
     // Team Cost Content
     let teamCostContent = document.createElement("p");
     teamCostContent.classList.add('matchInfoContent');
-    let teamCostContentText = document.createTextNode(`6`);
+    let teamCostContentText = document.createTextNode(`${match.maxCost}`);
     teamCostContent.appendChild(teamCostContentText);
     teamCostContainer.appendChild(teamCostContent);
 

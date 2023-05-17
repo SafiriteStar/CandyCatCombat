@@ -16,6 +16,7 @@ async function requestWaitingMatches() {
     try {
         const response = await fetch(`/api/games/`);
         var result = await response.json();
+        console.log(result);
         return {successful: response.status == 200, 
                 unauthenticated: response.status == 401,
                 matches: result};
@@ -37,7 +38,7 @@ async function requestJoinMatch(mId) {
           method: "PATCH"
         });
         let result = await response.json();
-        return {successful: response.status == 200, msg: result.result.msg};
+        return {successful: response.status == 200, msg: result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
