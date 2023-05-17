@@ -35,8 +35,9 @@ async function requestJoinMatch(mId) {
                 'Content-Type': 'application/json'
             },
           method: "PATCH"
-      });
-        return {successful: response.status == 200};
+        });
+        let result = await response.json();
+        return {successful: response.status == 200, msg: result.result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
