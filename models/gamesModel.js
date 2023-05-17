@@ -200,7 +200,7 @@ class Game {
                     [userId]);
             
             if (userTeamCost.maxCost > dbGame.gm_max_cost) {
-                return {status:400, result:{msg:"Your team has above the maximum allowed cost!"}};
+                return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
             }
 
             // We join the game but the game still has not started, that will be done outside

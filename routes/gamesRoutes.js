@@ -63,10 +63,15 @@ router.patch('/:id/join', auth.verifyAuth, async function (req, res, next) {
             res.status(400).send({msg:"You are already on a game. Only one game allowed"})
         } else {
             let joinResult = await Game.join(req.user.id,req.params.id);
-            let result = await Game.getPlayerActiveGame(req.user.id);
-            let game = result.result;
-            await Play.startGame(game);
-            res.status(result.status).send(joinResult.result);
+            if (joinResult.status == 400) {
+                res.status(400).send(joinResult);
+            }
+            else {
+                let result = await Game.getPlayerActiveGame(req.user.id);
+                let game = result.result;
+                await Play.startGame(game);
+                res.status(result.status).send(joinResult.result);
+            }
         }
     } catch (err) {
         console.log(err);
