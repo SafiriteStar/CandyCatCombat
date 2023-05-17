@@ -17,6 +17,7 @@ router.get('/', auth.verifyAuth, async function (req, res, next) {
             for (let game of result.result) {
                 games.push(game.export());
             }
+            console.log(games);
             res.status(200).send(games);
         }
     } catch (err) {
