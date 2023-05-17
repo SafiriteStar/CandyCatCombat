@@ -16,6 +16,7 @@ async function requestWaitingMatches() {
     try {
         const response = await fetch(`/api/games/`);
         var result = await response.json();
+        console.log(result);
         return {successful: response.status == 200, 
                 unauthenticated: response.status == 401,
                 matches: result};

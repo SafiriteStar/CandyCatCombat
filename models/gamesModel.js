@@ -86,7 +86,7 @@ class Game {
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
-            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.max_cost);
+            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.gm_max_cost);
             let result = await this.fillPlayersOfGame(id,game);
             if (result.status != 200) {
                 return result;
@@ -108,7 +108,7 @@ class Game {
                     where gst_state = 'Waiting'`);
             let games = [];
             for (let dbGame of dbGames) {
-                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.max_cost);
+                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.gm_max_cost);
                 let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
