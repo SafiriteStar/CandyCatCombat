@@ -17,6 +17,10 @@ window.onload = async function () {
         
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
+        window.baseCats = result.baseCats
+        document.getElementById('matchesMain').appendChild(createCatInfoSideBar(window.baseCats));
+        document.getElementById('matchesMain').appendChild(createSideBarHelp(window.baseCats));
+        calculateStatRanges(result.baseCats);
         // TODO: CREATE DEFAULT TEAM
 
         // Set the create match button

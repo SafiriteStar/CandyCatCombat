@@ -1,27 +1,71 @@
-.squareRatioDummy {
-    margin-top: 100%;
-    /* 1:1 aspect ratio */
+.sideBarIntroButtonContainer {
+    display: flex;
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    top: 50vh;
+    left: 15vw;
+    transform: translate(-50%, -50%);
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+
+    transition: 0.5s;
 }
 
-.containImage {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+.sideBarIntroButton {
+    position: relative;
+    height: 5vw;
+    width: 5.5vw;
+
+    background-color: lightblue;
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    border-radius: 50%;
+
+    transition: 0.3s;
+}
+
+.sideBarIntroButton:hover {
+    background-color: wheat;
+}
+
+.sideBarIntroParagraph {
+    position: relative;
+    margin: 0;
+    height: 3vw;
+    width: 11vw;
+    padding: 2% 2% 2% 10%;
+    left: -2vw;
+    z-index: -1;
+
+    background-color: lightblue;
+    border-radius: 0 1em 1em 0;
+
+    text-align: center;
+
+    font-size: 1.1vw;
+    transition: 0.5s;
 }
 
 .catInfoContainer {
     height: 100vh;
-    width: 30vw;
+    width: 25vw;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
+    transform: translate(-84%, 0);
     background-color: transparent;
     overflow-x: hidden;
     transition: 0.5s;
+}
+
+.sideInfoActive {
+    transform: translate(0, 0);
 }
 
 .catInfoPaginationBackground {
@@ -66,4 +110,5 @@
 .activePaginationItem {
     width: 100%;
     background-color: lightgreen;
+    cursor: default;
 }
