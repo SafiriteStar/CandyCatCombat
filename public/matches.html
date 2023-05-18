@@ -5,19 +5,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="/stylesheets/style.css">
-  <link rel="stylesheet" href="/stylesheets/defaultTeamDisplay.css">
-  <link rel="stylesheet" href="/stylesheets/catBooklet.css">
-  <link rel="stylesheet" href="/stylesheets/matchDisplay.css">
-  <link rel="stylesheet" href="/stylesheets/matches.css">
+  
+  <link rel="stylesheet" href="./stylesheets/style.css">
+  <link rel="stylesheet" href="./stylesheets/matches.css">
+  <link rel="stylesheet" href="./stylesheets/catInfoSideBar.css">
+
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
-  <script src="./javascripts/matchGameDisplay.js"></script>
+  <script src="./javascripts/oldMatchGameDisplay.js"></script>
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
-  <script src="./javascripts/displayTeam.js"></script>
-  <script src="./javascripts/catBooklet.js"></script>
+  <script src="./javascripts/oldDisplayTeam.js"></script>
   <script src="./javascripts/matches.js"></script>
 </head>
 
@@ -28,30 +27,31 @@
     </h2>
   </header>
   <main>
-      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
-    
-      <div id="defaultTeam">
-      <h1 class="defaultTeamHeader">Current Team:</h1>
-
-      <div class="defaultTeamTableContainer"></div>
-
-      <div class="matchesWrapper">
-        <div class="matchContextWrapper">
-          <h1>Choose a match or create a new one</h1>
-          <p>After creating or joining a match you cannot leave and cannot create/join other matches until you finish that match</p>
-          <button class="refreshMatchButton matchContextButton" onclick="refresh()">
-            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
-            <p>Refresh Matches</p>
-          </button>
-          <button class="createMatchButton matchContextButton" onclick="">
-            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
-            <p>Create My Match</p>
-          </button>
+    <div class="catInfoContainer">
+      <div class="catInfoPaginationContainer">
+        <div class="catInfoPagination">
+          <div class="paginationItem">
+            <div class="squareRatioDummy"></div>
+            <img class="containImage" src="./assets/VanillaCat/Vanilla_Cat_Base.png" alt="">
+          </div>
+          <div class="paginationItem activePaginationItem">
+            <div class="squareRatioDummy"></div>
+            <img class="containImage" src="./assets/VanillaCat/Vanilla_Cat_Base.png" alt="">
+          </div>
+          <div class="paginationItem">
+            <div class="squareRatioDummy"></div>
+            <img class="containImage" src="./assets/VanillaCat/Vanilla_Cat_Base.png" alt="">
+          </div>
+          <div class="paginationItem">
+            <div class="squareRatioDummy"></div>
+            <img class="containImage" src="./assets/VanillaCat/Vanilla_Cat_Base.png" alt="">
+          </div>
         </div>
-        <table id="matches"></table>
       </div>
-      <div id="catBooklet" class="catBooklet clearfix"></div>
-    </main>
+    </div>
+    <div class="defaultTeamContainer"></div>
+    <div class="matchesContainer"></div>
+  </main>
 </body>
 
 </html>

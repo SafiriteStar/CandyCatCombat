@@ -1,0 +1,56 @@
+.squareRatioDummy {
+    margin-top: 100%;
+    /* 1:1 aspect ratio */
+}
+
+.catInfoContainer {
+    height: 100%;
+    width: 30vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: lightgray;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.catInfoPaginationContainer {
+    position: relative;
+    height: 80%;
+    width: 16%;
+    top: 20%;
+    background-color: gray;
+}
+
+.catInfoPagination {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.paginationItem {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    background-color: white;
+
+    transition: 0.3s;
+}
+
+.paginationItem:hover {
+    width: 110%;
+}
+
+.activePaginationItem {
+    width: 110%;
+    background-color: lightgreen;
+}
+
+.containImage {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}

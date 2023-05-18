@@ -17,13 +17,7 @@ window.onload = async function () {
         
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
-        let tableContainers = document.getElementsByClassName('defaultTeamTableContainer');
-        
-        for (let i = 0; i < tableContainers.length; i++) {
-            tableContainers[i].appendChild(await createTeamDropDown(result.team, result.baseCats));
-        }
-        // Make the booklet
-        createBooklet(result.baseCats);
+        // TODO: CREATE DEFAULT TEAM
 
         // Set the create match button
         let createMatchButtons = document.getElementsByClassName('createMatchButton');
@@ -44,7 +38,7 @@ window.onload = async function () {
 }
 
 function fillMatches(matches) {
-    createMatchDisplayTable(matches);
+    
 }
 
 async function join(mId) {

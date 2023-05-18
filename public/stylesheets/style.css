@@ -1,19 +1,6 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
 .warning {
   color: darkred;
   font-size: larger;
-}
-
-#scores td {
-  padding: 5px 20px;
 }
 
 /* Game CSS*/
