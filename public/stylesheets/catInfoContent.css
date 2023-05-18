@@ -1,0 +1,119 @@
+.catInfoContentContainer {
+    position: absolute;
+    top: 0;
+    height: 90vh;
+    width: 84%;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+    background-color: beige;
+}
+
+.catInfoName {
+    position: relative;
+    height: 5vh;
+    margin: 0;
+    text-align: center;
+}
+
+.catInfoCatImageContainer {
+    display: inline-block;
+    position: relative;
+    height: 25vh;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.catInfoCatImage {
+    top: 50%;
+    transform: scaleX(-1) translate(0, -50%);
+}
+
+.catInfoStats {
+    height: 30vh;
+}
+
+.catInfoStat {
+    display: flex;
+    position: relative;
+    height: 20%;
+    justify-content: center;
+}
+
+.catInfoStatTextContainer {
+    margin: 0;
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+}
+
+.catInfoCatStatText {
+    margin: 0;
+    width: 100%;
+    text-align: left;
+}
+
+.catInfoStatVisual {
+    display: flex;
+    position: relative;
+    margin: 0;
+    height: 100%;
+    width: 60%;
+    justify-content: center;
+    align-items: center;
+}
+
+.catInfoStatImageContainer {
+    display: inline-block;
+    position: relative; 
+    width: 13%;
+}
+
+.catInfoStatImage {
+    position: relative;
+    top: 20%;
+    height: 60%;
+    max-width: 15%;
+}
+
+.rangeStatHorizontalLine {
+    position: absolute;
+    width: 80%;
+    height: 2%;
+    background-color: black;
+}
+
+.rangeStatVerticalLine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7%;
+    transform: translate(-50%, -50%);
+    height: 60%;
+    background-color: black;
+    opacity: 50%;
+}
+
+.catInfoDescriptionContainer {
+    height: 30vh;
+    overflow: hidden;
+}
+
+.catInfoDescription {
+    margin: 2.5% 0 0 0;
+    padding-left: 10%;
+    padding-right: 10%;
+    width: 80%;
+    height: 97.5%;
+    overflow-y: scroll;
+    
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+ .catInfoDescription::-webkit-scrollbar {
+    display: none;
+}

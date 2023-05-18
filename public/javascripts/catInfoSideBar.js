@@ -1,0 +1,3 @@
+function createCatInfoSideBar(baseCats) {
+    
+}

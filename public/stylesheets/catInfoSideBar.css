@@ -3,54 +3,67 @@
     /* 1:1 aspect ratio */
 }
 
+.containImage {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
 .catInfoContainer {
-    height: 100%;
+    height: 100vh;
     width: 30vw;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: lightgray;
+    background-color: transparent;
     overflow-x: hidden;
     transition: 0.5s;
 }
 
+.catInfoPaginationBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 90%;
+    background-color: lightgray;
+}
+
 .catInfoPaginationContainer {
-    position: relative;
-    height: 80%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 70vh;
     width: 16%;
-    top: 20%;
-    background-color: gray;
+    padding-top: 15vh;
+    padding-bottom: 15vh;
+    background-color: transparent;
 }
 
 .catInfoPagination {
-    position: relative;
+    position: absolute;
     width: 100%;
-    height: 100%;
+    height: 80vh;
 }
 
 .paginationItem {
     display: inline-block;
     position: relative;
-    width: 100%;
-    background-color: white;
+    width: 90%;
+    background-color: lightblue;
 
     transition: 0.3s;
 }
 
 .paginationItem:hover {
-    width: 110%;
+    width: 100%;
 }
 
 .activePaginationItem {
-    width: 110%;
-    background-color: lightgreen;
-}
-
-.containImage {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     width: 100%;
+    background-color: lightgreen;
 }
