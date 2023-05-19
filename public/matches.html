@@ -7,22 +7,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
   
   <link rel="stylesheet" href="./stylesheets/utils.css">
-  <link rel="stylesheet" href="./stylesheets/style.css">
-  <link rel="stylesheet" href="./stylesheets/matches.css">
   <link rel="stylesheet" href="./stylesheets/catInfo/sideBar.css">
   <link rel="stylesheet" href="./stylesheets/catInfo/content.css">
+  <link rel="stylesheet" href="./stylesheets/defaultTeam/container.css">
+  <link rel="stylesheet" href="./stylesheets/style.css">
+  <link rel="stylesheet" href="./stylesheets/matches.css">
 
   <script src="./javascripts/utils/catImagePaths.js"></script>
   <script src="./javascripts/catInfoSideBar/utils.js"></script>
   <script src="./javascripts/catInfoSideBar/create.js"></script>
   <script src="./javascripts/catInfoSideBar/update.js"></script>
+
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
-  <script src="./javascripts/oldMatchGameDisplay.js"></script>
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
-  <script src="./javascripts/oldDisplayTeam.js"></script>
   <script src="./javascripts/matches.js"></script>
 </head>
 
@@ -33,7 +33,28 @@
     </h2>
   </header>
   <main id="matchesMain">
-    <div class="defaultTeamContainer"></div>
+    <div class="dt-mainContainer">
+      <div class="dt-teamContainer">
+        <div class="dt-catContainer dt-catCircleRow1 dt-catCircleColumn2">
+          <div class="squareRatioDummy"></div>
+        </div>
+        <div class="dt-catContainer dt-catCircleRow1 dt-catCircleColumn3">
+          <div class="squareRatioDummy"></div>
+        </div>
+        <div class="dt-catContainer dt-catCircleRow2 dt-catCircleColumn1">
+          <div class="squareRatioDummy"></div>
+        </div>
+        <div class="dt-catContainer dt-catCircleRow2 dt-catCircleColumn4">
+          <div class="squareRatioDummy"></div>
+        </div>
+        <div class="dt-catContainer dt-catCircleRow3 dt-catCircleColumn2">
+          <div class="squareRatioDummy"></div>
+        </div>
+        <div class="dt-catContainer dt-catCircleRow3 dt-catCircleColumn3">
+          <div class="squareRatioDummy"></div>
+        </div>
+      </div>
+    </div>
     <div class="matchesContainer"></div>
   </main>
 </body>
