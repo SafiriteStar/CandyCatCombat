@@ -23,8 +23,9 @@
 }
 
 .dt-catContainer {
+    display: inline-block;
     position: absolute;
-    width: 17%;
+    width: 34%;
     background-color: black;
 
     border-radius: 50%;
@@ -58,4 +59,73 @@
 
 .dt-catCircleColumn4 {
     left: 75%;
+}
+
+.dt-selectedCat {
+    display: block;
+    position: absolute;
+    height: 65%;
+    width: 65%;
+
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50%);
+
+    border-radius: 50%;
+
+    background-color: aliceblue;
+}
+
+.dt-catOption {
+    position: absolute;
+    height: 30%;
+    width: 30%;
+
+    transform: translate( -50%, -50%);
+
+    border-radius: 50%;
+
+    background-color: darkgreen;
+
+    z-index: 10;
+}
+
+.dt-optionRow1 {
+    top: 0%;
+}
+
+.dt-optionRow2 {
+    top: 20%;
+}
+
+.dt-optionRow3 {
+    top: 50%;
+}
+
+.dt-optionRow4 {
+    top: 80%;
+}
+
+.dt-optionRow5 {
+    top: 100%;
+}
+
+.dt-optionColumn1 {
+    left: 0%;
+}
+
+.dt-optionColumn2 {
+    left: 20%;
+}
+
+.dt-optionColumn3 {
+    left: 50%;
+}
+
+.dt-optionColumn4 {
+    left: 80%;
+}
+
+.dt-optionColumn5 {
+    left: 100%;
 }
