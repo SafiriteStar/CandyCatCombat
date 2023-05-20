@@ -1,11 +1,12 @@
 class Window {
-    constructor (x, y, width, height) {
+    constructor (x,y,width,height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.opened = false;
         this.buttonList = [];
+        this.createButton('X',x+width-35,y+5,()=> { this.close()});
     }
 
     createButton(name, x, y, action, widthCenter) {

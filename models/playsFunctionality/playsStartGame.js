@@ -4,19 +4,6 @@ const Play = require("../playsFunctionality/playsInit");
 // Load in a team for the player or opponents using their default teams
 Play.addDBGameCatTeam = async function(gameId, playerId) {
 
-    // Get the player's user id
-    let [[userData]] = await pool.query(`Select ug_user_id as "id" from user_game where ug_id = ?`, [playerId]);
-
-    // Get the players default team
-    let [playerDefaultTeam] = await pool.query(
-        "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
-            [userData.id]
-    );
-
-    if (playerDefaultTeam.length <= 0) {
-        return false;
-    }
-
     // Add in a new game team
     await pool.query(
         'Insert into game_team (gt_game_id, gt_user_game_id) values (?, ?)',
@@ -25,6 +12,15 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
     // Get the game_team ID made for the player
     let [[playerGameTeam]] = await pool.query("Select * from game_team where gt_game_id = ? and gt_user_game_id = ?",
         [gameId, playerId]
+    );
+
+    // Get the player's user id
+    let [[userData]] = await pool.query(`Select ug_user_id as "id" from user_game where ug_id = ?`, [playerId]);
+
+    // Get the players default team
+    let [playerDefaultTeam] = await pool.query(
+        "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+        [userData.id]
     );
     
     // Add the cats in the default team to game_team_cat
@@ -68,28 +64,23 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
                 `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id) values (?, ?)`,
                     [cat.id, 1]);
         }
-
-        // If its a choco dairy milk cat
-        if (cat.type === 7) {
-            // Add in the healing fervor condition (condition id: 4)
-            await pool.query(
-                `Insert into game_team_cat_condition (gcc_gtc_id, gcc_ccn_id) values (?, ?)`,
-                    [cat.id, 4]);
-        }
     });
-
-    return true;
 }
 
 Play.startGame = async function(game) {
     try {
-        // Randomly determines who starts
+        // Randomly determines who starts    
         let myTurn = (Math.random() < 0.5);
         let p1Id = myTurn ? game.player.id : game.opponents[0].id;
         let p2Id = myTurn ? game.opponents[0].id : game.player.id;
+
+        // Player
+        await Play.addDBGameCatTeam(game.id, game.player.id);
         
-        // Teams were made when the game was created and when the user joined
-        // This is to avoid someone changing teams while waiting for an opponent
+        // Opponents (can do multiple but you should only have one)
+        for (let i = 0; i < game.opponents.length; i++) {
+            await Play.addDBGameCatTeam(game.id, game.opponents[i].id);
+        }
 
         // Player that start changes to order 1 
         await pool.query(`Update user_game set ug_order=? where ug_id = ?`, [1, p1Id]);

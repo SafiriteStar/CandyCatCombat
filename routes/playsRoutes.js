@@ -5,25 +5,14 @@ const Play = require("../models/playsModel");
 const auth = require("../middleware/auth");
 require("../db_scripts/mapPopulate");
 
-router.get('/map', async function (req, res, next) {
+router.get('/auth', auth.verifyAuth, async function (req, res, next) {
     try {
-        console.log("Get information about the map");
-        let result = await Play.getMap();
-        res.status(result.status).send(result.result);
-    } catch (err) {
-        console.log(err);
-        res.status(result.status).send(result.result);
-    }
-});
-
-router.get('/auth/teams', auth.verifyAuth, async function (req, res, next) {
-    try {
-        console.log("Get information about the game teams");
+        console.log("Get information about the board");
         if (!req.game) {
-            res.status(400).send({msg:"You are not in a game, please create or join a game"});
+            res.status(400).send({msg:"You are not at a game, please create or join a game"});
         }
         else {
-            let result = await Play.getGameTeams(req.game);
+            let result = await Play.getBoard(req.game);
             res.status(result.status).send(result.result);
         }
     } catch (err) {
@@ -77,11 +66,26 @@ router.patch('/move', auth.verifyAuth, async function (req, res, next) {
         console.log("Play move");
 
         if (req.body.catID === null || req.body.catID < 0) {
-            res.status(400).send({msg:"You cannot the move character since the chosen character is not valid"});
+            res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
+        } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
+            res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
         } else {
-            let result = await Play.move(req.game, req.body.path, req.body.catID);
+            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.map, req.body.catID, req.body.teamID);
             res.status(result.status).send(result.result);
         }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+
+// Generates and sets the map
+router.get('/generateMap', async function(req, res, next) {
+    try {
+        console.log("Generating Map");
+        await Play.setWorldData(World.createWorld, true, true);
+        res.status(200).send({ msg: "Map Generated!" });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);

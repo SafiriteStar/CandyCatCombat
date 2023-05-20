@@ -8,7 +8,6 @@ class CandyCornCatAttack extends CatStandardAttack {
     }
 
     async executeAttackSequence() {
-        
         // Get the cats we can attack
         this.generateAttackTargetList();
         let hitTarget = false; 

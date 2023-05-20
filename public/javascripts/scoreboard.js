@@ -33,7 +33,7 @@ function fillScores(scores) {
             td.textContent = player.state;
             tr.appendChild(td);
             td = document.createElement("td");
-            td.textContent = "Takedown Score: " + ((player.points / 1) * 100);
+            td.textContent = "Takedowns: " + player.points;
             tr.appendChild(td);
         }
         container.appendChild(elem);

@@ -10,7 +10,7 @@ class ScoreBoard {
         scale(1);
         fill(100,200,100);
         stroke(0,0,0);
-        rect (ScoreBoard.x, ScoreBoard.y, ScoreBoard.width, ScoreBoard.height, 5, 5, 5, 5);
+        rect (ScoreBoard.x,ScoreBoard.y,ScoreBoard.width,ScoreBoard.height,5,5,5,5);
         fill(0,0,0);
         textAlign(LEFT,CENTER);
         textSize(16);

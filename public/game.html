@@ -2,37 +2,22 @@
 
 <head>
   <title>Candy Cat Combat</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css">
-  <link rel="stylesheet" href="/stylesheets/catBooklet.css">
-  <link rel="stylesheet" href="/stylesheets/score.css">
-  <link rel="stylesheet" href="/stylesheets/pauseMenu.css">
   <script src="javascripts/utils/p5.min.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
-  <script src="./javascripts/requests/usersRequests.js"></script>
   <script src="javascripts/requests/gameRequests.js"></script> 
   <script src="javascripts/game.js"></script>
   <script src="javascripts/ui/gameInfo.js"></script> 
   <script src="javascripts/ui/actions.js"></script>
 
-  <script src="./javascripts/pauseMenu.js"></script>
-  <script src="./javascripts/gameScoreboard.js"></script>
-  <script src="./javascripts/draggableElement.js"></script>
-  <script src="./javascripts/showHideButton.js"></script>
-  <script src="./javascripts/catBooklet.js"></script>
-
   <script src="javascripts/ui/renderers/Utils.js"></script>
   <script src="javascripts/ui/renderers/InfoBox.js"></script>
-  <script src="javascripts/ui/renderers/teamStatusDisplay.js"></script>
   <script src="javascripts/ui/renderers/Tile.js"></script>
   <script src="javascripts/ui/renderers/Team.js"></script>
   <script src="javascripts/ui/renderers/Cat.js"></script>
   <script src="javascripts/ui/renderers/Map.js"></script>
   <script src="javascripts/ui/renderers/RangeHighlighter.js"></script>
-  <script src="javascripts/ui/renderers/Pathfinder.js"></script>
   <script src="javascripts/ui/renderers/HoverTile.js"></script>
   <script src="javascripts/ui/renderers/MapSelector.js"></script>
   <script src="javascripts/ui/renderers/World.js"></script>
@@ -44,23 +29,7 @@
 </head>
 
 <body>
-  <main id="game">
-    <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
-    <div id="catBooklet" class="catBooklet clearfix"></div>
-    <div class="pauseMenuFrame">
-      <h1 class="pauseMenuTitle">Game Paused</h1>
-      <button class="pauseResumeButton pauseButton pauseMenuText" onclick="togglePauseMenu()">Resume</button>
-      <button class="pauseQuitButton pauseButton pauseMenuText" onclick="quitGame()">Quit</button>
-      <div class="pauseSliderContextContainer">
-        <div class="pauseSliderWrapper">
-          <p class="pauseMenuText">Volume</p>
-          <div class="pauseSliderContainer">
-            <input type="range" min="1" max="100" value="50" class="pauseSlider volumeSlider">
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+  <main id="game"></main>
 </body>
 
 </html>

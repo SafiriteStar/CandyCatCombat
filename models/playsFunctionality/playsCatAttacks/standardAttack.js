@@ -34,7 +34,7 @@ class CatStandardAttack {
     ]
 
     generateAttackTargetList() {
-        let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range, true);
+        let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
         
         // Reset our list
         this.validTargetTeams = [];

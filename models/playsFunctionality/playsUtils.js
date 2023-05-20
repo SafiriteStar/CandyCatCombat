@@ -3,28 +3,10 @@ const Play = require("../playsFunctionality/playsInit");
 
 Play.setWorldData = async function(worldCreator, argv1, argv2) {
     Play.worldData = await worldCreator(argv1, argv2);
-
-    return true;
 }
 
 Play.getWorld = function() {
     return Play.worldData;
-}
-
-Play.checkTileExists = function(x, y, map) {
-    if (Play.worldData.maps[map] === null || Play.worldData.maps[map] === undefined) {
-        return false;
-    }
-    
-    if (Play.worldData.maps[map].tiles[x] === null || Play.worldData.maps[map].tiles[x] === undefined) {
-        return false;
-    }
-    
-    if (Play.worldData.maps[map].tiles[x][y] === null || Play.worldData.maps[map].tiles[x][y] === undefined) {
-        return false;
-    }
-
-    return true;
 }
 
 Play.getTile = function(x, y, map) {
@@ -44,8 +26,6 @@ Play.removeCondition = async function(catConditionID) {
 }
 
 Play.setConditionDuration = async function(catConditionID, duration) {
-    console.log("Game ID: " + catConditionID);
-    console.log("Duration: " + duration);
     await pool.query(
         `Update game_team_cat_condition set gcc_duration = ? where gcc_id = ?`,
             [duration, catConditionID]);
@@ -74,15 +54,6 @@ Play.tickConditionDuration = async function(catConditionID, change) {
 Play.applyDamage = async function(damage, catDBID) {
     await pool.query(`Update game_team_cat set gtc_current_health = gtc_current_health + ? where gtc_id = ?`,
         [damage, catDBID]);
-
-    let catData = Play.getGameCat(catDBID);
-
-    // Wait did the cat die?
-    if (catData.current_health <= 0) {
-        // Yes
-        // Set it to dead (id: 3)
-        await pool.query(`Update game_team_cat set gtc_state_id = 3 where gtc_id = ?`, [catDBID]);
-    }
 }
 
 Play.adjustStamina = async function(catID, staminaAdjustment) {
@@ -108,42 +79,8 @@ Play.adjustStamina = async function(catID, staminaAdjustment) {
 // state
 // boardID
 // conditions [ { name, duration, id, game_id } ]
-Play.getGameCat = async function(catId) {
-    let askForCat = `
-    Select
-        gtc_id as "id",               gtc_type_id as "type",          gtc_x as "x",                           gtc_y as "y",
-        cat_name as "name",           cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage",
-        cat_defense as "defense",     cat_speed as "speed",           gtc_stamina as "stamina",               cat_min_range as "min_range",
-        cat_max_range as "max_range", cat_cost as "cost",             gcs_state as "state",                   gtc_game_board_id as "boardID",
-        gtc_game_team_id as "team_id", cat_description as "description"
-    from
-        cat,
-        game_cat_state,
-        game_team_cat,
-        game_team
-    where
-        gtc_type_id = cat_id AND
-        gtc_state_id = gcs_id AND
-        gtc_game_team_id = gt_id AND
-        gtc_id = ?`
-
-    let [[gameCat]] = await pool.query(askForCat, [catId]);
-
-    let askForGameCatConditions = `Select ccn_name as "name", gcc_duration as "duration", gcc_ccn_id as "id", gcc_id as "game_id"
-    from game_team_cat, game_team_cat_condition, cat_condition
-    where gcc_ccn_id = ccn_id and gtc_id = gcc_gtc_id and gcc_gtc_id = ?`
-    // Ask for the conditions for that cat (even if empty)
-    // For each cat
-    
-    let [gameCatConditions] = await pool.query(askForGameCatConditions, [catId]);
-
-    gameCat.conditions = gameCatConditions;
-
-    return gameCat;
-}
-
 Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
-    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID", gtc_game_team_id as "team_id", cat_description as "description" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
+    let askForCatTeam = 'select gtc_id as "id", gtc_type_id as "type", gtc_x as "x", gtc_y as "y", cat_name as "name", cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage", cat_defense as "defense", cat_speed as "speed", gtc_stamina as "stamina", cat_min_range as "min_range", cat_max_range as "max_range", cat_cost as "cost", gcs_state as "state", gtc_game_board_id as "boardID" from cat, game_team_cat, game_cat_state where gtc_type_id = cat_id and gtc_state_id = gcs_id and gtc_game_team_id = ?'
 
     // Player info
     let player = {};
@@ -160,8 +97,7 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     player.team.cats = [];
 
     [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
-    console.log("Player Cat Team")
-    console.log(player.team.cats);
+
     // Ask for the conditions for that cat (even if empty)
     // For each cat
     for (let i = 0; i < player.team.cats.length; i++) {
@@ -174,40 +110,6 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     }
 
     return player
-}
-
-Play.getCatsInTile = async function(tile, gameId) {
-    let askForCats = `
-    Select
-        gtc_id as "id",               gtc_type_id as "type",          gtc_x as "x",                           gtc_y as "y",
-        cat_name as "name",           cat_max_health as "max_health", gtc_current_health as "current_health", cat_damage as "damage",
-        cat_defense as "defense",     cat_speed as "speed",           gtc_stamina as "stamina",               cat_min_range as "min_range",
-        cat_max_range as "max_range", cat_cost as "cost",             gcs_state as "state",                   gtc_game_board_id as "boardID",
-        gtc_game_team_id as "team_id"
-    from
-        cat,
-        game_cat_state,
-        game_team_cat_condition,
-        cat_condition,
-        game_team_cat,
-        game_team,
-        game
-    where
-        gtc_type_id = cat_id AND
-        gtc_state_id = gcs_id AND
-        gcc_ccn_id = ccn_id AND
-        gtc_id = gcc_gtc_id AND
-        gtc_game_team_id = gt_id AND
-        gt_game_id = gm_id AND
-        gtc_current_health > 0 AND
-        gm_id = ? AND
-        gtc_x = ? AND
-        gtc_y = ? AND
-        gtc_game_board_id = ?`
-
-    let [cats] = await pool.query(askForCats, [gameId, tile.x, tile.y, tile.map]);
-
-    return cats;
 }
 
 Play.changePlayerState = async function(stateID, playerID) {
@@ -272,7 +174,7 @@ Play.getNeighborTiles = function(tilesToCheck, ignoreWalls) { //CALL THIS FUNCTI
 }
 
 // Returns an array of layers, each layer containing its neighbors
-Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange, ignoreWalls) {
+Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange) {
     let tiles = [];
     let neighbors = [];
 
@@ -282,7 +184,7 @@ Play.getNeighborsOfRange = function(sourceTile, maxRange, minRange, ignoreWalls)
     // For however many layers we want to search
     for (let i = 0; i < maxRange; i++) {
         // Find some neighbors
-        let newNeighbors = Play.getNeighborTiles(tiles, ignoreWalls);
+        let newNeighbors = Play.getNeighborTiles(tiles);
         // Add them
         tiles = tiles.concat(newNeighbors);
         // And if we are at or above our minimum range, add them to the highlighted tiles as well
@@ -367,122 +269,17 @@ Play.countDeadCats = async function (playerID, gameID) {
     // Get the team we are looking for
     let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
 
-    let countDeadCats = 0;
+    let count = 0;
 
     // For each cat in that team
     playerTeam.team.cats.forEach(cat => {
         // If its dead
         if (cat.current_health <= 0) {
             // Add to the score
-            countDeadCats++;
+            count++;
         }
     });
 
-    // Return the score and length of the team
-    return [countDeadCats, playerTeam.team.cats.length];
+    // Return the score
+    return count;
 }
-
-async function getTile(map, x, y) {
-    if (Play.worldData.maps[map] === null || Play.worldData.maps[map] === undefined) {
-        return null;
-    }
-    if (Play.worldData.maps[map].tiles[x] === null || Play.worldData.maps[map].tiles[x] === undefined) {
-        return null;
-    }
-    if (Play.worldData.maps[map].tiles[x][y] === null || Play.worldData.maps[map].tiles[x][y] === undefined) {
-        return null;
-    }
-    return Play.worldData.maps[map].tiles[x][y];
-}
-
-async function getCommonNeighbor(tile1, tile2) {
-    // For each neighbor of tile1
-    for (let i = 0; i < tile1.connections.length; i++) {
-        // See if tile2 also has it
-        for (let j = 0; j < tile2.connections.length; j++) {
-            if (tile1.connections[i].x == tile2.connections[j].x &&
-                tile1.connections[i].y == tile2.connections[j].y &&
-                tile1.connections[i].map == tile2.connections[j].map) {
-
-                return await getTile(tile2.connections[j].map - 1, tile2.connections[j].x, tile2.connections[j].y);
-            }
-        }
-    }
-
-    return null;
-}
-
-async function getCaramelCatTile(x, y, map, cats) {
-    for (let i = 0; i < cats.length; i++) {
-        if (cats[i].x == x && cats[i].y == y && cats[i].boardID == map && cats[i].type == 6 && cats[i].current_health > 0) {
-            return cats[i];
-        }
-    }
-
-    return null;
-}
-
-async function calculateCatCaramelWalls(cat, existingWalls, teamCats) {
-    let startTile = await getTile(cat.boardID - 1, cat.x, cat.y);
-    let catWalls = [];
-
-    // If we are in placement board or in an invalid tile (How???)
-    if (cat.boardID === 1 || cat.current_health <= 0 || startTile === null) {
-        return catWalls; // Just return empty
-    }
-
-    // Get the tile neighbors for the tile we are on
-
-    // Transformations to get straight path neighbors:
-    let transformations = [
-        [0, 2],     // Up
-        [2, 1],     // Top Right
-        [2, -1],    // Top Left
-        [-2, -1],   // Bottom Left
-        [-2, 1],    // Bottom Right
-        [0, -2],    // Down
-    ]
-    // For each transformation
-    for (let i = 0; i < transformations.length; i++) {
-        // Get the tile
-        let endTile = await getTile(cat.boardID - 1, cat.x + transformations[i][0], cat.y + transformations[i][1]);
-        let caramelCatCheck = await getCaramelCatTile(cat.x + transformations[i][0], cat.y + transformations[i][1], cat.boardID, teamCats);
-        // Does the tile exist?
-        if (endTile !== null) {
-            // Yes
-            // Is the tile a wall or is there an allied caramel cat there?
-            if (endTile.type == 2 || caramelCatCheck !== null) {
-                // Yes, which means its valid
-                // Get the common neighbor
-                let commonNeighbor = await getCommonNeighbor(startTile, endTile);
-                // If the common neighbor is not null
-                if (commonNeighbor !== null) {
-                    // And not in our list already
-                    if (existingWalls.includes(commonNeighbor) === false) {
-                        // Add it to the caramel tile list
-                        catWalls.push(commonNeighbor);
-                    }
-                }
-            }
-        }
-    }
-
-    return catWalls;
-}
-
-Play.calculateTeamCaramelWalls = async function (playerTeam) {
-
-    let caramelWalls = [];
-    // For each cat
-    for (let i = 0; i < playerTeam.length; i++) {
-        // If the cat is a caramel cat
-        if (playerTeam[i].type == 6) {
-            // Get the caramel walls it can make
-            let newWalls = await calculateCatCaramelWalls(playerTeam[i], caramelWalls, playerTeam);
-            caramelWalls = caramelWalls.concat(newWalls);
-        }
-    }
-
-    return caramelWalls;
-}
-module.exports = Play;

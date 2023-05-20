@@ -11,9 +11,8 @@ create table user (
 
 create table game (
     gm_id int not null auto_increment,
-    gm_turn int not null default 1,
-    gm_max_cost int not null default 6,
     gm_board_id int not null default 2,
+    gm_turn int not null default 1,
     gm_state_id int not null,
     primary key (gm_id));
 
@@ -39,7 +38,7 @@ create table scoreboard (
     sb_id int not null auto_increment,
     sb_user_game_id int not null,
     sb_state_id int not null,
-    sb_points decimal(10,2) not null default 0,
+    sb_points int not null default 0,
     primary key (sb_id));
 
 create table scoreboard_state (
@@ -69,7 +68,6 @@ create table cat (
     cat_min_range int not null,
     cat_max_range int not null,
     cat_cost int not null,
-    cat_description varchar(800) not null,
     primary key (cat_id));
 
 create table game_team_cat (
@@ -129,7 +127,6 @@ create table tile_connection (
 # For now we only have one board;
 create table board (
     brd_id int not null auto_increment,
-    brd_name varchar(60) not null,
     primary key (brd_id));
 
 create table tile_type (

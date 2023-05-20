@@ -53,13 +53,13 @@ async function requestPlacementReady() {
     }
 }
 
-async function requestMap() {
+async function requestGameBoard() {
     try {
-        const response = await fetch(`/api/plays/map`);
+        const response = await fetch(`/api/plays/auth`);
         let result = await response.json();
         return { successful: response.status == 200,
                  unauthenticated: response.status == 401,
-                 map: result};
+                 game: result};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
@@ -67,21 +67,7 @@ async function requestMap() {
     }
 }
 
-async function requestGameTeams() {
-    try {
-        const response = await fetch(`/api/plays/auth/teams`);
-        let result = await response.json();
-        return { successful: response.status == 200,
-                 unauthenticated: response.status == 401,
-                 teams: result};
-    } catch (err) {
-        // Treat 500 errors here
-        console.log(err);
-        return {err: err};
-    }
-}
-
-async function requestMoveCharacter(path, catID) {
+async function requestMoveCharacter(x, y, map, catID, teamID) {
     try {
         const response = await fetch(`/api/plays/move`, 
         {
@@ -91,16 +77,16 @@ async function requestMoveCharacter(path, catID) {
             },
             method: "PATCH",
             body: JSON.stringify({
-              path: path,
-              catID: catID
+              x: x,
+              y: y,
+              map: map,
+              catID: catID,
+              teamID: teamID
             })
         });
-        let result = await response.json();
         // We are not checking for errors (considering the GUI is only allowing correct choices)
         // We only need to send if the user logged or not since the token will be in the cookie
-        return { successful: response.status == 200,
-            unauthenticated: response.status == 401,
-            msg: result.msg};
+        return { successful: response.status == 200};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

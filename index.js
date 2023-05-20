@@ -42,6 +42,11 @@ app.use((err, req, res, next) => {
   res.status(500).send(err);
 });
 
+const port = parseInt(process.env.port || '8080');
+app.listen(port,function() {
+  console.log("Server running at http://localhost:"+port);
+});
+
 // After we start the sever, we want to add in the maps to the database if they aren't in there already
 require("./db_scripts/mapPopulate");
 
@@ -53,9 +58,8 @@ class Argument {
 }
 
 let validArguments = [
-  new Argument("-r"), // Reset database tables
-  new Argument("-p"), // Purge database
-  new Argument("-k"), // Kill process after setting map
+  new Argument("-r"),
+  new Argument("-p")
 ];
 
 for (let i = 0; i < argv.length; i++) {
@@ -66,20 +70,4 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-function worldStart() {
-  return new Promise((resolve) => {
-    resolve(Play.setWorldData(World.createWorld, validArguments[0].execute, validArguments[1].execute, validArguments[2].execute));
-  }).then(() => {
-    if (validArguments[2].execute) {
-      process.kill(process.pid, "SIGINT");
-    }
-    else {
-      const port = parseInt(process.env.port || '8080');
-      app.listen(port,function() {
-        console.log("Server running at http://localhost:" + port);
-      });
-    }
-  });
-}
-
-worldStart();
+Play.setWorldData(World.createWorld, validArguments[0].execute, validArguments[1].execute);

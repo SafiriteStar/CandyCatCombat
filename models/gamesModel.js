@@ -1,6 +1,5 @@
 const pool = require("../config/database");
 const State = require("./statesModel");
-const Play = require("./playsModel");
 
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
@@ -21,13 +20,11 @@ class Player {
 }
 
 class Game {
-    constructor(id, turn, state, board, boardName, maxCost, player, opponents) {
+    constructor(id, turn, state, board, player, opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
         this.board = board;
-        this.boardName = boardName;
-        this.maxCost = maxCost;
         this.player = player;
         this.opponents = opponents || [];
     }
@@ -40,8 +37,6 @@ class Game {
             game.player = this.player.export();
         game.opponents = this.opponents.map(o => o.export());
         game.board = this.board;
-        game.boardName = this.boardName;
-        game.maxCost = this.maxCost;
         return game;
     }
 
@@ -80,13 +75,12 @@ class Game {
                     inner join user_game on gm_id = ug_game_id 
                     inner join user_game_state on ug_state_id = ugst_id
                     inner join game_state on gm_state_id = gst_id
-                    inner join board on gm_board_id = brd_id
                     where ug_user_id=? and (gst_state IN ('Waiting','Started') 
                     or (gst_state = 'Finished' and ugst_state = 'Score')) `, [id]);
             if (dbGames.length==0)
                 return {status:200, result:false};
             let dbGame = dbGames[0];
-            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.gm_max_cost);
+            let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
             let result = await this.fillPlayersOfGame(id,game);
             if (result.status != 200) {
                 return result;
@@ -104,11 +98,10 @@ class Game {
             let [dbGames] =
                 await pool.query(`Select * from game 
                     inner join game_state on gm_state_id = gst_id
-                    inner join board on gm_board_id = brd_id
                     where gst_state = 'Waiting'`);
             let games = [];
             for (let dbGame of dbGames) {
-                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id, dbGame.brd_name, dbGame.gm_max_cost);
+                let game = new Game(dbGame.gm_id, dbGame.gm_turn, new State(dbGame.gst_id, dbGame.gst_state), dbGame.gm_board_id);
                 let result = await this.fillPlayersOfGame(userId, game);
                 if (result.status != 200) {
                     return result;
@@ -124,7 +117,7 @@ class Game {
     }    
 
     static async #addUserToGame(userID, gameID) {
-        let [result] = await pool.query('Insert into user_game (ug_user_id, ug_game_id, ug_state_id) values (?, ?, ?)',
+        let [result] = await pool.query('Insert into user_game (ug_user_id,ug_game_id, ug_state_id) values (?, ?, ?)',
             [userID, gameID, 1]);
         return result;
     }
@@ -135,25 +128,11 @@ class Game {
     //  - User does not have an active game
     static async create(userId) {
         try {
-            // Get the players default team
-            let [[userTeamCost]] = await pool.query(
-                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
-                    [userId]);
-            
-            if (userTeamCost.maxCost === null || userTeamCost === undefined) {
-                return {status:400, result:{msg:"You need cats in your team!"} }
-            }
-
-            // Create the game
-            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id, gm_max_cost) values (?, ?, ?)', [1, 2, userTeamCost.maxCost]);
+            // create the game
+            let [result] = await pool.query('Insert into game (gm_state_id, gm_board_id) values (?, ?)', [1, 1]);
             let gameId = result.insertId;
             // add the user to the game
-            await Game.#addUserToGame(userId, gameId);
-
-            // Get the data of the user we just made
-            let [[userGame]] = await pool.query(`Select * from user_game where ug_user_id = ? and ug_game_id = ?`, [userId, gameId]);
-            // Add the user's team to the game
-            await Play.addDBGameCatTeam(gameId, userGame.ug_id);
+            Game.#addUserToGame(userId, gameId);
 
             return {status:200, result: {msg: "You created a new game."}};
         } catch (err) {
@@ -190,38 +169,14 @@ class Game {
     static async join(userId, gameId) {
         try {
             let [dbGames] = await pool.query(`Select * from game where gm_id=?`, [gameId]);
-            if (dbGames.length==0) {
+            if (dbGames.length==0)
                 return {status:404, result:{msg:"Game not found"}};
-            }
             let dbGame = dbGames[0];
-
-            if (dbGame.gm_state_id != 1) {
+            if (dbGame.gm_state_id != 1) 
                 return {status:400, result:{msg:"Game not waiting for other players"}};
-            }
-
-            let [[userTeamCost]] = await pool.query(
-                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
-                [userId]);
-
-            if (userTeamCost <= 0) {
-                return {status:400, result: {msg: "You need candy cats in your team!"}};
-            }
-                
-            if (userTeamCost.maxCost > dbGame.gm_max_cost) {
-                return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
-            }
 
             // We join the game but the game still has not started, that will be done outside
             let result = await Game.#addUserToGame(userId, gameId);
-
-            // Get the data of the user we just made
-            let [[userGame]] = await pool.query(`Select * from user_game where ug_user_id = ? and ug_game_id = ?`, [userId, gameId]);
-            // Add the user's team to the game
-            await Play.addDBGameCatTeam(gameId, userGame.ug_id);
-
-            if (!teamCreation) {
-                return { status:200, result: { msg: "You have no cats in your default team!" }};
-            }
          
             return {status:200, result: {msg: "You joined the game."}};
         } catch (err) {

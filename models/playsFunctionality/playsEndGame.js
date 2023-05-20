@@ -17,8 +17,12 @@ Play.checkEndGame = async function(game) {
     if (playerCatCount === 0 || opponentCatCount === 0) {
         return true;
     }
+
+    console.log(playerCatCount);
+    console.log(opponentCatCount);
     
     // If we got here, the game can continue
+    console.log("Keep the game going");
     return false;
 }
 
@@ -35,29 +39,10 @@ Play.endGame = async function(game) {
         // Insert score lines with the state and points.
         // A player has a score equal to the number of dead cats on the enemy team
         let sqlScore = `Insert into scoreboard (sb_user_game_id, sb_state_id, sb_points) values (?, ?, ?)`;
-        let [playerDeadCats, playerTeamLength] = await Play.countDeadCats(game.opponents[0].id, game.id);
-        let [opponentDeadCats, opponentTeamLength] = await Play.countDeadCats(game.player.id, game.id);
-
-        let playerScore = playerDeadCats / playerTeamLength;
-        let opponentScore = opponentDeadCats / opponentTeamLength;
-
-        let playerState = 1;
-        let oppState = 1;
-
-        if (playerScore > opponentScore) {
-            playerState = 3;
-            oppState = 2;
-        }
-        else if (playerScore > opponentScore) {
-            playerState = 2;
-            oppState = 3;
-        }
-
-        console.log("Player Score: " + playerScore);
-        console.log("Opponent Score: " + opponentScore);
-
-        await pool.query(sqlScore, [game.player.id, playerState, playerScore]);
-        await pool.query(sqlScore, [game.opponents[0].id, oppState, opponentScore]);
+        let playerScore = await Play.countDeadCats(game.opponents[0].id, game.id);
+        let opponentScore = await Play.countDeadCats(game.player.id, game.id);
+        await pool.query(sqlScore, [game.player.id, 1, playerScore]);
+        await pool.query(sqlScore, [game.opponents[0].id, 1, opponentScore]);
 
         return { status: 200, result: { msg: "Game ended. Check scores." } };
     } catch (err) {

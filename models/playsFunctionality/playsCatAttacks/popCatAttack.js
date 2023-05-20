@@ -8,18 +8,17 @@ class PopCatAttack extends CatStandardAttack {
         super(playerCat, targetSearchTeams, playerSearchTeams);
         this.targetAOETeams = targetSearchTeams.concat(playerSearchTeams);
         this.validAOETargetTeams = []
-        this.aoeFilters = [ CatStandardAttack.catIsAliveFilter ];
     }
 
     generateAOETargets(targetCatData) {
-        let aoeTiles = Play.getNeighborsOfRange(Play.getTile(targetCatData.x, targetCatData.y, targetCatData.boardID - 1), 1, 1, true);
+        let aoeTiles = Play.getNeighborsOfRange(Play.getTile(targetCatData.x, targetCatData.y, targetCatData.boardID - 1), 1, 1);
 
         // Add the player team to the targetSearchTeams
 
         // For every team
         for (let team = 0; team < this.targetAOETeams.length; team++) {
             // Get all valid neighbors
-            let targetCatIndexes = Play.getCatNeighbors(this.targetAOETeams[team].team.cats, aoeTiles, this.aoeFilters);
+            let targetCatIndexes = Play.getCatNeighbors(this.targetAOETeams[team].team.cats, aoeTiles, this.filters);
             // If we have target
             if (targetCatIndexes.length > 0) {
                 // Add a new list of targets for this team

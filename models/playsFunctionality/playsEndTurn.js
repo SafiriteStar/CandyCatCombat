@@ -25,13 +25,9 @@ Play.resolveAttacks = async function(game) {
     let opponentsTeams = [];
     for (let i = 0; i < game.opponents.length; i++) {
         opponentsTeams[i] = await Play.getGameCatTeam("opponent", game.opponents[i].id, game.id);
-
-        opponentsTeams[i].team.cats.forEach(async function(oppCat) {
-            await CatStandardAttack.rootedCheck(oppCat);
-        });
     }
-
-    async function catAttackSequence (playerCat, index, array) {
+    // For every player cat
+    player.team.cats.forEach(async function(playerCat, index, array) {
         let attackSuccessful = false;
         // If we aren't in the placement map and the cat is alive
         if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
@@ -45,14 +41,7 @@ Play.resolveAttacks = async function(game) {
         await CatStandardAttack.rootedCheck(playerCat);
 
         await GumCatAttack.reStealthCheck(playerCat, attackSuccessful);
-
-        await ChocoDairyMilkHeal.healingFervorCheck(playerCat);
-    }
-    
-    // For every player cat
-    for (let i = 0; i < player.team.cats.length; i++) {
-        await catAttackSequence(player.team.cats[i], i, player.team.cats);
-    }
+    });
 }
 
 // This considers that only one player plays at each moment,

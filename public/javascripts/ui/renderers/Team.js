@@ -1,32 +1,14 @@
 class Team {
-    static getCatImage(catIndex) {
-        let catImageTable = [
-            GameInfo.images.cats.vanillaCat,
-            GameInfo.images.cats.candyCornCat,
-            GameInfo.images.cats.mawbreakerCat,
-            GameInfo.images.cats.gumCat,
-            GameInfo.images.cats.popCat,
-            GameInfo.images.cats.caramelCat,
-            GameInfo.images.cats.chocoDairyMilkCat,
-        ]
-
-        return catImageTable[catIndex];
-    }
-
-    constructor(teamId, playerName, catList, caramelWalls, colorArray) {
+    constructor(teamId, playerName, catList, colorArray) {
         this.id = teamId;
         this.playerName = playerName;
         this.cats = [];
         this.color = colorArray;
 
-        this.caramelWalls = [];
-        for (let i = 0; i < caramelWalls.length; i++) {
-            this.caramelWalls.push(new Tile(caramelWalls[i]));
-        }
-
         let unplacedIndex = 0;
+        console.log(GameInfo.images.cats);
         for (let i = 0; i < catList.length; i++) {
-            this.cats[i] = new Cat(catList[i], Team.getCatImage(catList[i].type - 1), false);
+            this.cats[i] = new Cat(catList[i], GameInfo.images.cats[catList[i].type - 1], false);
         }
     }
     
@@ -41,18 +23,6 @@ class Team {
         return false;
     }
 
-    getLiveCats() {
-        let liveCats = [];
-
-        for (let i = 0; i < this.cats.length; i++) {
-            if (this.cats[i].current_health > 0) {
-                liveCats.push(this.cats[i]);
-            }
-        }
-
-        return liveCats;
-    }
-
     // Returns the index
     getCatAtCoord(x, y, map) {
         for (let i = 0; i < this.cats.length; i++) {
@@ -65,51 +35,15 @@ class Team {
         return null;
     }
 
-    checkCaramelTile(x, y, map) {
-        for (let i = 0; i < this.caramelWalls.length; i++) {
-            if (this.caramelWalls[i].x == x && this.caramelWalls[i].y == y && this.caramelWalls[i].map == map) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    draw() {        
+    draw() {
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].draw(this.color);
         }
     }
 
-    drawCaramelTiles() {
-        push();
-        fill('burlywood');
-        for (let i = 0; i < this.caramelWalls.length; i++) {
-            push();
-            translate(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY);
-            tint(255, 255, 255, 125);
-            image(GameInfo.images.tiles.caramel, -GameInfo.images.tiles.caramel.width * 0.5, -GameInfo.images.tiles.caramel.height * 0.5);
-            //Tile.drawSimpleTile(this.caramelWalls[i].screenX, this.caramelWalls[i].screenY)
-            pop();
-        }
-        pop();
-    }
-
-    update(catList, caramelWalls) {
-        // Update all the info
+    update(catList) {
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].update(catList[i], false);
-        }
-
-        this.caramelWalls = [];
-        for (let i = 0; i < caramelWalls.length; i++) {
-            this.caramelWalls.push(new Tile(caramelWalls[i]));
-        }
-    }
-
-    updateFace(opponentList) {
-        for (let i = 0; i < this.cats.length; i++) {
-            this.cats[i].updateFace(opponentList);
         }
     }
 }
