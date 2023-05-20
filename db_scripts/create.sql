@@ -1,6 +1,6 @@
-create database cccdb;
+create database cccdbp;
 
-use cccdb;
+use cccdbp;
 
 create table user (
     usr_id int not null auto_increment,
