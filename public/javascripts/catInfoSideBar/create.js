@@ -14,7 +14,7 @@ function createSideBar(baseCats) {
         item.classList.add('removeButtonStyle');
         item.classList.add('paginationItem');
         item.value = i;
-        item.onclick = () => updateCatInfoSideBar(baseCats[i], baseCats);
+        item.onclick = () => updateCatInfoSideBar(baseCats[i], baseCats, "toggle");
 
         let dummy = document.createElement('div');
         dummy.classList.add('squareRatioDummy');
@@ -192,10 +192,10 @@ function createSideBarHelp(baseCats) {
         }
 
         if (window.selectedCat) {
-            updateCatInfoSideBar(baseCats[window.selectedCat], baseCats, true);
+            updateCatInfoSideBar(baseCats[window.selectedCat], baseCats, "show");
         }
         else {
-            updateCatInfoSideBar(baseCats[0], baseCats, true);
+            updateCatInfoSideBar(baseCats[0], baseCats, "show");
         }
     }
 

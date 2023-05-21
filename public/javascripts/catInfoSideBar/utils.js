@@ -44,17 +44,23 @@ function calculateStars(key, value) {
     return Math.min(Math.max(Math.ceil(((value - min) / (max - min)) * maxStars), minStars), maxStars);
 }
 
-function toggleCatInfoSideBar(show) {
+function toggleCatInfoSideBar() {
     let sideBars = document.getElementsByClassName('catInfoContainer')
     for (let i = 0; i < sideBars.length; i++) {
-        if (show === true && !sideBars[i].classList.contains('sideInfoActive')) {
-            sideBars[i].classList.add('sideInfoActive');
-        }
-        else if (show === false && sideBars[i].classList.contains('sideInfoActive')) {
-            sideBars[i].classList.remove('sideInfoActive');
-        }
-        else if (show === null || show === undefined) {
-            sideBars[i].classList.toggle('sideInfoActive');
-        }
+        sideBars[i].classList.toggle('sideInfoActive');
+    }
+}
+
+function showCatInfoSideBar() {
+    let sideBars = document.getElementsByClassName('catInfoContainer')
+    for (let i = 0; i < sideBars.length; i++) {
+        sideBars[i].classList.add('sideInfoActive');
+    }
+}
+
+function hideCatInfoSidebar() {
+    let sideBars = document.getElementsByClassName('catInfoContainer')
+    for (let i = 0; i < sideBars.length; i++) {
+        sideBars[i].classList.remove('sideInfoActive');
     }
 }

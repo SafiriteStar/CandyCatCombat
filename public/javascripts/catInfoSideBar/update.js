@@ -1,14 +1,21 @@
 function updateCatInfoSideBar(cat, baseCats, show) {
     // If we clicked on the cat we are already on
-    if (window.selectedCat == cat.cat_id - 1) {
+    if (window.selectedCat == cat.cat_id - 1 && show != "ignore") {
         toggleCatInfoSideBar();
         return;
     }
-    if (show === true || show === false) {
-        toggleCatInfoSideBar(show);
+    // If we didn't click on the we are on
+    else if (window.selectedCat != cat.cat_id - 1 && show != "ignore") {
+        showCatInfoSideBar();
     }
-    else {
-        toggleCatInfoSideBar(true);
+    else if (show === "show") {
+        showCatInfoSideBar();
+    }
+    else if (show === "hide") {
+        hideCatInfoSideBar();
+    }
+    else if (show === "toggle") {
+        toggleCatInfoSideBar();
     }
     window.selectedCat = cat.cat_id - 1;
     

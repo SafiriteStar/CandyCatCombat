@@ -8,6 +8,33 @@
 	outline: inherit;
 }
 
+.defaultButtonStyle {
+    display: inline-block;
+    padding: 1%;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: bisque;
+    background-color: #815f38;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0.5vh #999;
+    
+    transition: 0.05s;
+}
+
+.defaultButtonStyle:hover {
+    background-color: #5e4529
+}
+
+.defaultButtonStyle:active {
+  background-color: #815f38;
+  box-shadow: 0 0.5vh #666;
+  transform: translateY(4px);
+}
+
 .squareRatioDummy {
     margin-top: 100%;
     /* 1:1 aspect ratio */
@@ -17,6 +44,14 @@
     margin-top: 75%;
 }
 
+.ratioDummy5-1 {
+    margin-top: 40%;
+}
+
+.ratioDummy10-1 {
+    margin-top: 20%;
+}
+
 .containImage {
     position: absolute;
     top: 0;
@@ -24,4 +59,11 @@
     left: 0;
     right: 0;
     width: 100%;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50%);
 }

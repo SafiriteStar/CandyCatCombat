@@ -22,6 +22,10 @@ window.onload = async function () {
         document.getElementById('matchesMain').appendChild(createSideBarHelp(window.baseCats));
         calculateStatRanges(result.baseCats);
         // TODO: CREATE DEFAULT TEAM
+        let mainContainers = document.getElementsByClassName('dt-mainContainer');
+        for (let i = 0; i < mainContainers.length; i++) {
+            mainContainers[i].appendChild(createDefaultTeamDisplay(result.team, result.baseCats));
+        }
 
         // Set the create match button
         let createMatchButtons = document.getElementsByClassName('createMatchButton');

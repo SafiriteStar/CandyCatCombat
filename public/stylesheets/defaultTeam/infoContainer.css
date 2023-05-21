@@ -1,0 +1,34 @@
+.dt-infoContainer {
+    display: inline-block;
+    position: absolute;
+    width: 45vw;
+
+    top: 12.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    background-color: aliceblue;
+}
+
+.dt-PlayerName {
+    max-width: 100%;
+    position: absolute;
+    margin-top: 1vw;
+
+    height: fit-content;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 3vw;
+
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.dt-logoutButton {
+    position: absolute;
+    bottom: 6%;
+    right: 0.5%;
+}
