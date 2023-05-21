@@ -112,12 +112,6 @@ async function refresh() {
         if (!result.successful || result.err)
             throw result.err || { err: "Not successful" }
 
-        // remove everything to fill again:
-        let parent = document.getElementById("matches");
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
-        console.log(result.matches);
         fillMatches(result.matches);
     } catch (err) {
         console.log(err);
