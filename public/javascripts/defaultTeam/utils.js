@@ -104,9 +104,28 @@ async function updateSelectedCats() {
     }
 }
 
-async function changeDefaultCat(catId, teamId) {
-    await requestChangeDefaultCat(catId, teamId);
-    await updateSelectedCats();
+async function changeDefaultCat(catId, teamId, element) {
+    let unavailableOption = false;
+    for (let i = 0; i < element.children.length; i++) {
+        if (element.children[i].classList.contains('dt-catOptionInner')) {
+            let innerChildren = element.children[i].children;
+            for (let j = 0; j < innerChildren.length; j++) {
+                if (innerChildren[j].classList.contains('dt-catOptionBack')) {
+                    let backChildren = innerChildren[j].children;
+                    for (let k = 0; k < backChildren.length; k++) {
+                        if (backChildren[k].classList.contains('dt-unavailableOption')) {
+                            unavailableOption = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    if (unavailableOption === false) {
+        await requestChangeDefaultCat(catId, teamId);
+        await updateSelectedCats();
+    }
 }
 
 async function removeDefaultCat(teamId) {

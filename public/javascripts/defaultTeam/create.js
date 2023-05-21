@@ -5,7 +5,7 @@ function createTeamCatOption(position, cat, teamCost, teamId) {
     optionContainer.classList.add(position[0]);
     optionContainer.classList.add(position[1]);
     optionContainer.setAttribute('onmouseenter', `updateCatInfoIndex(${cat.cat_id - 1})`);
-    optionContainer.onclick = async () => await changeDefaultCat(cat.cat_id, teamId);
+    optionContainer.setAttribute('onclick', `changeDefaultCat(${cat.cat_id}, ${teamId}, this)`);
 
     let inner = document.createElement('div');
     inner.classList.add('dt-catOptionInner');
@@ -148,8 +148,6 @@ function createTeamCat(position, cat, team, baseCats) {
 }
 
 function createDefaultTeamDisplay(team, baseCats) {
-    console.log(team);
-    console.log(baseCats);
     let mainContainer = document.createElement('div');
     mainContainer.classList.add('dt-teamContainer');
 
