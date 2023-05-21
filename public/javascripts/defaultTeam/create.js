@@ -1,6 +1,7 @@
 function createTeamCatOption(position, cat, teamCost, teamId) {
     let optionContainer = document.createElement('div');
     optionContainer.classList.add('dt-catOption');
+    optionContainer.classList.add('dt-catOptionType' + cat.cat_id);
     optionContainer.classList.add(position[0]);
     optionContainer.classList.add(position[1]);
     optionContainer.setAttribute('onmouseenter', `updateCatInfoIndex(${cat.cat_id - 1})`);
@@ -110,6 +111,7 @@ function createTeamCatOverlay(baseCats, team, teamId) {
 
 function createTeamCat(position, cat, team, baseCats) {
     let catContainer = document.createElement('div');
+    catContainer.id = "teamCat" + cat.id;
     catContainer.classList.add('dt-catContainer');
     catContainer.classList.add(position[0]);
     catContainer.classList.add(position[1]);
@@ -163,6 +165,7 @@ function createDefaultTeamDisplay(team, baseCats) {
     teamCostText.appendChild(document.createTextNode(calculateTeamCost(team, baseCats)));
     teamCostText.classList.add('dt-teamCostText');
     teamCostContainer.appendChild(teamCostText);
+    mainContainer.appendChild(teamCostContainer);
 
     let catPositions = [
         ["dt-catCircleRow1", "dt-catCircleColumn2"],

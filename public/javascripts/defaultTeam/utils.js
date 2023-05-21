@@ -23,7 +23,7 @@ function calculateTeamCost(team, baseCats) {
 
     for (let i = 0; i < team.length; i++) {
         if (team[i].enabled == 1) {
-            totalCost = totalCost + baseCats[team[0].cat_id -1].cost;
+            totalCost = totalCost + baseCats[team[i].cat_id -1].cost;
         }
     }
 
@@ -33,28 +33,74 @@ function calculateTeamCost(team, baseCats) {
 async function updateSelectedCats() {
     let result = await requestDefaultTeam();
     let team = result.team;
-    
+    let teamCost = calculateTeamCost(result.team, result.baseCats);
+
     for (let i = 0; i < team.length; i++) {
-        let selectedCatImage = document.getElementById('selectedCatImage' + team[i].id);
-        if (team[i].enabled == true) {
-            selectedCatImage.src = catImagePaths[team[i].cat_id - 1][0];
-        }
-        else if (team[i].enabled == false) {
-            selectedCatImage.src = "/assets/UI/AddOption.png";
+        let teamCat = document.getElementById('teamCat' + team[i].id);
+        let teamCatChildren = teamCat.children;
+        for (let j = 0; j < teamCatChildren.length; j++) {
+            // Change the selected cat image
+            if (teamCatChildren[j].classList.contains('dt-selectedCat')) {
+                let selectedCatContainer = teamCatChildren[j];
+                let selectedCatContainerChildren = selectedCatContainer.children;
+                for (let k = 0; k < selectedCatContainerChildren.length; k++) {
+                    if (selectedCatContainerChildren[k].classList.contains('dt-selectedCatImage')) {
+                        if (team[i].enabled == true) {
+                            selectedCatContainerChildren[k].src = catImagePaths[team[i].cat_id - 1][0];
+                        }
+                        else if (team[i].enabled == false) {
+                            selectedCatContainerChildren[k].src = "/assets/UI/AddOption.png";
+                        }
+                    }
+                }
+            }
+            else if (teamCatChildren[j].classList.contains('dt-catOverlay')) {
+                overlayChildren = teamCatChildren[j].children;
+
+                for (let k = 0; k < overlayChildren.length; k++) {
+                    for (let l = 0; l < result.baseCats.length; l++) {
+                        if (overlayChildren[k].classList.contains('dt-catOptionType' + result.baseCats[l].cat_id)) {
+                            let optionChildren = overlayChildren[k].children;
+                            for (let m = 0; m < optionChildren.length; m++) {
+                                if (optionChildren[m].classList.contains('dt-catOptionInner')) {
+                                    let innerChildren = optionChildren[m].children;
+                                    for (let n = 0; n < innerChildren.length; n++) {
+                                        if (innerChildren[n].classList.contains('dt-catOptionBack')) {
+                                            let backChildren = innerChildren[n].children;
+                                            for (let o = 0; o < backChildren.length; o++) {
+                                                if (backChildren[o].classList.contains('dt-optionCatImage')) {
+                                                    // We got to the image of the option
+                                                    let image = backChildren[o];
+                                                    if (result.baseCats[k] !== null && result.baseCats[k] !== undefined) {
+                                                        // We are at an option that is a cat
+                                                        let selectedCatCost = 0;
+                                                        if (team[i].enabled == true) {
+                                                            selectedCatCost = result.baseCats[team[i].cat_id - 1].cost;
+                                                        }
+
+                                                        if (teamCost - selectedCatCost + result.baseCats[l].cost <= 6) {
+                                                            image.classList.remove('dt-unavailableOption');
+                                                        }
+                                                        else {
+                                                            image.classList.add('dt-unavailableOption');
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    let teamCost = calculateTeamCost(result.team, result.baseCats);
-    for (let i = 1; i <= 7; i++) {
-        let catOptions = document.getElementsByClassName('catType' + i);
-        for (let j = 0; j < catOptions.length; j++) {
-            if (teamCost - 1 + result.baseCats[i - 1].cost <= 6) {
-                catOptions[j].classList.remove("dt-unavailableOption");
-            }
-            else {
-                catOptions[j].classList.add("dt-unavailableOption");
-            }
-        }
+    let teamCostTexts = document.getElementsByClassName('dt-teamCostText');
+    for (let i = 0; i < teamCostTexts.length; i++) {
+        teamCostTexts[i].innerHTML = teamCost;
     }
 }
 

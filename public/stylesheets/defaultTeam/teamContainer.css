@@ -10,7 +10,7 @@
     border: 1px solid black;
     border-radius: 50%;
 
-    background-color: aliceblue;
+    background-color: burlywood;
 }
 
 .dt-teamCostContainer {
@@ -23,7 +23,7 @@
 
     border-radius: 50%;
 
-    background-color: gray;
+    background-color: transparent;
 }
 
 .dt-teamCostText {
@@ -54,7 +54,7 @@
 
     cursor: pointer;
     
-    background-color: black;
+    background-color: transparent;
 }
 
 .dt-catCircleRow1 { top: 17.5%; }
@@ -82,7 +82,7 @@
 .dt-selectedCat {
     height: 85%;
     width: 85%;
-    background-color: lightgray;
+    background-color: transparent;
 }
 
 .dt-catOverlay {
@@ -178,7 +178,7 @@
     display: flex;
     place-content: center center;
     position: absolute;
-    bottom: 0;
+    bottom: -20%;
     left: 50%;
     height: 30%;
     width: 80%;
