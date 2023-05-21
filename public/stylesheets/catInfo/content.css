@@ -5,7 +5,9 @@
     width: 84%;
     padding-top: 5vh;
     padding-bottom: 5vh;
-    background-color: beige;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
 }
 
 .catInfoName {

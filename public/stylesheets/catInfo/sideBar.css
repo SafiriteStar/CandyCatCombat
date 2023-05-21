@@ -75,11 +75,13 @@
     height: 100vh;
     width: 90%;
     cursor: pointer;
-    background-color: lightgray;
+    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
+    background-size: cover;
+    background-repeat: repeat;
 }
 
 .catInfoPaginationBackground:hover {
-    background-color: rgb(226, 226, 226);
+    filter: saturate(3);
 }
 
 .catInfoPaginationContainer {
@@ -87,8 +89,7 @@
     top: 0;
     right: 0;
     height: 100vh;
-    width: 16%;
-    background-color: transparent;
+    width: 4vw;
 }
 
 .catInfoPagination {
@@ -107,7 +108,9 @@
     display: inline-block;
     position: relative;
     width: 90%;
-    background-color: lightblue;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
 
     transition: 0.3s;
 }
@@ -118,6 +121,9 @@
 
 .activePaginationItem {
     width: 100%;
-    background-color: lightgreen;
     cursor: default;
+}
+
+.activePaginationItem > img {
+    filter: drop-shadow(0 0 0.75rem black);
 }
