@@ -47,13 +47,18 @@ window.onload = async function () {
 
 function fillMatches(matches) {
     let tableBodies = document.getElementsByClassName('md-matchTableBody');
-    
+    let teamCostInput = document.getElementById('matchCostFilter');
+    let maxBudget = Math.min(Math.max(Math.floor(teamCostInput.value), 1), 6);
+
     for (let i = 0; i < tableBodies.length; i++) {
         while (tableBodies[i].firstChild) {
             tableBodies[i].removeChild(tableBodies[i].firstChild);
         }
 
         for (let j = 0; j < matches.length; j++) {
+            if (matches[j].maxCost > maxBudget) {
+                continue;
+            }
             let row = document.createElement('tr');
             row.classList.add('md-matchTableRow');
 
