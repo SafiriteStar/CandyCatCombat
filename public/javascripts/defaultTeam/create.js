@@ -9,6 +9,7 @@ function createTeamCatOption(position, cat, teamCost, teamId) {
 
     let inner = document.createElement('div');
     inner.classList.add('dt-catOptionInner');
+    inner.classList.add('dt-inner' + cat.cat_id);
 
     let front = document.createElement('div');
     front.classList.add('dt-catOptionFront');

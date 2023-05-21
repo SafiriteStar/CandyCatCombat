@@ -103,8 +103,6 @@
     perspective: 1000px;
     
     cursor: pointer;
-    
-    transition: top 0.5s, left 0.5s;
 }
 
 .dt-catOptionInner {
@@ -115,6 +113,14 @@
     transition: transform 0.4s;
     transform-style: preserve-3d;
 }
+
+.dt-inner1 { transition-delay: 0.05s; }
+.dt-inner2 { transition-delay: 0.1s; }
+.dt-inner3 { transition-delay: 0.15s; }
+.dt-inner4 { transition-delay: 0.2s; }
+.dt-inner5 { transition-delay: 0.25s; }
+.dt-inner6 { transition-delay: 0.3s; }
+.dt-inner7 { transition-delay: 0.35s; }
 
 .dt-catOptionFront, .dt-catOptionBack {
     position: absolute;
