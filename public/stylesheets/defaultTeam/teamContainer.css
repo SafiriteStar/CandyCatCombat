@@ -1,7 +1,7 @@
 .dt-teamContainer {
     display: inline-block;
     position: absolute;
-    width: 35vw;
+    width: 33vw;
 
     top: 60%;
     left: 50%;
@@ -138,10 +138,15 @@
     border-radius: 50%;
     background: radial-gradient(circle, rgb(32, 14, 1) 0%, rgb(255, 198, 160) 93%, rgba(2,0,36,1) 100%);
     transform: rotateY(180deg);
+    cursor: cell;
 }
 
-.dt-catOption:hover .dt-catOptionInner {
-    transform: rotateY(180deg);
+.dt-catRemoveOptionBack {
+    cursor: pointer;
+}
+
+.dt-catOptionBack:hover {
+    background: radial-gradient(circle, rgb(102, 45, 4) 0%, rgb(255, 198, 160) 93%, rgba(2,0,36,1) 100%);
 }
 
 .dt-selectedCatImage {
@@ -150,10 +155,16 @@
 
 .dt-optionCatImage {
     width: 150%;
+    transition: width 0.1s;
+}
+
+.dt-catOptionBack:hover > .dt-optionCatImage {
+    width: 200%;
 }
 
 .dt-unavailableOption {
     filter: grayscale(100%);
+    cursor: not-allowed;
 }
 
 .dt-catContainerActive > .dt-catOverlay > .dt-optionRow1    { top: -20%;  }

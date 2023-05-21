@@ -37,6 +37,7 @@ async function updateSelectedCats() {
 
     for (let i = 0; i < team.length; i++) {
         let teamCat = document.getElementById('teamCat' + team[i].id);
+        teamCat.setAttribute('onmouseenter', `showCatOverlay(this, ${team[i].cat_id - 1})`);
         let teamCatChildren = teamCat.children;
         for (let j = 0; j < teamCatChildren.length; j++) {
             // Change the selected cat image

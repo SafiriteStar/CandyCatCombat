@@ -93,6 +93,7 @@ function createTeamCatOverlay(baseCats, team, teamId) {
     
     let removeBack = document.createElement('div');
     removeBack.classList.add('dt-catOptionBack');
+    removeBack.classList.add('dt-catRemoveOptionBack');
     
     let removeImage = document.createElement('img');
     removeImage.classList.add('containImage');

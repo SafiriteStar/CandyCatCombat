@@ -4,6 +4,14 @@ function createSideBar(baseCats) {
 
     let background = document.createElement('div');
     background.classList.add('catInfoPaginationBackground');
+    background.onclick = () => {
+        if (window.selectedCat) {
+            updateCatInfoSideBar(baseCats[window.selectedCat], baseCats, "show");
+        }
+        else {
+            updateCatInfoSideBar(baseCats[0], baseCats, "show");
+        }
+    }
     container.appendChild(background);
 
     let pagination = document.createElement('div');

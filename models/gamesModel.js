@@ -140,8 +140,8 @@ class Game {
                 `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
                     [userId]);
             
-            if (userTeamCost.maxCost === null || userTeamCost === undefined) {
-                return {status:400, result:{msg:"You need cats in your team!"} }
+            if (userTeamCost === null || userTeamCost === undefined || userTeamCost.maxCost <= 0) {
+                return { status:400, result:{ msg:"You need cats in your team!"} }
             }
 
             // Create the game
@@ -206,7 +206,7 @@ class Game {
             if (userTeamCost <= 0) {
                 return {status:400, result: {msg: "You need candy cats in your team!"}};
             }
-                
+
             if (userTeamCost.maxCost > dbGame.gm_max_cost) {
                 return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
             }

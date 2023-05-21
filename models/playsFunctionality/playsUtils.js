@@ -368,6 +368,7 @@ Play.countDeadCats = async function (playerID, gameID) {
     let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
 
     let countDeadCats = 0;
+    let teamCost = 0;
 
     // For each cat in that team
     playerTeam.team.cats.forEach(cat => {
@@ -376,10 +377,11 @@ Play.countDeadCats = async function (playerID, gameID) {
             // Add to the score
             countDeadCats++;
         }
+        teamCost = teamCost + cat.cost;
     });
 
     // Return the score and length of the team
-    return [countDeadCats, playerTeam.team.cats.length];
+    return [countDeadCats, teamCost];
 }
 
 async function getTile(map, x, y) {

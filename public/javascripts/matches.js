@@ -46,7 +46,48 @@ window.onload = async function () {
 }
 
 function fillMatches(matches) {
+    let tableBodies = document.getElementsByClassName('md-matchTableBody');
     
+    for (let i = 0; i < tableBodies.length; i++) {
+        while (tableBodies[i].firstChild) {
+            tableBodies[i].removeChild(tableBodies[i].firstChild);
+        }
+
+        for (let j = 0; j < matches.length; j++) {
+            let row = document.createElement('tr');
+            row.classList.add('md-matchTableRow');
+
+            let playerCell = document.createElement('td');
+            playerCell.classList.add('md-matchPlayer');
+            playerCell.appendChild(document.createTextNode(matches[j].opponents[0].name));
+            row.appendChild(playerCell);
+
+            let mapCell = document.createElement('td');
+            mapCell.classList.add('md-matchMap');
+            mapCell.appendChild(document.createTextNode(matches[j].boardName));
+            row.appendChild(mapCell);
+
+            let budgetCell = document.createElement('td');
+            budgetCell.classList.add('md-matchBudget');
+            budgetCell.appendChild(document.createTextNode(matches[j].maxCost));
+            row.appendChild(budgetCell);
+
+            let joinCell = document.createElement('td');
+            joinCell.classList.add('md-matchJoin');
+            let joinButton = document.createElement('button');
+            joinButton.classList.add('removeButtonStyle');
+            joinButton.classList.add('defaultButtonStyle');
+            joinButton.classList.add('md-matchJoinButton');
+            joinButton.appendChild(document.createTextNode('Join'));
+            
+            joinButton.onclick = () => join(matches[j].id);
+            
+            joinCell.appendChild(joinButton);
+            row.appendChild(joinCell);
+            tableBodies[i].appendChild(row);
+        }
+        
+    }
 }
 
 async function join(mId) {

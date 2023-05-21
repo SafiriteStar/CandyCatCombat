@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="./stylesheets/defaultTeam/mainContainer.css">
   <link rel="stylesheet" href="./stylesheets/defaultTeam/infoContainer.css">
   <link rel="stylesheet" href="./stylesheets/defaultTeam/teamContainer.css">
+  <link rel="stylesheet" href="./stylesheets/matchesDisplay.css/showButton.css">
+  <link rel="stylesheet" href="./stylesheets/matchesDisplay.css/content.css">
   <link rel="stylesheet" href="./stylesheets/style.css">
   <link rel="stylesheet" href="./stylesheets/matches.css">
 
@@ -21,6 +23,7 @@
   <script src="./javascripts/catInfoSideBar/update.js"></script>
   <script src="./javascripts/defaultTeam/utils.js"></script>
   <script src="./javascripts/defaultTeam/create.js"></script>
+  <script src="./javascripts/matchSideBar/utils.js"></script>
 
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
@@ -41,7 +44,65 @@
         <button class="removeButtonStyle defaultButtonStyle dt-logoutButton" onclick="logout()">Logout</button>
       </div>
     </div>
-    <div class="matchesContainer"></div>
+    <div class="md-showMatchesContainer">
+      <button class="removeButtonStyle md-showMatchesButton md-showMatchesButtonTop" onclick="createMatch()">
+        <div class="squareRatioDummy"></div>
+        <div class="md-showMatchesText center">Create a match</div>
+      </button>
+      <button class="removeButtonStyle md-showMatchesButton md-showMatchesButtonBottom" onclick="toggleMatchSideBar()">
+        <div class="squareRatioDummy"></div>
+        <div class="md-showMatchesText center">Find a match</div>
+      </button>
+    </div>
+    <div class="md-mainContainer">
+      <button class="removeButtonStyle md-sidePanel" onclick="toggleMatchSideBar()"></button>
+      <div class="md-headerContainer md-innerContent">
+        <h2 class="md-headerText">Available Matches:</h2>
+      </div>
+      <div class="md-contentContainer md-innerContent">
+        <div class="md-optionsContainer">
+          <div class="defaultButtonStyle md-filters">
+            <label class="md-budgetFilterLabel" for="matchCostFilter">Team Budget:</label>
+            <input class="removeButtonStyle md-budgetFilter" type="number" id="matchCostFilter" name="matchCostFilter" min="1" max="6" value="6" step="1">
+          </div>
+          <div class="defaultButtonStyle md-refreshContainer">
+            <button class="removeButtonStyle md-refreshButton">Refresh</button>
+          </div>
+        </div>
+        <div class="md-matchListContainer">
+          <div class="md-matchListWrapper">
+            <table class="md-matchTable">
+              <thead class="md-matchTableHeader">
+                <tr class="md-matchTableRow">
+                  <th class="md-matchPlayerHeader">Player</th>
+                  <th class="md-matchMapHeader">Map</th>
+                  <th class="md-matchBudgetHeader">Budget</th>
+                  <th class="md-matchJoinHeader"></th>
+                </tr>
+              </thead>
+              <tbody class="md-matchTableBody">
+                <tr class="md-matchTableRow">
+                  <td class="md-matchPlayer">A Name</td>
+                  <td class="md-matchMap">The Arena</td>
+                  <td class="md-matchBudget">6</td>
+                  <td class="md-matchJoin">
+                    <button class="removeButtonStyle defaultButtonStyle md-matchJoinButton">Join</button>
+                  </td>
+                </tr>
+                <tr class="md-matchTableRow">
+                  <td class="md-matchPlayer">A Name</td>
+                  <td class="md-matchMap">The Arena</td>
+                  <td class="md-matchBudget">6</td>
+                  <td class="md-matchJoin">
+                    <button class="removeButtonStyle defaultButtonStyle md-matchJoinButton">Join</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 
