@@ -125,6 +125,10 @@
     display: block;
     height: 95%;
     width: 100%;
+
+    background-image: url('/assets/UI/ContentPaper.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 
 .md-matchListWrapper {
@@ -136,8 +140,6 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-
-    background-color: transparent;
 }
 
 .md-matchContainer {

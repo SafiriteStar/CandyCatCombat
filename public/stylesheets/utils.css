@@ -16,8 +16,10 @@
     text-align: center;
     text-decoration: none;
     outline: none;
-    color: bisque;
-    background-color: #815f38;
+    color: rgb(6, 6, 29);
+    background-image: url('/assets/UI/Base_Button.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     border: none;
     border-radius: 15px;
     box-shadow: 0 0.5vh #999;
@@ -44,8 +46,24 @@
     margin-top: 75%;
 }
 
+.ratioDummy2-1 {
+    margin-top: 50%;
+}
+
+.ratioDummy4-1 {
+    margin-top: 25%;
+}
+
 .ratioDummy5-1 {
     margin-top: 40%;
+}
+
+.ratioDummy16-9 {
+    margin-top: 56.25%;
+}
+
+.ratioDummy16-10 {
+    margin-top: 62.5%;
 }
 
 .ratioDummy10-1 {

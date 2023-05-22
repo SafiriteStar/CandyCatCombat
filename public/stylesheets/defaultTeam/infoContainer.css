@@ -1,13 +1,17 @@
 .dt-infoContainer {
     display: inline-block;
     position: absolute;
-    width: 35vw;
+    width: 44vw;
 
-    top: 12.5%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    border-radius: 2em;
     
-    background-color: gray;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
 }
 
 .dt-PlayerName {
@@ -21,6 +25,7 @@
     text-overflow: ellipsis;
     text-align: center;
     font-size: 3vw;
+    font-family: 'Lily Script One', cursive;
 
     top: 0;
     left: 50%;

@@ -36,6 +36,16 @@
     height: fit-content;
 
     font-size: 4vw;
+    font-family: 'Lily Script One', cursive;
+
+    background-image: linear-gradient(45deg, #bd8b21, #eeec63);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+
+    filter: drop-shadow(0 0 0.75rem black);
 }
 
 .dt-teamCoinImage {
@@ -50,13 +60,16 @@
     position: absolute;
     width: 24%;
     
-    border-radius: 50%;
-    
     transform: translate(-50%, -50%);
 
     cursor: pointer;
     
-    background-color: transparent;
+    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
+    background-repeat: no-repeat;
+    background-position: 50% 90%;
+    background-size: 50% 10%;
+
+    border-radius: 45%;
 }
 
 .dt-catCircleRow1 { top: 17.5%; }
@@ -76,7 +89,6 @@
     transform: translate( -50%, -50%);
     
     border-radius: 50%;
-    
     
     transition: 0.5s;
 }
@@ -159,6 +171,7 @@
 .dt-optionCatImage {
     width: 150%;
     transition: width 0.1s;
+    filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.5));
 }
 
 .dt-catOptionBack:hover > .dt-optionCatImage {
