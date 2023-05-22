@@ -21,20 +21,13 @@
     background-size: 100% 100%;
     background-repeat: no-repeat;
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 0.5vh #999;
     
     transition: 0.05s;
 }
 
-.defaultButtonStyle:hover {
-    background-color: #5e4529
-}
-
 .defaultButtonStyle:active {
-  background-color: #815f38;
-  box-shadow: 0 0.5vh #666;
-  transform: translateY(4px);
+    box-shadow: 0 150% #666;
+    transform: translateY(4px);
 }
 
 .squareRatioDummy {
