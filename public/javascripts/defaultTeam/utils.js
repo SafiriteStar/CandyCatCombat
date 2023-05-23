@@ -101,7 +101,7 @@ async function updateSelectedCats() {
 
     let teamCostTexts = document.getElementsByClassName('dt-teamCostText');
     for (let i = 0; i < teamCostTexts.length; i++) {
-        teamCostTexts[i].innerHTML = teamCost;
+        teamCostTexts[i].innerHTML = `${teamCost}/6`;
     }
 }
 
