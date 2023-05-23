@@ -41,7 +41,7 @@ function createTeamCatOption(position, cat, teamCost, teamId) {
         let costImage = document.createElement('img');
         costImage.classList.add('containImage');
         costImage.classList.add('center');
-        costImage.src = "/assets/UI/costStat.png";
+        costImage.src = "/assets/UI/Stats/costStat.png";
         costImage.alt = "Cost Coin";
         coinContainer.appendChild(costImage);
         costContainer.appendChild(coinContainer);

@@ -73,7 +73,7 @@ function generateMainGrid() {
     // Grid Cat Image Container
     let catImageContainer = createElementFull('div', 'catImageContainer', ['catImageContainer', 'catBookletCell']);
     let catImage = createElementFull('img', 'catImage', ['catImage']);
-    catImage.src = '/assets/UI/genericStat.png';
+    catImage.src = '/assets/UI/Stats/genericStat.png';
     catImage.alt = 'catImage';
     catImageContainer.appendChild(catImage);
     grid.appendChild(catImageContainer);
@@ -89,11 +89,11 @@ function generateMainGrid() {
     // Grid Cat Weapons
     let catWeapons = createElementFull('div', 'catWeapons', ['catWeapons', 'catBookletCell']);
     let weapons1 = createElementFull('img', 'weaponImage1', ['weaponImage1']);
-    weapons1.src = './assets/UI/genericStat.png'
+    weapons1.src = './assets/UI/Stats/genericStat.png'
     weapons1.alt = 'weapon1';
     catWeapons.appendChild(weapons1);
     let weapons2 = createElementFull('img', 'weaponImage2', ['weaponImage2']);
-    weapons2.src = './assets/UI/genericStat.png'
+    weapons2.src = './assets/UI/Stats/genericStat.png'
     weapons2.alt = 'weapon2';
     catWeapons.appendChild(weapons2);
     grid.appendChild(catWeapons);

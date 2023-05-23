@@ -125,7 +125,7 @@ function createSideContent() {
         }
         
         for (let j = 0; j < maxStars; j++) {
-            let statImageContainer = createStatStar('/assets/UI/genericStat.png', statNames[i]);
+            let statImageContainer = createStatStar('/assets/UI/Stats/genericStat.png', statNames[i]);
             statVisual.appendChild(statImageContainer);
         }
         statContainer.appendChild(statVisual);

@@ -82,6 +82,7 @@ function fillMatches(matches) {
             let joinButton = document.createElement('button');
             joinButton.classList.add('removeButtonStyle');
             joinButton.classList.add('defaultButtonStyle');
+            joinButton.classList.add('shortButton');
             joinButton.classList.add('md-matchJoinButton');
             joinButton.appendChild(document.createTextNode('Join'));
             

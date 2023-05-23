@@ -1,18 +1,12 @@
 .dt-teamContainer {
     display: inline-block;
     position: absolute;
-    width: 33vw;
+    width: 25vw;
 
-    top: 60%;
-    left: 50%;
+    top: 55%;
+    left: 60%;
     transform: translate(-50%, -50%);
-
-    border: 1px solid black;
     border-radius: 50%;
-
-    background-image: url('/assets/UI/Textures/statuario_gda.jpg');
-    background-size: cover;
-    background-repeat: repeat;
 }
 
 .dt-teamCostContainer {
@@ -63,22 +57,17 @@
     transform: translate(-50%, -50%);
 
     cursor: pointer;
-    
-    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 90%;
-    background-size: 50% 10%;
 
     border-radius: 45%;
 }
 
-.dt-catCircleRow1 { top: 17.5%; }
+.dt-catCircleRow1 { top: 27.5%; }
 .dt-catCircleRow2 { top: 50%; }
-.dt-catCircleRow3 { top: 82.5%; }
-.dt-catCircleColumn1 { left: 11.25%; }
+.dt-catCircleRow3 { top: 72.5%; }
+.dt-catCircleColumn1 { left: 0%; }
 .dt-catCircleColumn2 { left: 30%; }
 .dt-catCircleColumn3 { left: 70%; }
-.dt-catCircleColumn4 { left: 88.75%; }
+.dt-catCircleColumn4 { left: 100%; }
 
 .dt-selectedCat, .dt-catOverlay {
     display: block;
@@ -97,12 +86,11 @@
     height: 85%;
     width: 85%;
     background-color: transparent;
-    filter: drop-shadow(0 0 0.75rem black);
 }
 
 .dt-catOverlay {
-    height: 100%;
-    width: 100%;
+    height: 125%;
+    width: 125%;
 
     background-color: transparent;
 }
@@ -171,11 +159,11 @@
 .dt-optionCatImage {
     width: 150%;
     transition: width 0.1s;
-    filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.5));
 }
 
 .dt-catOptionBack:hover > .dt-optionCatImage {
     width: 200%;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 .dt-unavailableOption {

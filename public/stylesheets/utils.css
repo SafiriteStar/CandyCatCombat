@@ -17,7 +17,6 @@
     text-decoration: none;
     outline: none;
     color: rgb(6, 6, 29);
-    background-image: url('/assets/UI/Base_Button.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     border: none;
@@ -28,6 +27,18 @@
 .defaultButtonStyle:active {
     box-shadow: 0 150% #666;
     transform: translateY(4px);
+}
+
+.normalButton {
+    background-image: url('/assets/UI/Buttons/Base_Button.png');
+}
+
+.shortButton {
+    background-image: url('/assets/UI/Buttons/Base_Button_Short.png');
+}
+
+.longButton {
+    background-image: url('/assets/UI/Buttons/Base_Button_Long.png');
 }
 
 .squareRatioDummy {

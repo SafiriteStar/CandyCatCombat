@@ -43,7 +43,7 @@ function updateCatInfoSideBar(cat, baseCats, show) {
     }
 
     let stats = ['health', 'damage', 'defense'];
-    let statsImage = ['/assets/UI/healthStat.png', '/assets/UI/damageStat.png', '/assets/UI/defenseStat.png'];
+    let statsImage = ['/assets/UI/Stats/healthStat.png', '/assets/UI/Stats/damageStat.png', '/assets/UI/Stats/defenseStat.png'];
 
     for (let i = 0; i < stats.length; i++) {
 
@@ -69,7 +69,7 @@ function updateCatInfoSideBar(cat, baseCats, show) {
             // Calculate how many stars to show
 
             let statSearch = (stats[i] == 'damage' && cat.cat_id == 7) && 'healing' || stats[i];
-            let statImagePath = (stats[i] == 'damage' && cat.cat_id == 7) && '/assets/UI/healingStat.png' || statsImage[i];
+            let statImagePath = (stats[i] == 'damage' && cat.cat_id == 7) && '/assets/UI/Stats/healingStat.png' || statsImage[i];
             let starNum = calculateStars(statSearch, cat[stats[i]]);
             for (let k = 0; k < starNum; k++) {
                 let statStar = createStatStar(statImagePath, statSearch);
@@ -115,7 +115,7 @@ function updateCatInfoSideBar(cat, baseCats, show) {
         // Calculate how many stars to show
 
         for (let j = 0; j < cat.cost; j++) {
-            let statStar = createStatStar('/assets/UI/costStat.png', 'Cost');
+            let statStar = createStatStar('/assets/UI/Stats/costStat.png', 'Cost');
             costStatVisuals[i].appendChild(statStar);
         }
     }
