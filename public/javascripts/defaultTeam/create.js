@@ -162,7 +162,7 @@ function createDefaultTeamDisplay(team, baseCats) {
     teamCostContainer.classList.add('center');
 
     let teamCostText = document.createElement('p');
-    teamCostText.appendChild(document.createTextNode(calculateTeamCost(team, baseCats)));
+    teamCostText.appendChild(document.createTextNode(`${calculateTeamCost(team, baseCats)}/6`));
     teamCostText.classList.add('dt-teamCostText');
     teamCostContainer.appendChild(teamCostText);
     mainContainer.appendChild(teamCostContainer);

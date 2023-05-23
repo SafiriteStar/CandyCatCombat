@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    height: 20vw;
-    width: 10vw;
+    height: 25vw;
+    width: 9vw;
 
     top: 50%;
     left: 81.25%;
@@ -14,35 +14,23 @@
 }
 
 .md-showMatchesButton {
-    position: relative;
+    position: absolute;
     width: 100%;
-    margin-bottom:  25%;
 
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(177,189,236,1) 0%, rgba(165,156,255,1) 13%, rgba(255,255,255,1) 100%);
+    background-image: url('/assets/UI/Buttons/Round_Button.png');
+    background-size: cover;
+    background-repeat: repeat;
 
     cursor: pointer;
 }
 
-.md-showMatchesButton::after {
-    position: absolute;
-    top: -1vw; bottom: -1vw;
-    left: -1vw; right: -1vw;
-    background: radial-gradient(circle, rgba(0,12,59,1) 0%, rgba(255,255,255,1) 93%, rgba(2,0,36,1) 100%);
-    content: '';
-    z-index: -1;
-    border-radius: 50%;
-}
-
 .md-showMatchesButton:hover {
-    background: radial-gradient(circle, rgba(128,140,184,1) 0%, rgba(109,103,173,1) 13%, rgba(255,255,255,1) 100%);
+    filter: brightness(1.1);
 }
 
 .md-showMatchesButton:active {
     transform: translateY(4px);
-}
-.md-showMatchesButton:active::after {
-    background: radial-gradient(circle, rgba(128,140,184,1) 0%, rgba(109,103,173,1) 13%, rgba(255,255,255,1) 100%);
 }
 
 .md-showMatchesButtonTop {
@@ -54,6 +42,6 @@
 }
 
 .md-showMatchesText {
-    font-size: 2vw;
+    font-size: 1.7vw;
     text-align: center;
 }

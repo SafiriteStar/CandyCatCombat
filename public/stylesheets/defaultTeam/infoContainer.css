@@ -15,9 +15,9 @@
 }
 
 .dt-PlayerName {
+    margin: 0;
     max-width: 100%;
     position: absolute;
-    margin-top: 1vw;
 
     height: fit-content;
     overflow: hidden;
@@ -27,9 +27,9 @@
     font-size: 3vw;
     font-family: 'Lily Script One', cursive;
 
-    top: 0;
+    top: 20%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
 }
 
 .dt-logoutButton {
