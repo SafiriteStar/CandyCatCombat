@@ -24,7 +24,9 @@ body {
 
 header {
     display: inline-block;
-    background-color: rgba(250, 250, 190, 0.8);
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     border-radius: 1em;
     
     width: fit-content;
@@ -50,11 +52,11 @@ header > ul > li {
     padding-right: 0.3em;
 
     width: fit-content;
-    height: 1.7em;
+    height: 10vw;
 
     letter-spacing: 0.2em;
     font-family: "Amita", cursive;
-    font-size: 7em;
+    font-size: 6vw;
     font-weight: 700;
 
     background-image: linear-gradient(217deg, rgba(114, 61, 0, 0.8), rgba(255,0,0,0) 70.71%),
@@ -77,13 +79,17 @@ header > p {
 }
 
 .loginContainer {
-    background-color: rgba(250, 250, 190, 0.8);
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     border-radius: 1em;
-    padding-top: 2em;
-    padding-left: 2em;
-    padding-right: 4em;
+
+    padding-top: 2vw;
+    padding-left: 2vw;
+    padding-right: 4vw;
     width: fit-content;
     height: fit-content;
+
 }
 
 .loginContainer > p {
@@ -93,53 +99,19 @@ header > p {
 
 .loginContainer > * {
     margin-left: 2em;
-    margin-bottom: 0;
     padding-bottom: 2em;
+    font-size: 1vw;
 }
 
-.loginLink {
-    width: fit-content;
-    min-width: 15em;
-    padding: 1em;
-    background-image: url('../assets/UI/LongerButton.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-
-    text-align: center;
+.loginButton {
+    margin-bottom: 1vw;
 }
 
-.loginLink > a {
-    color: lightgoldenrodyellow;
+.loginText {
+    font-size: 1vw;
 }
 
-.loginLink > a:link {
-    text-decoration: none;
-}
-
-.loginLink > a:hover {
-    text-decoration: underline;
-    color: burlywood;
-}
-
-button, input[type="submit"], input[type="reset"] {
-
-    width: 8em;
-    height: 2em;
-
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-    
-    background: none;
-    background-image: url("../assets/UI/NormalButton.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-	color: lightgoldenrodyellow;
-}
-
-button:hover, input[type="submit"]:hover, input[type="reset"]:hover {
-    color: burlywood;
-    text-decoration: underline;
+.loginTextInput {
+    width: 10vw;
+    height: 1.2vw;
 }
