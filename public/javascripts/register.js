@@ -4,7 +4,14 @@ async function register() {
     try {
         let name = document.getElementById("name").value;
         let pass = document.getElementById("password").value;
-        let res = await requestRegister(name,pass);
+        let conf = document.getElementById("confirm").value;
+
+        if (pass !== conf) {
+            msgDOM.textContent = "Passwords do not match";
+            return;
+        }
+
+        let res = await requestRegister(name, pass, conf);
         if (res.successful) {
             msgDOM.textContent = "Account created. Go to login page";
         } else {

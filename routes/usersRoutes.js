@@ -29,6 +29,13 @@ router.post('', async function (req, res, next) {
         let user = new User();
         user.name = req.body.username;
         user.pass = req.body.password;
+        user.confirm = req.body.confirm;
+
+        if (user.pass !== user.confirm) {
+            res.status(400).send({msg: "Passwords do not match"});
+            return;
+        }
+
         let result = await User.register(user);
         res.status(result.status).send(result.result);
     } catch (err) {
