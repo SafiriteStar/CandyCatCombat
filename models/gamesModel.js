@@ -200,13 +200,14 @@ class Game {
             }
 
             let [[userTeamCost]] = await pool.query(
-                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
+                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_enabled = true and tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
                 [userId]);
 
             if (userTeamCost <= 0) {
                 return {status:400, result: {msg: "You need candy cats in your team!"}};
             }
-
+            console.log(userTeamCost.maxCost);
+            console.log(dbGame.gm_max_cost);
             if (userTeamCost.maxCost > dbGame.gm_max_cost) {
                 return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
             }
