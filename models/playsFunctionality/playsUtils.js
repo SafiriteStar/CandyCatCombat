@@ -160,8 +160,6 @@ Play.getGameCatTeam = async function(teamOwnershipType, playerId, gameId) {
     player.team.cats = [];
 
     [player.team.cats] = await pool.query(askForCatTeam, [player.team.id]);
-    console.log("Player Cat Team")
-    console.log(player.team.cats);
     // Ask for the conditions for that cat (even if empty)
     // For each cat
     for (let i = 0; i < player.team.cats.length; i++) {
@@ -368,6 +366,7 @@ Play.countDeadCats = async function (playerID, gameID) {
     let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
 
     let countDeadCats = 0;
+    let teamCost = 0;
 
     // For each cat in that team
     playerTeam.team.cats.forEach(cat => {
@@ -376,10 +375,11 @@ Play.countDeadCats = async function (playerID, gameID) {
             // Add to the score
             countDeadCats++;
         }
+        teamCost = teamCost + cat.cost;
     });
 
     // Return the score and length of the team
-    return [countDeadCats, playerTeam.team.cats.length];
+    return [countDeadCats, teamCost];
 }
 
 async function getTile(map, x, y) {

@@ -1,0 +1,114 @@
+.removeButtonStyle {
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.defaultButtonStyle {
+    display: inline-block;
+    padding: 1%;
+    font-size: 1vw;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: rgb(6, 6, 29);
+
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+    border: none;
+    padding: 0.75vw 2vw 0.75vw 2vw;
+    font-size: 0.75vw;
+    
+    transition: 0.05s;
+}
+
+.defaultButtonStyle:active {
+    box-shadow: 0 150% #666;
+    transform: translateY(4px);
+}
+
+.defaultButtonStyle > a {
+    color: black;
+}
+
+.normalButton {
+    background-image: url('/assets/UI/Buttons/Base_Button.png');
+}
+
+.shortButton {
+    background-image: url('/assets/UI/Buttons/Base_Button_Short.png');
+}
+
+.longButton {
+    background-image: url('/assets/UI/Buttons/Base_Button_Long.png');
+}
+
+.buttonBackground {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 0.7vw; /* control the border thickness */
+    background: url('/assets/UI/Textures/black_and_gold.jpg');
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+}
+
+.squareRatioDummy {
+    margin-top: 100%;
+    /* 1:1 aspect ratio */
+}
+
+.ratioDummy4-3 {
+    margin-top: 75%;
+}
+
+.ratioDummy2-1 {
+    margin-top: 50%;
+}
+
+.ratioDummy4-1 {
+    margin-top: 25%;
+}
+
+.ratioDummy5-1 {
+    margin-top: 40%;
+}
+
+.ratioDummy16-9 {
+    margin-top: 56.25%;
+}
+
+.ratioDummy16-10 {
+    margin-top: 62.5%;
+}
+
+.ratioDummy10-1 {
+    margin-top: 20%;
+}
+
+.containImage {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50%);
+}

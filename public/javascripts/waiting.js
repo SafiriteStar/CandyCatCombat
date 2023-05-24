@@ -17,7 +17,7 @@ function waitingQuery() {
 
 async function makeWaitingCall() {
     await waitingQuery();
-    setTimeout(() => makeWaitingCall(), 100);
+    setTimeout(() => makeWaitingCall(), 1000);
 }
 
 makeWaitingCall();

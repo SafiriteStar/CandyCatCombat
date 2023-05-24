@@ -1,0 +1,23 @@
+.dt-mainContainer {
+    height: 100vh;
+    width: 35vw;
+    position: fixed;
+    top: 0;
+    left: 47.3vw;
+    transform: translate(-50%, 0);
+
+    transition: 0.5s;
+}
+
+.backgroundImageContainer {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.backgroundImage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}

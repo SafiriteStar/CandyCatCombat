@@ -6,6 +6,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/utils.css">
   <link rel="stylesheet" href="/stylesheets/login.css">
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
@@ -30,21 +31,21 @@
   </header>
   <main>
     <div class="loginContainer">
-      <form action="javascript:login()">
+      <form action="javascript:login()" style="display: flex; flex-direction: column;">
         <table>
           <tr>
-            <td>Name:</td>
-            <td><input type="text" autocomplete="username" id="name"></td>
+            <td class="loginText">Name:</td>
+            <td><input class="loginTextInput" type="text" autocomplete="username" id="name"></td>
           </tr>
           <tr>
-            <td>Password:</td>
-            <td><input type="password" autocomplete="current-password" id="password"></td>
+            <td class="loginText">Password:</td>
+            <td><input class="loginTextInput" type="password" autocomplete="current-password" id="password"></td>
           </tr>
         </table>
         <p id="msg" class="warning"></p>
-        <p><input type="submit" value="Login"></p>
-        <p class="loginLink"><a href="register.html">Create a new account</a></p>
-        <p class="loginLink"><a href="scoreboard.html">See previous games Score Board</a></p>
+        <input class="removeButtonStyle defaultButtonStyle longButton loginButton" type="submit" value="Login">
+        <a class="removeButtonStyle defaultButtonStyle longButton loginButton" href="register.html">Create a new account</a>
+        <a class="removeButtonStyle defaultButtonStyle longButton loginButton" href="scoreboard.html">See previous games Score Board</a>
       </form>
     </div>
   </main>
