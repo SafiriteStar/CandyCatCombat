@@ -50,7 +50,12 @@ async function updateSelectedCats() {
                             selectedCatContainerChildren[k].src = catImagePaths[team[i].cat_id - 1][0];
                         }
                         else if (team[i].enabled == false) {
-                            selectedCatContainerChildren[k].src = "/assets/UI/AddOption.png";
+                            if (teamCost < 6) {
+                                selectedCatContainerChildren[k].src = "/assets/UI/AddOption.png";
+                            }
+                            else {
+                                selectedCatContainerChildren[k].src = "/assets/UI/BannedOption.png";
+                            }
                         }
                     }
                 }
