@@ -20,7 +20,7 @@
     height: 5vw;
     width: 5.5vw;
 
-    background-color: lightblue;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     
@@ -46,7 +46,9 @@
     left: -2vw;
     z-index: -1;
 
-    background-color: lightblue;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
     border-radius: 0 1em 1em 0;
 
     text-align: center;
@@ -54,6 +56,23 @@
     font-size: 1.1vw;
     transition: 0.5s;
 }
+
+.sideBarIntroButton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 0.7vw; /* control the border thickness */
+    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
 
 .catInfoContainer {
     height: 100vh;
