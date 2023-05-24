@@ -13,26 +13,6 @@
 }
 
 button.game {
-  font-size: 1.5em;
-  background-color: transparent;
-  background-image: url('../assets/UI/MatchJoinButton.png');
-  background-size: cover;
-  background-position: center;
-  color: black;
-  border: none;
-  text-align: center;
-  font-weight: bold;
-  width: 220px;
-  height: auto;
-  line-height: 46px;
-}
-
-button.game:hover {
-  color: rgb(85, 85, 85);
-  cursor: pointer;
-}
-
-button.game:active {
-  background-image: url('../assets/UI/MatchJoinButtonPressed.png');
-  color: rgb(58, 58, 58);
+  font-size: 1.1vw;
+  scale: 1;
 }
