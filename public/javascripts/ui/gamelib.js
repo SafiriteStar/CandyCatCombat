@@ -1,6 +1,13 @@
 const Game = require("../../../models/gamesModel");
 
+
 async function refresh() {
+    console.log (GameInfo.game)
+
+    if (GameInfo.game == false) {
+        window.location.reload();
+    }
+
     if (GameInfo.game.player.state == "Waiting" || GameInfo.game.player.state == "PlacementReady") { 
         // Every time we are waiting
         await getGameInfo();

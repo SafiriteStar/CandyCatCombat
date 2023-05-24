@@ -7,6 +7,9 @@ async function getGameInfo() {
         window.location.pathname = "index.html";
     } else {
         GameInfo.game = result.game;
+        if (GameInfo.game.state == "Canceled") {
+            window.location.reload()
+        }
         if (GameInfo.scoreBoard) {
             GameInfo.scoreBoard.update(GameInfo.game);  
         }
