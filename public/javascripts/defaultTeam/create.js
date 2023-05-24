@@ -1,4 +1,4 @@
-function createTeamCatOption(position, cat, teamCost, teamId) {
+function createTeamCatOption(position, cat, teamCost, teamId, catIsAvailable) {
     let optionContainer = document.createElement('div');
     optionContainer.classList.add('dt-catOption');
     optionContainer.classList.add('dt-catOptionType' + cat.cat_id);
@@ -23,7 +23,8 @@ function createTeamCatOption(position, cat, teamCost, teamId) {
     catImage.classList.add('containImage');
     catImage.classList.add('center');
     catImage.classList.add('dt-optionCatImage');
-    if (teamCost - 1 + cat.cost > 6) {
+    let selectedCatCost = catIsAvailable && 1 || 0;
+    if (teamCost - selectedCatCost + cat.cost > 6) {
         catImage.classList.add('dt-unavailableOption');
     }
     catImage.src = catImagePaths[cat.cat_id - 1][0];
@@ -54,7 +55,7 @@ function createTeamCatOption(position, cat, teamCost, teamId) {
     return optionContainer;
 }
 
-function createTeamCatOverlay(baseCats, team, teamId) {
+function createTeamCatOverlay(baseCats, team, teamId, catIsAvailable) {
     let overlay = document.createElement('div');
     overlay.classList.add('dt-catOverlay');
 
@@ -73,7 +74,7 @@ function createTeamCatOverlay(baseCats, team, teamId) {
     let teamCost = calculateTeamCost(team, baseCats);
 
     for (; index < baseCats.length; index++) {
-        let option = createTeamCatOption(optionPositions[index], baseCats[index], teamCost, teamId);
+        let option = createTeamCatOption(optionPositions[index], baseCats[index], teamCost, teamId, catIsAvailable);
         overlay.appendChild(option);
     }
 
@@ -133,17 +134,27 @@ function createTeamCat(position, cat, team, baseCats) {
     selectedCatImage.classList.add('containImage');
     selectedCatImage.classList.add('center');
     selectedCatImage.classList.add('dt-selectedCatImage');
+    let catIsAvailable = false;
     if (cat.enabled == 0) {
-        selectedCatImage.src = "/assets/UI/AddOption.png";
+        let teamCost = calculateTeamCost(team, baseCats);
+        if (teamCost < 6) {
+            catIsAvailable = true;
+            selectedCatImage.src = "/assets/UI/AddOption.png";
+        }
+        else {
+            catIsAvailable = false;
+            selectedCatImage.src = "/assets/UI/BannedOption.png";
+        }
     }
     else {
+        catIsAvailable = true;
         selectedCatImage.src = catImagePaths[cat.cat_id -1][0];
     }
     selectedCatImage.alt = "Selected Cat";
     selectedCatContainer.appendChild(selectedCatImage);
     catContainer.appendChild(selectedCatContainer);
 
-    let catOverlay = createTeamCatOverlay(baseCats, team, cat.id);
+    let catOverlay = createTeamCatOverlay(baseCats, team, cat.id, catIsAvailable);
     catContainer.appendChild(catOverlay);
 
     return catContainer;
