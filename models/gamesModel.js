@@ -206,8 +206,7 @@ class Game {
             if (userTeamCost <= 0) {
                 return {status:400, result: {msg: "You need candy cats in your team!"}};
             }
-            console.log(userTeamCost.maxCost);
-            console.log(dbGame.gm_max_cost);
+
             if (userTeamCost.maxCost > dbGame.gm_max_cost) {
                 return {status:400, result: {msg: "Your team has above the maximum allowed cost!"}};
             }

@@ -111,6 +111,8 @@ class MapSelector {
                     // Update our indicators
                     this.catInfoBox.update(this.cat, this.team);
                     this.updateRangeIndicators(GameInfo.world.teams[this.team].cats[this.cat]);
+                    // Update the side bar
+                    updateCatInfoSideBar(window.baseCats[GameInfo.world.teams[this.team].cats[this.cat].type - 1], window.baseCats, "ignore");
                 }
             }
             else {
@@ -118,6 +120,7 @@ class MapSelector {
                 // Do we have *a* cat already and was that tile not a caramel tile?
                 if (this.team !== null && this.team !== undefined) {
                     // We do
+
                     // Do we have a player cat?
                     if (this.team == 0 && !GameInfo.world.teams[this.team].cats[this.cat].isRooted() && GameInfo.world.checkOtherTeamsCaramelTile(this.team, this.coordX, this.coordY, this.map + 1) === false) {
                         // We do

@@ -9,7 +9,7 @@ Play.addDBGameCatTeam = async function(gameId, playerId) {
 
     // Get the players default team
     let [playerDefaultTeam] = await pool.query(
-        "Select tmc_cat_id from team_cat where tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
+        "Select tmc_cat_id from team_cat where tmc_enabled = true and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)",
             [userData.id]
     );
 
