@@ -49,7 +49,7 @@ class World {
         let playerStatusWidth = 400;
         let playerStatusHeight = 100;
         let playerStatusMargin = 25;
-        this.playerStatus = new teamStatus(playerStatusMargin, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
+        this.playerStatus = new teamStatus(playerStatusMargin + 75, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();

@@ -6,6 +6,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/utils.css">
+  <link rel="stylesheet" href="/stylesheets/catInfo/content.css">
+  <link rel="stylesheet" href="/stylesheets/catInfo/sideBar.css">
   <link rel="stylesheet" href="/stylesheets/catBooklet.css">
   <link rel="stylesheet" href="/stylesheets/score.css">
   <link rel="stylesheet" href="/stylesheets/pauseMenu.css">
@@ -13,7 +16,11 @@
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
-  <script src="javascripts/requests/gameRequests.js"></script> 
+  <script src="javascripts/requests/gameRequests.js"></script>
+  <script src="javascripts/utils/catImagePaths.js"></script>
+  <script src="javascripts/catInfoSideBar/utils.js"></script>
+  <script src="javascripts/catInfoSideBar/update.js"></script>
+  <script src="javascripts/catInfoSideBar/create.js"></script>
   <script src="javascripts/game.js"></script>
   <script src="javascripts/ui/gameInfo.js"></script> 
   <script src="javascripts/ui/actions.js"></script>
@@ -23,7 +30,6 @@
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
   <script src="./javascripts/catBooklet.js"></script>
-
   <script src="javascripts/ui/renderers/Utils.js"></script>
   <script src="javascripts/ui/renderers/InfoBox.js"></script>
   <script src="javascripts/ui/renderers/teamStatusDisplay.js"></script>
@@ -45,8 +51,6 @@
 
 <body>
   <main id="game">
-    <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
-    <div id="catBooklet" class="catBooklet clearfix"></div>
     <div class="pauseMenuFrame">
       <h1 class="pauseMenuTitle">Game Paused</h1>
       <button class="pauseResumeButton pauseButton pauseMenuText" onclick="togglePauseMenu()">Resume</button>
