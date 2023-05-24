@@ -4,54 +4,111 @@
   <title>Candy Cat Combat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="/stylesheets/style.css">
-  <link rel="stylesheet" href="/stylesheets/defaultTeamDisplay.css">
-  <link rel="stylesheet" href="/stylesheets/catBooklet.css">
-  <link rel="stylesheet" href="/stylesheets/matchDisplay.css">
-  <link rel="stylesheet" href="/stylesheets/matches.css">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Lily+Script+One&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
+  
+  <link rel="stylesheet" href="./stylesheets/utils.css">
+  <link rel="stylesheet" href="./stylesheets/catInfo/sideBar.css">
+  <link rel="stylesheet" href="./stylesheets/catInfo/content.css">
+  <link rel="stylesheet" href="./stylesheets/defaultTeam/mainContainer.css">
+  <link rel="stylesheet" href="./stylesheets/defaultTeam/infoContainer.css">
+  <link rel="stylesheet" href="./stylesheets/defaultTeam/teamContainer.css">
+  <link rel="stylesheet" href="./stylesheets/matchesDisplay.css/showButton.css">
+  <link rel="stylesheet" href="./stylesheets/matchesDisplay.css/content.css">
+  <link rel="stylesheet" href="./stylesheets/style.css">
+  <link rel="stylesheet" href="./stylesheets/matches.css">
+
+  <script src="./javascripts/utils/catImagePaths.js"></script>
+  <script src="./javascripts/catInfoSideBar/utils.js"></script>
+  <script src="./javascripts/catInfoSideBar/create.js"></script>
+  <script src="./javascripts/catInfoSideBar/update.js"></script>
+  <script src="./javascripts/defaultTeam/utils.js"></script>
+  <script src="./javascripts/defaultTeam/create.js"></script>
+  <script src="./javascripts/matchSideBar/utils.js"></script>
+
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
-  <script src="./javascripts/matchGameDisplay.js"></script>
   <script src="./javascripts/draggableElement.js"></script>
   <script src="./javascripts/showHideButton.js"></script>
-  <script src="./javascripts/displayTeam.js"></script>
-  <script src="./javascripts/catBooklet.js"></script>
   <script src="./javascripts/matches.js"></script>
 </head>
 
 <body>
   <header>
-    <h2 class="matchesHeader"><span id="player">Hello ______</span>
-      <input class="matchesButton" type="button" value="Logout" onclick="logout()">
-    </h2>
   </header>
-  <main>
-      <div id="catBookletShowButton" class="catBookletShowButton" onclick="showHideElement(this, 'catBooklet', 'inline-grid')"></div>
-    
-      <div id="defaultTeam">
-      <h1 class="defaultTeamHeader">Current Team:</h1>
-
-      <div class="defaultTeamTableContainer"></div>
-
-      <div class="matchesWrapper">
-        <div class="matchContextWrapper">
-          <h1>Choose a match or create a new one</h1>
-          <p>After creating or joining a match you cannot leave and cannot create/join other matches until you finish that match</p>
-          <button class="refreshMatchButton matchContextButton" onclick="refresh()">
-            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
-            <p>Refresh Matches</p>
-          </button>
-          <button class="createMatchButton matchContextButton" onclick="">
-            <img src="./assets/UI/MatchJoinButton.png" alt="Create Match Button">
-            <p>Create My Match</p>
-          </button>
-        </div>
-        <table id="matches"></table>
+  <main id="matchesMain">
+    <div class="backgroundImageContainer">
+      <img class="backgroundImage" src="/assets/Backgrounds/LoginScreen.png" alt="Background Image">
+    </div>
+    <div class="dt-mainContainer">
+      <div class="dt-infoContainer">
+        <div class="ratioDummy4-1"></div>
+        <h2 class="dt-PlayerName" id="player">Hello ______</h2>
+        <button class="removeButtonStyle defaultButtonStyle shortButton dt-logoutButton" onclick="logout()">Logout</button>
       </div>
-      <div id="catBooklet" class="catBooklet clearfix"></div>
-    </main>
+    </div>
+    <div class="md-showMatchesContainer">
+      <button class="removeButtonStyle md-showMatchesButton md-showMatchesButtonTop" onclick="createMatch()">
+        <div class="squareRatioDummy"></div>
+        <div class="buttonBackground"></div>
+        <div class="md-showMatchesText center">Create match</div>
+      </button>
+      <button class="removeButtonStyle md-showMatchesButton md-showMatchesButtonBottom" onclick="toggleMatchSideBar()">
+        <div class="squareRatioDummy"></div>
+        <div class="buttonBackground"></div>
+        <div class="md-showMatchesText center">Find match</div>
+      </button>
+    </div>
+    <div class="md-mainContainer">
+      <button class="removeButtonStyle md-sidePanel" onclick="toggleMatchSideBar()"></button>
+      <div class="md-headerContainer md-innerContent">
+        <h2 class="md-headerText">Available Matches:</h2>
+      </div>
+      <div class="md-contentContainer md-innerContent">
+        <div class="md-optionsContainer">
+          <div class="defaultButtonStyle longButton md-filters">
+            <label class="md-budgetFilterLabel" for="matchCostFilter">Max Team Budget:</label>
+            <input class="removeButtonStyle md-budgetFilter" type="number" id="matchCostFilter" name="matchCostFilter" min="1" max="6" value="6" step="1">
+          </div>
+          <div class="defaultButtonStyle normalButton md-refreshContainer">
+            <button class="removeButtonStyle md-refreshButton" onclick="refresh()">Refresh</button>
+          </div>
+        </div>
+        <div class="md-matchListContainer">
+          <div class="md-matchListWrapper">
+            <table class="md-matchTable">
+              <thead class="md-matchTableHeader">
+                <tr class="md-matchTableRow">
+                  <th class="md-matchPlayerHeader">Player</th>
+                  <th class="md-matchMapHeader">Map</th>
+                  <th class="md-matchBudgetHeader">Budget</th>
+                  <th class="md-matchJoinHeader"></th>
+                </tr>
+              </thead>
+              <tbody class="md-matchTableBody">
+                <tr class="md-matchTableRow">
+                  <td class="md-matchPlayer">A Name</td>
+                  <td class="md-matchMap">The Arena</td>
+                  <td class="md-matchBudget">6</td>
+                  <td class="md-matchJoin">
+                    <button class="removeButtonStyle defaultButtonStyle shortButton md-matchJoinButton">Join</button>
+                  </td>
+                </tr>
+                <tr class="md-matchTableRow">
+                  <td class="md-matchPlayer">A Name</td>
+                  <td class="md-matchMap">The Arena</td>
+                  <td class="md-matchBudget">6</td>
+                  <td class="md-matchJoin">
+                    <button class="removeButtonStyle defaultButtonStyle shortButton md-matchJoinButton">Join</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </body>
 
 </html>

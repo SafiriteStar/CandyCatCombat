@@ -47,7 +47,7 @@ class User {
             // Add add a bunch of vanilla cats
             let fillCharacterData = [];
             for (let i = 0; i < 6; i++) {
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id) values (?, ?)', [1, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id, tmc_enabled) values (?, ?, true)', [1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
@@ -108,7 +108,7 @@ class User {
     static async getDefaultTeam(userId) {
         try {
             let [teamData] = await pool.query(
-                `Select tmc_id as "id", cat_id as "cat_id"
+                `Select tmc_id as "id", cat_id as "cat_id", tmc_enabled as "enabled"
                 from team, team_cat, cat
                 where tm_id = tmc_team_id and tmc_cat_id = cat_id and tm_user_id = ?`,
                     [userId]);
@@ -139,15 +139,14 @@ class User {
         return catDataList[0];
     }
 
+    // Calculate the current cost of the team
     static catCostCheck(newCatData, defaultTeamData, replaceTeamCatID) {
-        // Calculate the current cost of the team
         
         let currentCost = 0;
         
         for (let i = 0; i < defaultTeamData.length; i++) {
-            
-            // If its not the cat we are going to replace
-            if (defaultTeamData[i].tmc_id !== parseInt(replaceTeamCatID)) {
+            // Add the cost of all enabled cats and If its not the cat we are going to replace
+            if (defaultTeamData[i].tmc_enabled == true && defaultTeamData[i].tmc_id !== parseInt(replaceTeamCatID)) {
                 currentCost = currentCost + defaultTeamData[i].cat_cost;
             }
         }
@@ -171,11 +170,12 @@ class User {
             // Do we have space
             if (User.catCostCheck(catData, userDefaultTeam, teamCatId) === false) {
                 // No
+                console.log(teamCatId);
                 return { status: 400, result: { msg:"Not enough space in team. Please remove a cat." } };
             }
 
-            // Update the cat
-            await pool.query(`Update team_cat set tmc_cat_id = ? where tmc_id = ?`, [newCatId, teamCatId]);
+            // Update the cat and set it to enabled
+            await pool.query(`Update team_cat set tmc_cat_id = ?, tmc_enabled = true where tmc_id = ?`, [newCatId, teamCatId]);
 
             return { status: 200, result: { msg:"Cat Changed!" } } ;            
         } catch (err) {
@@ -186,7 +186,8 @@ class User {
 
     static async removeDefaultCat(teamCatId) {
         try {
-            await pool.query(`Delete from team_cat where tmc_id = ?`, [teamCatId]);
+            // Just set the cat in disabled
+            await pool.query(`Update team_cat set tmc_enabled = false where tmc_id = ?`, [teamCatId]);
 
             return { status: 200, result: {msg:"Cat Removed!"}} ;            
         } catch (err) {

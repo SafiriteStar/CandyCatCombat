@@ -57,6 +57,7 @@ create table team_cat (
     tmc_id int not null auto_increment,
     tmc_cat_id int not null,
     tmc_team_id int not null,
+    tmc_enabled boolean not null,
     primary key (tmc_id));
 
 create table cat (

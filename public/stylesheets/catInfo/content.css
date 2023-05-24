@@ -1,0 +1,138 @@
+.catInfoContentContainer {
+    position: absolute;
+    top: 0;
+    height: 90vh;
+    width: 84%;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+}
+
+.catInfoName {
+    position: relative;
+    height: 5vh;
+    margin: 0;
+    text-align: center;
+
+    font-size: 1.9vw;
+    font-family: 'Lily Script One', cursive;
+    transition: font-size 0.5s;
+}
+
+.catInfoCatImageContainer {
+    display: inline-block;
+    position: relative;
+    height: 15vh;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.catInfoCatImage {
+    top: 50%;
+    transform: scaleX(-1) translate(0, -50%);
+    filter: drop-shadow(0 0 2rem black);
+}
+
+.catInfoStats {
+    height: 30vh;
+    filter: drop-shadow(0 0 1rem black);
+}
+
+.catInfoStat {
+    display: flex;
+    position: relative;
+    height: 20%;
+    justify-content: center;
+}
+
+.catInfoStatTextContainer {
+    margin: 0;
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+}
+
+.catInfoCatStatText {
+    margin: 0 0 0 20%;
+    width: 80%;
+    text-align: left;
+}
+
+.catInfoStatVisual {
+    display: flex;
+    position: relative;
+    margin: 0;
+    height: 100%;
+    width: 80%;
+    justify-content: left;
+    align-items: center;
+}
+
+.catInfoStatImageContainer {
+    display: inline-block;
+    position: relative; 
+    width: 13%;
+}
+
+.catInfoStatImage {
+    position: relative;
+    top: 20%;
+    height: 60%;
+    max-width: 15%;
+}
+
+.rangeStatHorizontalLine {
+    position: absolute;
+    width: 80%;
+    height: 2%;
+    background-color: black;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.rangeStatVerticalLine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7%;
+    transform: translate(-50%, -50%);
+    height: 50%;
+    background-color: black;
+    opacity: 50%;
+}
+
+.catInfoDescriptionContainer {
+    height: 40vh;
+    overflow: hidden;
+
+    background-image: url('/assets/UI/ContentPaper.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.catInfoDescription {
+    margin: 2.5% 0 0 0;
+    padding-left: 10%;
+    padding-right: 10%;
+    width: 80%;
+    height: 97.5%;
+    
+    overflow-y: scroll;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+ .catInfoDescription::-webkit-scrollbar {
+    display: none;
+}
+
+.catInfoTextAdjustable {
+    font-size: 0.9vw;
+    transition: font-size 0.5s;
+}

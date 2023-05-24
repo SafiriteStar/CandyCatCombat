@@ -64,7 +64,7 @@ function createPlayerRow(playerName, scorePercentage, cats) {
             }
         }
         else {
-            scoreCat.src = './assets/UI/genericStat.png';
+            scoreCat.src = '/assets/UI/Stats/genericStat.png';
         }
         scoreCats.appendChild(scoreCat);
     }

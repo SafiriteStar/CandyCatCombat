@@ -17,13 +17,15 @@ window.onload = async function () {
         
         if (!result.successful || result.err) { throw result.err || { err: "Not successful" } }
 
-        let tableContainers = document.getElementsByClassName('defaultTeamTableContainer');
-        
-        for (let i = 0; i < tableContainers.length; i++) {
-            tableContainers[i].appendChild(await createTeamDropDown(result.team, result.baseCats));
+        window.baseCats = result.baseCats
+        document.getElementById('matchesMain').appendChild(createCatInfoSideBar(window.baseCats));
+        document.getElementById('matchesMain').appendChild(createSideBarHelp(window.baseCats));
+        calculateStatRanges(result.baseCats);
+        // TODO: CREATE DEFAULT TEAM
+        let mainContainers = document.getElementsByClassName('dt-mainContainer');
+        for (let i = 0; i < mainContainers.length; i++) {
+            mainContainers[i].appendChild(createDefaultTeamDisplay(result.team, result.baseCats));
         }
-        // Make the booklet
-        createBooklet(result.baseCats);
 
         // Set the create match button
         let createMatchButtons = document.getElementsByClassName('createMatchButton');
@@ -44,7 +46,54 @@ window.onload = async function () {
 }
 
 function fillMatches(matches) {
-    createMatchDisplayTable(matches);
+    let tableBodies = document.getElementsByClassName('md-matchTableBody');
+    let teamCostInput = document.getElementById('matchCostFilter');
+    let maxBudget = Math.min(Math.max(Math.floor(teamCostInput.value), 1), 6);
+
+    for (let i = 0; i < tableBodies.length; i++) {
+        while (tableBodies[i].firstChild) {
+            tableBodies[i].removeChild(tableBodies[i].firstChild);
+        }
+
+        for (let j = 0; j < matches.length; j++) {
+            if (matches[j].maxCost > maxBudget) {
+                continue;
+            }
+            let row = document.createElement('tr');
+            row.classList.add('md-matchTableRow');
+
+            let playerCell = document.createElement('td');
+            playerCell.classList.add('md-matchPlayer');
+            playerCell.appendChild(document.createTextNode(matches[j].opponents[0].name));
+            row.appendChild(playerCell);
+
+            let mapCell = document.createElement('td');
+            mapCell.classList.add('md-matchMap');
+            mapCell.appendChild(document.createTextNode(matches[j].boardName));
+            row.appendChild(mapCell);
+
+            let budgetCell = document.createElement('td');
+            budgetCell.classList.add('md-matchBudget');
+            budgetCell.appendChild(document.createTextNode(matches[j].maxCost));
+            row.appendChild(budgetCell);
+
+            let joinCell = document.createElement('td');
+            joinCell.classList.add('md-matchJoin');
+            let joinButton = document.createElement('button');
+            joinButton.classList.add('removeButtonStyle');
+            joinButton.classList.add('defaultButtonStyle');
+            joinButton.classList.add('shortButton');
+            joinButton.classList.add('md-matchJoinButton');
+            joinButton.appendChild(document.createTextNode('Join'));
+            
+            joinButton.onclick = () => join(matches[j].id);
+            
+            joinCell.appendChild(joinButton);
+            row.appendChild(joinCell);
+            tableBodies[i].appendChild(row);
+        }
+        
+    }
 }
 
 async function join(mId) {
@@ -69,12 +118,6 @@ async function refresh() {
         if (!result.successful || result.err)
             throw result.err || { err: "Not successful" }
 
-        // remove everything to fill again:
-        let parent = document.getElementById("matches");
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
-        console.log(result.matches);
         fillMatches(result.matches);
     } catch (err) {
         console.log(err);

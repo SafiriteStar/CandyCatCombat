@@ -1,0 +1,46 @@
+.md-showMatchesContainer {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    height: 25vw;
+    width: 9vw;
+
+    top: 50%;
+    left: 81.25%;
+
+    transform: translate(-50%, -50%);
+
+    background-color: transparent;
+}
+
+.md-showMatchesButton {
+    position: absolute;
+    width: 100%;
+    border-radius: 50%;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+
+    cursor: pointer;
+}
+
+.md-showMatchesButton:hover {
+    filter: brightness(1.1);
+}
+
+.md-showMatchesButton:active {
+    transform: translateY(4px);
+}
+
+.md-showMatchesButtonTop {
+    top: 0;
+}
+
+.md-showMatchesButtonBottom {
+    bottom: 0;
+}
+
+.md-showMatchesText {
+    font-size: 1.7vw;
+    text-align: center;
+}

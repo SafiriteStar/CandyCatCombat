@@ -1,0 +1,152 @@
+.sideBarIntroButtonContainer {
+    display: flex;
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    top: 50vh;
+    left: 15vw;
+    transform: translate(-50%, -50%);
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+
+    transition: 0.5s;
+}
+
+.sideBarIntroButton {
+    position: relative;
+    height: 5vw;
+    width: 5.5vw;
+
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    border-radius: 50%;
+
+    transition: 0.3s;
+}
+
+.sideBarIntroButton:hover {
+    background-color: wheat;
+}
+
+.catRetainerImage {
+    filter: drop-shadow(0 0 0.5rem black)
+}
+
+.sideBarIntroParagraph {
+    position: relative;
+    margin: 0;
+    height: 3vw;
+    width: 11vw;
+    padding: 2% 2% 2% 10%;
+    left: -2vw;
+    z-index: -1;
+
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 0 1em 1em 0;
+
+    text-align: center;
+
+    font-size: 1.1vw;
+    transition: 0.5s;
+}
+
+.sideBarIntroButton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 0.7vw; /* control the border thickness */
+    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
+.catInfoContainer {
+    height: 100vh;
+    width: 25vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    transform: translate(-84%, 0);
+    background-color: transparent;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.sideInfoActive {
+    transform: translate(0, 0);
+}
+
+.catInfoPaginationBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 90%;
+    cursor: pointer;
+    background-image: url('/assets/UI/Textures/black_and_gold.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+}
+
+.catInfoPaginationBackground:hover {
+    filter: saturate(3);
+}
+
+.catInfoPaginationContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 4vw;
+}
+
+.catInfoPagination {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.paginationItem {
+    display: inline-block;
+    position: relative;
+    width: 90%;
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+
+    transition: 0.3s;
+}
+
+.paginationItem:hover {
+    width: 100%;
+}
+
+.activePaginationItem {
+    width: 100%;
+    cursor: default;
+}
+
+.activePaginationItem > img {
+    filter: drop-shadow(0 0 0.75rem black);
+}
