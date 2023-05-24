@@ -6,6 +6,9 @@ async function getGameInfo() {
         window.location.pathname = "index.html";
     } else {
         GameInfo.game = result.game;
+        if (GameInfo.game.state == "Canceled") {
+            window.location.reload()
+        }
         if (GameInfo.scoreBoard) {
             GameInfo.scoreBoard.update(GameInfo.game);  
         }
@@ -75,6 +78,8 @@ async function moveCatAction(x, y, map, catID, teamID) {
         GameInfo.prepareUI();
     }
     else {
+        await getGameInfo();
+        
         alert("Something went wrong when trying to move the character");
     }
 }
