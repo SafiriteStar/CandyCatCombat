@@ -16,9 +16,8 @@
 .md-showMatchesButton {
     position: absolute;
     width: 100%;
-
     border-radius: 50%;
-    background-image: url('/assets/UI/Buttons/Round_Button.png');
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
     background-size: cover;
     background-repeat: repeat;
 
