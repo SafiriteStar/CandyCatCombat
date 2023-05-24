@@ -5,7 +5,7 @@ class ScoreWindow extends Window {
         this.score = score;
         this.player = this.score.playerScores[0];
         this.opp = this.score.playerScores[1];
-        this.createButton("Close Score", (x + width)/2, y + (height * 37/40), action);
+        this.createButton("Close", (x + width)/2, y + (height * 37/40), action);
     }
 
     close() {

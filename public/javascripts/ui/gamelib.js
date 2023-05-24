@@ -1,6 +1,13 @@
 const Game = require("../../../models/gamesModel");
 
+
 async function refresh() {
+    console.log (GameInfo.game)
+
+    if (GameInfo.game == false) {
+        window.location.reload();
+    }
+
     if (GameInfo.game.player.state == "Waiting" || GameInfo.game.player.state == "PlacementReady") { 
         // Every time we are waiting
         await getGameInfo();
@@ -125,15 +132,21 @@ async function setup() {
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
     GameInfo.endturnButton.parent('game');
-    GameInfo.endturnButton.position(GameInfo.width - (210 + 40), GameInfo.height - (46 + 23));
+    GameInfo.endturnButton.position(GameInfo.width - (150), GameInfo.height - (46 + 23));
     GameInfo.endturnButton.mouseClicked(endturnAction);
-    GameInfo.endturnButton.addClass('game')
+    GameInfo.endturnButton.addClass('removeButtonStyle');
+    GameInfo.endturnButton.addClass('defaultButtonStyle');
+    GameInfo.endturnButton.addClass('shortButton');
+    GameInfo.endturnButton.addClass('game');
 
     GameInfo.placementReadyButton = createButton('Ready');
     GameInfo.placementReadyButton.parent('game');
-    GameInfo.placementReadyButton.position(GameInfo.width - (210 + 40), GameInfo.height - (46 + 23));
+    GameInfo.placementReadyButton.position(GameInfo.width - (150), GameInfo.height - (46 + 23));
     GameInfo.placementReadyButton.mouseClicked(placementReadyAction);
-    GameInfo.placementReadyButton.addClass('game')
+    GameInfo.placementReadyButton.addClass('removeButtonStyle');
+    GameInfo.placementReadyButton.addClass('defaultButtonStyle');
+    GameInfo.placementReadyButton.addClass('shortButton');
+    GameInfo.placementReadyButton.addClass('game');
 
     GameInfo.prepareUI();
     

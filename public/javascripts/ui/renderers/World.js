@@ -85,7 +85,7 @@ class World {
             );
         }
     }
-    
+
     draw() {
         // Get where the mouse is
         this.mouseScreenX = (mouseX - (this.cameraX * this.scale)) / this.scale;
