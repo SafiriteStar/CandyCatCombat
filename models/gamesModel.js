@@ -137,7 +137,7 @@ class Game {
         try {
             // Get the players default team
             let [[userTeamCost]] = await pool.query(
-                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
+                `Select sum(cat_cost) as "maxCost" from team_cat, cat where tmc_enabled = true and tmc_cat_id = cat_id and tmc_team_id = (select tm_id from team where tm_user_id = ? and tm_selected = 1)`,
                     [userId]);
             
             if (userTeamCost === null || userTeamCost === undefined || userTeamCost.maxCost <= 0) {
