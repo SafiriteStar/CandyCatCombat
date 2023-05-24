@@ -2,25 +2,6 @@ const pool = require("../../config/database");
 const Play = require("./playsInit");
 require("./playsUtils");
 
-Play.countLiveCats = async function countLiveCats(playerID, gameID) {
-    // Get the team we are looking for
-    let playerTeam = await Play.getGameCatTeam("player", playerID, gameID);
-
-    let count = 0;
-
-    // For each cat in that team
-    playerTeam.team.cats.forEach(cat => {
-        // If its dead
-        if (cat.current_health <= 0) {
-            // Add to the score
-            count++;
-        }
-    });
-
-    // Return the score
-    return count;
-}
-
 Play.checkEndGame = async function(game) {
     // Have we reached our turn limit?
     if (game.turn >= Play.maxNumberTurns) {
@@ -33,15 +14,11 @@ Play.checkEndGame = async function(game) {
     let opponentCatCount = await Play.countLiveCats(game.opponents[0].id, game.id);
     
     // If either of them are 0, just end the game
-    if (playerCatCount === 6 || opponentCatCount === 6) {
+    if (playerCatCount === 0 || opponentCatCount === 0) {
         return true;
     }
-
-    console.log(playerCatCount);
-    console.log(opponentCatCount);
     
     // If we got here, the game can continue
-    console.log("Keep the game going");
     return false;
 }
 
@@ -58,10 +35,26 @@ Play.endGame = async function(game) {
         // Insert score lines with the state and points.
         // A player has a score equal to the number of dead cats on the enemy team
         let sqlScore = `Insert into scoreboard (sb_user_game_id, sb_state_id, sb_points) values (?, ?, ?)`;
-        let playerScore = await Play.countLiveCats(game.player.id, game.id);
-        let opponentScore = await Play.countLiveCats(game.opponents[0].id, game.id);
-        await pool.query(sqlScore, [game.player.id, 1, playerScore]);
-        await pool.query(sqlScore, [game.opponents[0].id, 1, opponentScore]);
+        let [playerDeadCats, playerTeamCost] = await Play.countDeadCats(game.opponents[0].id, game.id);
+        let [opponentDeadCats, opponentTeamCost] = await Play.countDeadCats(game.player.id, game.id);
+
+        let playerScore = playerDeadCats / playerTeamCost;
+        let opponentScore = opponentDeadCats / opponentTeamCost;
+
+        let playerState = 1; // 1 Tied - 2 Lost - 3 Won
+        let oppState = 1;
+
+        if (playerScore > opponentScore) {
+            playerState = 3;
+            oppState = 2;
+        }
+        else if (playerScore < opponentScore) {
+            playerState = 2;
+            oppState = 3;
+        }
+
+        await pool.query(sqlScore, [game.player.id, playerState, playerScore]);
+        await pool.query(sqlScore, [game.opponents[0].id, oppState, opponentScore]);
 
         return { status: 200, result: { msg: "Game ended. Check scores." } };
     } catch (err) {

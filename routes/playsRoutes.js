@@ -1,16 +1,29 @@
 const express = require('express');
 const router = express.Router();
+const World = require('../db_scripts/mapPopulate');
 const Play = require("../models/playsModel");
 const auth = require("../middleware/auth");
+require("../db_scripts/mapPopulate");
 
-router.get('/auth', auth.verifyAuth, async function (req, res, next) {
+router.get('/map', async function (req, res, next) {
     try {
-        console.log("Get information about the game");
+        console.log("Get information about the map");
+        let result = await Play.getMap();
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(result.status).send(result.result);
+    }
+});
+
+router.get('/auth/teams', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Get information about the game teams");
         if (!req.game) {
-            res.status(400).send({msg:"You are not at a game, please create or join a game"});
+            res.status(400).send({msg:"You are not in a game, please create or join a game"});
         }
         else {
-            let result = await Play.getBoard(req.game);
+            let result = await Play.getGameTeams(req.game);
             res.status(result.status).send(result.result);
         }
     } catch (err) {
@@ -59,38 +72,14 @@ router.patch('/placementready', auth.verifyAuth, async function (req, res, next)
     }
 });
 
-// router.patch('/team/select', async function (req, res, next) {
-//     try{
-//         const characterId = req.body.characterId;
-//         const teamId = req.body.teamId;
-
-//         if (!teamId) {
-//             res.status(400).send({msg:"You cannot selected that team since the chosen team is not valid"});
-//         } else {
-//             let result = await Play.selectTeam(0, characterId, teamId);
-//             res.status(result.status).send(result.result);
-//         }
-
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).send(err);
-//     }
-// })
-
-// Body:
-// "characterId": (num),
-// "coord": (2D array)
-
 router.patch('/move', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Play move");
 
         if (req.body.catID === null || req.body.catID < 0) {
-            res.status(400).send({msg:"You cannot move character since the chosen character is not valid"});
-        } else if ((req.body.x === null || req.body.y === null) && (req.body.placementX === null || req.body.placementY === null)) {
-            res.status(400).send({msg:"You cannot move character since the chosen coordinate is not valid"});
+            res.status(400).send({msg:"You cannot the move character since the chosen character is not valid"});
         } else {
-            let result = await Play.move(req.game, req.body.x, req.body.y, req.body.placementX, req.body.placementY, req.body.catID, req.body.teamID);
+            let result = await Play.move(req.game, req.body.path, req.body.catID);
             res.status(result.status).send(result.result);
         }
     } catch (err) {

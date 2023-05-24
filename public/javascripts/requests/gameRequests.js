@@ -53,13 +53,13 @@ async function requestPlacementReady() {
     }
 }
 
-async function requestGameBoard() {
+async function requestMap() {
     try {
-        const response = await fetch(`/api/plays/auth`);
+        const response = await fetch(`/api/plays/map`);
         let result = await response.json();
         return { successful: response.status == 200,
                  unauthenticated: response.status == 401,
-                 game: result};
+                 map: result};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
@@ -67,7 +67,21 @@ async function requestGameBoard() {
     }
 }
 
-async function requestMoveCharacter(x, y, placementX, placementY, catID) {
+async function requestGameTeams() {
+    try {
+        const response = await fetch(`/api/plays/auth/teams`);
+        let result = await response.json();
+        return { successful: response.status == 200,
+                 unauthenticated: response.status == 401,
+                 teams: result};
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+        return {err: err};
+    }
+}
+
+async function requestMoveCharacter(path, catID) {
     try {
         const response = await fetch(`/api/plays/move`, 
         {
@@ -75,18 +89,18 @@ async function requestMoveCharacter(x, y, placementX, placementY, catID) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-          method: "PATCH",
-          body: JSON.stringify({
-              x: x,
-              y: y,
-              placementX: placementX,
-              placementY: placementY,
+            method: "PATCH",
+            body: JSON.stringify({
+              path: path,
               catID: catID
-          })
+            })
         });
+        let result = await response.json();
         // We are not checking for errors (considering the GUI is only allowing correct choices)
         // We only need to send if the user logged or not since the token will be in the cookie
-        return { successful: response.status == 200};
+        return { successful: response.status == 200,
+            unauthenticated: response.status == 401,
+            msg: result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

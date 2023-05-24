@@ -39,14 +39,14 @@ class Map {
 
     // Checks if the given X and Y position have a tile
     checkPositionExists(screenX, screenY) {
-        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5));
+        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5)) - (this.drawStartX / (Tile.width * 1.5));
         let tileCoordY = Math.ceil((-screenY - Tile.height) / (Tile.height * 2)) + (this.drawStartY / (Tile.height * 2));
         
         return this.checkTileExists(tileCoordX, tileCoordY);
     }
 
     getPositionCoord(screenX, screenY) {
-        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5));
+        let tileCoordX = Math.floor((screenX) / (Tile.width * 1.5)) - (this.drawStartX / (Tile.width * 1.5));
         let tileCoordY = Math.ceil((-screenY - Tile.height) / (Tile.height * 2)) + (this.drawStartY / (Tile.height * 2));
 
         return [tileCoordX, tileCoordY]
@@ -56,9 +56,31 @@ class Map {
         push();
         translate(this.drawStartX, this.drawStartY);
 
-        for (let i = 0; i < this.tiles.length; i++) {
-            for (let j = 0; j < this.tiles[i].length; j++) {
-                this.tiles[i][j].draw()
+        for (let j = this.height - 1; j >= 0; j--) {
+            for (let i = 0; i < this.width; i = i + 2) {
+                if (this.tiles[i][j].type != 2) {
+                    this.tiles[i][j].draw();
+                }
+            }
+            
+            for (let i = 1; i < this.width; i = i + 2) {
+                if (this.tiles[i][j].type != 2) {
+                    this.tiles[i][j].draw();
+                }
+            }
+        }
+
+        for (let j = this.height - 1; j >= 0; j--) {
+            for (let i = 0; i < this.width; i = i + 2) {
+                if (this.tiles[i][j].type == 2) {
+                    this.tiles[i][j].draw();
+                }
+            }
+
+            for (let i = 1; i < this.width; i = i + 2) {
+                if (this.tiles[i][j].type == 2) {
+                    this.tiles[i][j].draw();
+                }
             }
         }
         pop();

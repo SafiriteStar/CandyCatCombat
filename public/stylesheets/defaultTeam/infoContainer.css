@@ -1,0 +1,39 @@
+.dt-infoContainer {
+    display: inline-block;
+    position: absolute;
+    width: 44vw;
+
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    border-radius: 2em;
+    
+    background-image: url('/assets/UI/Textures/lasa_polished.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+}
+
+.dt-PlayerName {
+    margin: 0;
+    max-width: 100%;
+    position: absolute;
+
+    height: fit-content;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 3vw;
+    font-family: 'Lily Script One', cursive;
+
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.dt-logoutButton {
+    position: absolute;
+    bottom: 6%;
+    right: 0.5%;
+}

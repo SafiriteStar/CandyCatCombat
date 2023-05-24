@@ -2,31 +2,43 @@
 
 <head>
   <title>Candy Cat Combat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/utils.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/login.css">
   <script src="./javascripts/requests/usersRequests.js"></script>
   <script src="./javascripts/register.js"></script>
 </head>
 
 <body>
   <header>
-    <h1>Register</h1>
+    <h1 class="fancyHeader">Register</h1>
   </header>
   <main>
-    <form action="javascript:register()">
-      <table>
-        <tr>
-          <td>Name:</td>
-          <td><input type="text" autocomplete="username" id="name"></td>
-        </tr>
-        <tr>
-          <td>Password:</td>
-          <td><input type="password" autocomplete="new-password"  id="password"></td>
-        </tr>
-      </table>
-      <p id="msg" class="warning"></p>
-      <p><input type="submit" value="Register"></p>
-      <p><a href="index.html">Login page</a></p>
-    </form>
+    <div class="loginContainer">
+      <form action="javascript:register()">
+        <table>
+          <tr>
+            <td class="loginText">Name:</td>
+            <td><input class="loginTextInput" type="text" autocomplete="username" id="name"></td>
+          </tr>
+          <tr>
+            <td class="loginText">Password:</td>
+            <td><input class="loginTextInput" type="password" autocomplete="new-password" id="password"></td>
+          </tr>
+          <tr>
+            <td class="loginText">Confirm:</td>
+            <td><input class="loginTextInput" type="password" autocomplete="new-password" id="confirm"></td>
+          </tr>
+        </table>
+        <p id="msg" class="warning"></p>
+        <input class="removeButtonStyle defaultButtonStyle normalButton" type="submit" value="Register">
+        <p></p>
+        <a class="removeButtonStyle defaultButtonStyle normalButton" href="index.html">Login page</a>
+      </form>
+    </div>
   </main>
 </body>
 

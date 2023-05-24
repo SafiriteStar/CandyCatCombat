@@ -25,18 +25,34 @@ Play.resolveAttacks = async function(game) {
     let opponentsTeams = [];
     for (let i = 0; i < game.opponents.length; i++) {
         opponentsTeams[i] = await Play.getGameCatTeam("opponent", game.opponents[i].id, game.id);
+
+        opponentsTeams[i].team.cats.forEach(async function(oppCat) {
+            await CatStandardAttack.rootedCheck(oppCat);
+        });
     }
-    // For every player cat
-    player.team.cats.forEach(async function(playerCat, index, array) {
+
+    async function catAttackSequence (playerCat, index, array) {
+        let attackSuccessful = false;
         // If we aren't in the placement map and the cat is alive
         if (playerCat.boardID !== 1 && playerCat.current_health > 0) {
             let attackCat = new attackTypes[playerCat.type - 1](playerCat, opponentsTeams, [player]);
 
-            await attackCat.executeAttackSequence();
+            attackSuccessful = await attackCat.executeAttackSequence();
             // Refill our stamina to max
             await Play.adjustStamina(playerCat.id, playerCat.speed - playerCat.stamina);
         }
-    });
+
+        await CatStandardAttack.rootedCheck(playerCat);
+
+        await GumCatAttack.reStealthCheck(playerCat, attackSuccessful);
+
+        await ChocoDairyMilkHeal.healingFervorCheck(playerCat);
+    }
+    
+    // For every player cat
+    for (let i = 0; i < player.team.cats.length; i++) {
+        await catAttackSequence(player.team.cats[i], i, player.team.cats);
+    }
 }
 
 // This considers that only one player plays at each moment,
@@ -54,7 +70,6 @@ Play.endTurn = async function(game) {
         await Play.changePlayerState(3, game.player.id);
         await Play.changePlayerState(4, game.opponents[0].id);
 
-        // Both players played
         // Criteria to check if game ended
         if (await Play.checkEndGame(game)) {
             return await Play.endGame(game);

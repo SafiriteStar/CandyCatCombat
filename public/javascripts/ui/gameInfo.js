@@ -11,6 +11,7 @@ class GameInfo  {
     static game;
     static images = {};
     static sounds = {};
+    static isMouseOverMenu = false;
 
     // rendererers
     static scoreBoard;
@@ -51,7 +52,10 @@ class GameInfo  {
         else if (GameInfo.game.player.state == "Score") {
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.hide();
-            GameInfo.scoreWindow.open();
+            let scoreContainers = document.getElementsByClassName('scoreContainer');
+            for (let i = 0; i < scoreContainers.length; i++) {
+                scoreContainers[i].classList.remove('scoreSwitch');
+            }
         }
         else if (GameInfo.game.player.state == "End") {
             GameInfo.placementReadyButton.hide();

@@ -26,9 +26,6 @@ async function requestWaitingMatches() {
     }
 }
 
-
-
-
 async function requestJoinMatch(mId) {
     try {
         const response = await fetch(`/api/games/${mId}/join`, 
@@ -38,8 +35,9 @@ async function requestJoinMatch(mId) {
                 'Content-Type': 'application/json'
             },
           method: "PATCH"
-      });
-        return {successful: response.status == 200};
+        });
+        let result = await response.json();
+        return {successful: response.status == 200, msg: result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
@@ -57,7 +55,8 @@ async function requestCreateMatch() {
             },
           method: "POST"
         });
-        return {successful: response.status == 200};
+        let result = await response.json();
+        return {successful: response.status == 200, msg:result.msg};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

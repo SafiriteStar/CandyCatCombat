@@ -29,6 +29,13 @@ router.post('', async function (req, res, next) {
         let user = new User();
         user.name = req.body.username;
         user.pass = req.body.password;
+        user.confirm = req.body.confirm;
+
+        if (user.pass !== user.confirm) {
+            res.status(400).send({msg: "Passwords do not match"});
+            return;
+        }
+
         let result = await User.register(user);
         res.status(result.status).send(result.result);
     } catch (err) {
@@ -82,6 +89,42 @@ router.get('/auth/defaultteam', auth.verifyAuth, async function (req, res, next)
     try {
         console.log("Get User Default Team");
         let result = await User.getDefaultTeam(req.user.id);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+// Changes a user's default cat to another
+router.patch('/auth/changedefaultcat', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Changing Default User Cat");
+        let result = await User.changeDefaultCat(req.user.id, req.body.newCatID, req.body.teamCatID);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+// Add a default cat
+router.post('/auth/adddefaultcat', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Adding Default User Cat");
+        let result = await User.addDefaultCat(req.user.id, req.body.newCatID);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+// Remove a default cat
+router.delete('/auth/removedefaultcat', auth.verifyAuth, async function (req, res, next) {
+    try {
+        console.log("Removing Default User Cat");
+        let result = await User.removeDefaultCat(req.body.teamCatID);
         res.status(result.status).send(result.result);
     } catch (err) {
         console.log(err);

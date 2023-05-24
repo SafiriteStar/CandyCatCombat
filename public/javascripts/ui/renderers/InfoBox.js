@@ -90,7 +90,7 @@ class CatInfoBox extends InfoBox {
         // Call InfoBox's constructor
         super(
             InfoBox.strokeWeight + InfoBox.margin,
-            InfoBox.strokeWeight + InfoBox.margin,
+            GameInfo.height - (TileInfoBox.boxHeight + InfoBox.strokeWeight + InfoBox.margin) - (CatInfoBox.boxHeight + InfoBox.strokeWeight + InfoBox.margin),
             CatInfoBox.boxWidth,
             CatInfoBox.boxHeight
         );

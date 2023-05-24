@@ -1,6 +1,6 @@
 class World {
-    static cameraStartPosX = 0;
-    static cameraStartPosY = 0;
+    static cameraStartPosX = Tile.width * 1.5 * 5;
+    static cameraStartPosY = Tile.height * 7.5 * 5;
 
     static teamColors = [
         [151, 255, 175],
@@ -8,16 +8,16 @@ class World {
     ];
 
     static mapDrawOffsets = [
-        [0, Tile.height * 4],
+        [-Tile.width * 3, -Tile.height * 14],
         [0, 0]
     ]
 
-    constructor(maps, player, opponents) {
+    constructor(maps, player, opponents, playerOrder) {
         // -- Camera & Mouse --
         this.scale = 0.2;
         
-        this.cameraX = 0;
-        this.cameraY = 0;
+        this.cameraX = World.cameraStartPosX;
+        this.cameraY = World.cameraStartPosY;
         this.cameraMouseStartX = 0;
         this.cameraMouseStartY = 0;
 
@@ -43,8 +43,13 @@ class World {
         
         // -- Player --
         // Create team for the player
-        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, World.teamColors[0]);
+        this.teams[0] = new Team(player.team.id, GameInfo.game.player.name, player.team.cats, player.caramelWalls, World.teamColors[0]);
         this.teams[0].state = player.state.name;
+
+        let playerStatusWidth = 400;
+        let playerStatusHeight = 100;
+        let playerStatusMargin = 25;
+        this.playerStatus = new teamStatus(playerStatusMargin + 75, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();
@@ -52,7 +57,7 @@ class World {
         // -- Opponents --
         // Create teams for the opponent
         for (let i = 0; i < opponents.length; i++) {
-            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, World.teamColors[1]);
+            this.teams[i + 1] = new Team(opponents[i].team.id, GameInfo.game.opponents[i].name, opponents[i].team.cats, opponents[i].caramelWalls, World.teamColors[1]);
             this.teams[i].state = player.state.name;
         }
 
@@ -62,24 +67,32 @@ class World {
         this.maps = [];
         // Note: First map is always placement map
         for (let i = 0; i < maps.length; i++) {
+
+            let xOffset = World.mapDrawOffsets[i][0];
+            let yOffset = World.mapDrawOffsets[i][1];
+            
+            // If we are the placement map and are second
+            if (GameInfo.game.player.order === 2 && i === 0) {
+                xOffset = -xOffset * (Math.floor(maps[i+1].width * 0.5) + 1);
+            }
+            
             this.maps[i] = new Map (
                 maps[i].width,
                 maps[i].height,
                 maps[i].tiles,
-                World.mapDrawOffsets[i][0],
-                World.mapDrawOffsets[i][1]
+                xOffset,
+                yOffset
             );
         }
     }
 
     draw() {
-        
         // Get where the mouse is
         this.mouseScreenX = (mouseX - (this.cameraX * this.scale)) / this.scale;
         this.mouseScreenY = (mouseY - (this.cameraY * this.scale)) / this.scale;
         
         // Calculate the camera translation if we are dragging with the cursor
-        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag) { // Do this to avoid JS shenanigans
+        if (mouseIsPressed === true && mouseButton === RIGHT && this.canDrag && GameInfo.isMouseOverMenu === false) { // Do this to avoid JS shenanigans
             // TODO: Potentially add arrow key support?
             this.mouseXDragDelta = this.cameraMouseStartX - mouseX;
             this.mouseYDragDelta = this.cameraMouseStartY - mouseY;
@@ -104,6 +117,9 @@ class World {
                 this.mouseCameraDrag = false;
             }
         }
+        else if (GameInfo.isMouseOverMenu) {
+            this.canDrag = false;
+        }
 
         // Start of camera translation
         push();
@@ -113,6 +129,11 @@ class World {
             // Where we want to be looking at the start 
             translate(World.startPosX / this.scale, World.startPosY / this.scale);
 
+            push();
+            scale(2.5);
+            image(GameInfo.images.backgrounds.arena, -GameInfo.images.backgrounds.arena.width * 0.35, -GameInfo.images.backgrounds.arena.height * 0.575);
+            pop();
+
             // Draw the maps
             // We need to reverse the order so that the placement map is
             // always the first being drawn
@@ -120,6 +141,15 @@ class World {
                 if (i === 0 && this.teams[0].unplacedCatsCheck() || i > 0) {
                     this.maps[i].draw();
                 }
+            }
+
+            // Draw player team caramel tiles
+            this.teams[0].drawCaramelTiles();
+
+            // Draw opponent teams caramel tiles
+            for (let i = 1; i < this.teams.length; i++) {
+                // The opponent information shouldn't be sent on the wrong state
+                this.teams[i].drawCaramelTiles();
             }
             
             // Draw the player team
@@ -137,48 +167,134 @@ class World {
             // Draw Map Tile Select Indicator
             if (this.mapSelector.map !== null) {
                 this.mapSelector.draw();
+
+                /* if (this.mapSelector.path !== null && this.mapSelector.path !== undefined) {
+                    for (let i = 0; i < this.mapSelector.path.length; i++) {
+                        push();
+                        translate(this.mapSelector.path[i].screenX - 60, this.mapSelector.path[i].screenY + 60);
+                        fill(255, 0, 0, 255);
+                        textSize(72);
+                        text(i, 0, 0);
+                        pop();
+                    }
+                } */
             }
         pop();
 
         // Draw the Select Info Boxes
-        this.mapSelector.drawInfoBoxes();
+        //this.mapSelector.drawInfoBoxes();
+        this.playerStatus.draw();
+    }
+
+    getMap(map) {
+        return this.maps[map];
+    }
+
+    getMapTiles(map) {
+        return this.maps[map].tiles;
+    }
+
+    getFlatMapTiles(mapIndex) {
+        let tiles = [];
+
+        for (let x = 0; x < this.maps[mapIndex].tiles.length; x++) {
+            for (let y = 0; y < this.maps[mapIndex].tiles[x].length; y++) {
+                tiles.push(this.maps[mapIndex].tiles[x][y]);
+            }
+        }
+
+        return tiles;
     }
 
     getTileInMap(x, y, map) {
         return this.maps[map].getTile(x, y);
     }
 
-    update(boards, playerTeam, opponentTeams) {
-        // Update the maps
-        for (let i = 0; i < this.maps.length; i++) {
-            this.maps[i].update(boards[i].tiles);
+    getCatAliveAtCoord(x, y, map) {
+        // For each team
+        for (let i = 0; i < this.teams.length; i++) {
+            // Try to see if there is a cat alive at the coordinate
+            let cat = this.teams[i].getCatAtCoord(x, y, map);
+
+            // Cat exists
+            if (cat !== null) {
+                // Is it alive?
+                if (this.teams[i].cats[cat].current_health > 0) {
+                    // Return the cat and the team
+                    return [this.teams[i].cats[cat], this.teams[i]];
+                }
+            }
         }
 
+        // If we got here it means that we could not find any cat alive at the provided coordinate
+        return [];
+    }
+
+    checkTeamsCaramelTile(x, y, map) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (this.teams[i].checkCaramelTile(x, y, map)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    getCatTeamIndex(cat) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (this.teams[i].cats.includes(cat)) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    checkOtherTeamsCaramelTile(ignoreIndex, x, y, map) {
+        for (let i = 0; i < this.teams.length; i++) {
+            if (i !== ignoreIndex) {
+                if (this.teams[i].checkCaramelTile(x, y, map)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    update(playerTeam, opponentTeams) {
         // Update the player team
-        this.teams[0].update(playerTeam.team.cats)
+        this.teams[0].update(playerTeam.team.cats, playerTeam.caramelWalls)
 
         // Update the opponent teams
         for (let i = 0; i < opponentTeams.length; i++) {
             if (this.teams[i + 1] !== undefined) {
-                this.teams[i + 1].update(opponentTeams[i].team.cats);
+                this.teams[i + 1].update(opponentTeams[i].team.cats, opponentTeams[i].caramelWalls);
             }
             else {
-                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, World.teamColors[1]);
+                this.teams[i + 1] = new Team(opponentTeams[i].team.id, GameInfo.game.opponents[i].name, opponentTeams[i].team.cats, opponentTeams[i].caramelWalls, World.teamColors[1]);
             }
         }
+
+        this.updateTeamCatFaces();
 
         if (this.mapSelector.rangeIndicator.sourceCat !== null && this.teams[this.mapSelector.team] !== undefined) {
             this.mapSelector.updateRangeIndicators(this.teams[this.mapSelector.team].cats[this.mapSelector.cat]);
         }
     }
 
+    updateTeamCatFaces() {
+        if (this.teams.length > 1) {
+            // Update the faces for both teams
+            this.teams[0].updateFace(this.teams[1].cats); // Player
+            this.teams[1].updateFace(this.teams[0].cats); // Opponent
+        }
+    }
 
-    keyPressed() {
+
+    async keyPressed() {
         if (keyCode === ESCAPE) {
-            if(confirm("Are you sure you want to quit?")) {
-                cancelGame();
-                window.location.reload();
-            }
+            togglePauseMenu();
         }
     }
 
@@ -191,7 +307,7 @@ class World {
     mouseReleased() {
 
         // If we weren't dragging the camera
-        if (!this.mouseCameraDrag) {
+        if (!this.mouseCameraDrag && GameInfo.isMouseOverMenu === false) {
             // We were hovering over a valid tile
             // and not the same tile we were before
             if (this.hoverTile.map !== null

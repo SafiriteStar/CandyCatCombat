@@ -1,158 +1,160 @@
 const pool = require("../../config/database");
 const Play = require("../playsFunctionality/playsInit");
 
-Play.move = async function(game, x, y, map, catID, teamID) {
-    try {
-        // Check if it's the user's turn
-        if (game.player.state.id === 3) { // 3 = waiting
+function getPathTiles(path, catData) {
+    let pathTiles = []
 
-            return { status: 400, result: {msg:"You cannot move the character since it's not this user's turn"} };
+    // Get the world information
+    for (let i = 0; i < path.length; i++) {
+        // Check if the tile exists
+        if (Play.checkTileExists(path[i].x, path[i].y, path[i].map - 1)) {
+            pathTiles.push(Play.worldData.maps[path[i].map - 1].tiles[path[i].x][path[i].y]);
         }
-        
-        let [selectedCats] = await pool.query(
-            `Select *
-            from game_team_cat
-            where gtc_id = ?`,
-            [catID]
-        );
-
-        // Check if any cats with that ID exists
-        if (selectedCats.length > 1) {
-            return { status: 400, result: {msg:"You cannot move the character since the chosen character is not valid"} };
-        }
-
-        // Get the cat that was returned
-        let selectedCat = selectedCats[0];
-        let stamina = selectedCat.gtc_stamina;
-
-        // Dead cats can't be moved
-        if (selectedCat.gtc_state_id === 3) { // 3 = dead
-            return { status: 400, result: {msg:"You cannot move the character since it is dead"} };
-        }
-
-        // Cats with no stamina can't be moved
-        if (stamina <= 0) {
-            return { status: 400, result: {msg:"You cannot move the character since it has no stamina"} };
-        }
-
-        // Ask for the tile data at the coordinates
-        let [tiles] = await pool.query(
-            `Select *
-            from tile
-            where tile_x = ? and tile_y = ? and tile_board_id = ?`,
-            [x, y, map]
-        );
-
-        // Does the tile exist?
-        if (tiles.length === 0) {
-            return { status: 400, result: {msg: "You cannot move the selected character there since it's not a tile"} };
-        }
-
-        // Store the data
-        let tile = tiles[0]
-
-        // Is the tile a wall?
-        if (tile.type_id == 2) { // 2 = wall
-            return { status: 400, result: {msg: "You cannot move the selected character there since it's a wall"} };
-        }
-
-        // Is there a cat already at the target tile?
-        let [cats] = await pool.query(
-            `Select gtc_x, gtc_y
-            from game, game_team, game_team_cat
-            where gtc_x = ? and gtc_y = ? and gtc_game_board_id = ? and gt_id = ? and gtc_game_team_id = gt_id`,
-            [x, y, map, teamID]
-        );
-
-        if (cats.length > 1) {
-            return { status: 400, result: {msg: "You cannot move the selected character there since there's already another character occupying that hex"} };
-        }
-
-        // Check if moving cat from board 1
-        if (selectedCat.gtc_game_board_id === 1) {
-
-            // Check if it's not placement tile
-            if (tile.tile_type_id !== 3) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid position"} };
-            }
-
-            // Check if valid placement group
-            let [tileGroups] = await pool.query(
-                `Select *
-                from placement_tile_group
-                where ptg_tile_x = ? and ptg_tile_y = ? and ptg_tile_board_id = ?`,
-                [x, y, map]
-            );
-
-            // Does the tile group exist?
-            if (tileGroups.length === 0) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid tile"} };
-            }
-
-            let tileGroup = tileGroups[0];
-            if(tileGroup.ptg_group !== game.player.order) {
-                return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
-            }
-
-            // Change cat to board2
-            await pool.query(
-                `Update game_team_cat set gtc_game_board_id = 2 where gtc_id = ?`,
-                [catID]
-            );
-        }
-        // Moving from board 2
         else {
-            // Check if player is in placement state
-            if (game.player.state.id === 1) { // 1 = Placement
-                if (tile.tile_type_id !== 3) { // 3 = Placement tile
-                    return { status: 400, result: {msg:"You cannot end placement since you readied up"} };
-                }
-                // Check if valid placement group
-                let [tileGroups] = await pool.query(
-                    `Select *
-                    from placement_tile_group
-                    where ptg_tile_x = ? and ptg_tile_y = ? and ptg_tile_board_id = ?`,
-                    [x, y, map]
-                );
+            // A tile was invalid, cancel the whole path
+            return [];
+        }
+    }
 
-                // Does the tile group exist?
-                if (tileGroups.length === 0) {
-                    return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid tile"} };
-                }
+    // Add in the tile that the cat is in (the tile we start at)
+    pathTiles.unshift(Play.worldData.maps[catData.boardID - 1].tiles[catData.x][catData.y]);
 
-                let tileGroup = tileGroups[0];
-                if(tileGroup.ptg_group !== game.player.id) {
-                    return { status: 400, result: {msg: "You cannot move the selected character there since it's not a valid placement group"} };
-                }
+    
+    return pathTiles;
+}
 
-            } 
-            else if (game.player.state_id === 4) {
+function checkNextTileIsNeighbor(currentTile, nextTile) {
+    // For each connection
+    for (let i = 0; i < currentTile.connections.length; i++) {
+        // Check if the nextTile is a connection
+        if (currentTile.connections[i].x == nextTile.x && currentTile.connections[i].y == nextTile.y && currentTile.connections[i].map == nextTile.map) {
+            return true;
+        }
+    }
+    // If we got here, none of the tiles were a neighbor
+    return false;
+}
 
-                // Check if the target tile not in same board or not next to the cat
-                if (selectedCat.gtc_game_board_id !== tile.tile_board_id || !this.isNeighbor(selectedCat.gtc_x, selectedCat.gtc_y, x, y)) {
-                    return { status: 400, result: {msg:"You cannot move the character since the chosen coordinate is not valid"} };
-                }
+Play.moveByPath = async function(game, path, catID) {
+    try {
+        // Are we in a state where we can move a cat?
+        if (!(game.player.state.name == "Playing" || game.player.state.name == "Placement")) {
+            return { status: 400, result: { msg: "You cannot move the character since its not your turn!" } };
+        }
 
-                // Use stamina
-                stamina = stamina - 1;
- 
+        // Get the information of the cat we are trying to move
+        let catData = await Play.getGameCat(catID);
+        // Is the cat dead?
+        if (catData.current_health <= 0) {
+            // Yes
+            return { status: 400, result: { msg: "You cannot move the character since its dead!" } };
+        }
+
+        // Is the cat rooted?
+        for (let i = 0; i < catData.conditions.length; i++) {
+            if (catData.conditions[i].name == "Rooted") {
+                // Yes
+                return { status: 400, result: { msg: "You cannot move the character since its rooted!" } };
             }
         }
 
-        // Update the cat info
+        // Get the world tile information of the path
+        let pathTiles = getPathTiles(path, catData);
+
+        // Did the tiles exist?
+        if (pathTiles.length === 0) {
+            return { status: 400, result: { msg: "You cannot move the character, the path had a nonexistent tile!" } };
+        }
+
+        // Get the caramel tile of the other teams
+        let caramelTiles = [];
+        for (let i = 0; i < game.opponents.length; i++) {
+            // For each opponent team
+            let oppCats = await Play.getGameCatTeam("opponent" + game.opponents[i].id, game.opponents[i].id, game.id);
+            // Add their caramel tiles to the list
+            caramelTiles = caramelTiles.concat(Play.calculateTeamCaramelWalls(oppCats.team.cats));
+        }
+
+        // For each one of those tiles (except the one we start at), append any living cats to those tiles
+        // Also check for walls
+        for (let i = 0; i < pathTiles.length - 1; i++) {
+            // Is that tile a wall or is it filled with caramel?
+            if (pathTiles[i].type == 2 || caramelTiles.includes(pathTiles[i])) {
+                // Yup
+                return { status: 400, result: { msg: "You cannot move the character, a path tile was a wall!" } };
+            }
+
+            pathTiles[i].cats = await Play.getCatsInTile(pathTiles[i]);
+            
+            // Are there cats alive in our path (except for the one we start at?)
+            if (pathTiles[i].cats.length > 0) {
+                // Are we at the last tile?
+                if (i == pathTiles.length - 1) {
+                    // Yes
+                    // Doesn't matter which team the cat is on; If there is a cat there, we can't stop there
+                    return { status: 400, result: { msg: "You cannot move the character since the space is already occupied!" } };
+                }
+                else {
+                    // Is the cat an enemy?
+                    for (let j = 0; j < pathTiles[i].cats.length; j++) {
+                        if (pathTiles[i].cats[j].team_id != catData.team_id) {
+                            // Yes
+                            return { status: 400, result: { msg: "You cannot move the character, a path tile was occupied by an enemy!" } };
+                        }
+                    }
+                }
+            }
+        }
+
+        // If we got here it means
+        // None of the tiles are occupied by other cats that we care about
+        let staminaLeftOver = catData.stamina;
+
+        // Are we in placement phase?
+        if (game.player.state.name == "Placement") {
+            // Then we need to check the path only has 2 tiles
+            if (pathTiles.length > 2) {
+                return { status: 400, result: { msg: "You cannot move the character, the path was too long for placement!" } };
+            }
+
+            // Are both the tiles the correct group?
+            for (let i = 0; i < pathTiles.length; i++) {
+                // Are they placement to begin with?
+                if (pathTiles[i].group === null || pathTiles[i].group === undefined) {
+                    return { status: 400, result: { msg: "You cannot move the character, the path had non placement tiles!" } };
+                }
+                
+                // Do they not match our order and are they not a universal group?
+                if (pathTiles[i].group !== game.player.order && pathTiles[i].group !== 0) {
+                    return { status: 400, result: { msg: "You cannot move the character, the path had the wrong placement tiles!" } };
+                }
+            }
+        }
+        else {
+            // We are in playing phase
+            // We need to check that all tiles form a chain of neighbors to each other
+            for (let i = 0; i < pathTiles.length - 1; i++) {
+                if (!checkNextTileIsNeighbor(pathTiles[i], pathTiles[i + 1])) {
+                    return { status: 400, result: { msg: "You cannot move the character, not all tiles in the path were neighbors!" } };
+                }
+            }
+
+            // Do we have enough stamina to walk that far?
+            if (catData.stamina < pathTiles.length - 1) {
+                return { status: 400, result: { msg: "You cannot move the character, not enough stamina!" } };
+            }
+
+            // Take away a point of stamina for how far we walked
+            staminaLeftOver = staminaLeftOver - (pathTiles.length - 1);
+        }
+
+        // If we got here, everything is okay!
+        // Move the cat to the new tile
         await pool.query(
             `Update game_team_cat set gtc_x = ?, gtc_y = ?, gtc_game_board_id = ?, gtc_stamina = ? where gtc_id = ?`,
-            [x, y, map, stamina, catID]
-        );
+                [pathTiles[pathTiles.length - 1].x, pathTiles[pathTiles.length - 1].y, pathTiles[pathTiles.length - 1].map, staminaLeftOver, catID]);
 
-        return {
-            status: 200, 
-            result: {
-                stamina: stamina,
-                x: x,
-                y: y
-            }
-        };
+        return { status: 200, result: { msg: "Move success!", stamina: staminaLeftOver } }
 
     } catch (err) {
         console.log(err);
@@ -160,47 +162,13 @@ Play.move = async function(game, x, y, map, catID, teamID) {
     }
 }
 
+Play.move = async function(game, path, catID) {
+    try {
+        result = await Play.moveByPath(game, path, catID);
 
-
-Play.isNeighbor = function(originX, originY, targetX, targetY) {
-
-    if (originX == targetX && originY == targetY + 1) { // middle up tile
-        return true;
+        return result;
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
     }
-
-    if (originX == targetX && originY == targetY - 1) { // middle down tile
-        return true;
-    }
-
-    if (originX == targetX - 1 && originY == targetY) { // left tile
-        return true;
-    }
-
-    if (originX == targetX + 1 && originY == targetY) { // right tile
-        return true;
-    }
-
-    // If the originX is an even number
-    if (originX % 2 === 0 && originY === targetY - 1) { // right up tile
-        if (originX === targetX + 1) {
-            return true;
-        }
-
-        if (originX === targetX - 1) { // left up tile
-            return true;
-        }
-    }
-
-    // If the originX is an odd number
-    else if(Math.abs(originX % 2) === 1 && originY === targetY + 1) { // right down tile
-        if (originX === targetX + 1) {
-            return true;
-        }
-
-        if (originX === targetX - 1) { // left down tile
-            return true;
-        }
-    }
-
-    return false;
 }

@@ -14,12 +14,27 @@ class CatStandardAttack {
         return cat.current_health > 0;
     }
 
+    static catIsNotStealthedFilter(cat) {
+        // For each condition
+        for (let i = 0; i < cat.conditions.length; i++) {
+            // If its stealth
+            if (cat.conditions[i].id === 1) {
+                // Then the check failed
+                return false;
+            }
+        }
+
+        // If we got here then the cat was not stealthed
+        return true;
+    }
+
     static filters = [
-        CatStandardAttack.catIsAliveFilter
+        CatStandardAttack.catIsAliveFilter,
+        CatStandardAttack.catIsNotStealthedFilter
     ]
 
     generateAttackTargetList() {
-        let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range);
+        let attackRangeTiles = Play.getNeighborsOfRange(Play.getTile(this.playerCat.x, this.playerCat.y, this.playerCat.boardID - 1), this.playerCat.max_range, this.playerCat.min_range, true);
         
         // Reset our list
         this.validTargetTeams = [];
@@ -45,12 +60,6 @@ class CatStandardAttack {
 
     async attack(targetCatData) {
         let damageDealt = targetCatData.defense - this.playerCat.damage;
-        console.log("Attacking Cat: " + this.playerCat.name + " GTC ID: " + this.playerCat.id);
-        console.log("Attack: " + this.playerCat.damage);
-        console.log("Defending Cat: " + targetCatData.name + " GTC ID: " + targetCatData.id);
-        console.log("Defense: " + targetCatData.defense);
-        console.log("Damage Dealt: " + damageDealt);
-        console.log("Updating database...");
 
         // APPLY DAMAGE
         await Play.applyDamage(damageDealt, targetCatData.id);
@@ -107,14 +116,17 @@ class CatStandardAttack {
         }
 
         // In case we need it, give back who we hit and for how much
-        return targetHit, damageDealt;
+        return targetHit !== null && targetHit !== undefined;
     }
 
     async executeAttackSequence() {
         // Get the cats we can attack
         this.generateAttackTargetList();
         // Attack a random target
-        await this.attackRandomTarget();
+        let hitTarget = await this.attackRandomTarget();
+
+        // Return true if we hit someone, false if else
+        return hitTarget
     }
 
     setNewSearchTeam(targetSearchTeams) {
@@ -122,6 +134,16 @@ class CatStandardAttack {
         this.validTargetTeams = [];
     }
 
+    static async rootedCheck(playerCat) {
+        // For every condition
+        for (let i = 0; i < playerCat.conditions.length; i++) {
+            // If its the root condition
+            if (playerCat.conditions[i].id === 2) {
+                // Tick it down
+                await Play.tickConditionDuration(playerCat.conditions[i].game_id, -1); 
+            }
+        }
+    }
 }
 
 module.exports = CatStandardAttack;

@@ -1,0 +1,123 @@
+.defaultTeamTableContainer {
+    position: relative;
+    z-index: 1;
+}
+
+.defaultTeamTable {
+    border-spacing: 2em 1em;
+    background-color: #ddbf98;
+    border: none;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+.defaultTeamTable * {
+    border-radius: 1em;
+}
+
+.defaultTeamCell {
+    padding: 0;
+    border: 1px solid black;
+    background-color: #e7cba7;
+}
+
+.defaultCatDropdown {
+    position: relative;
+    display: inline-block;
+    width: 10em;
+    height: 8.125em;
+}
+
+.defaultCatDropdownContent {
+    display: grid;
+    position: absolute;
+    width: 0%;
+    height: 0%;
+    visibility: hidden;
+    grid-template-areas: 'a a a a';
+    grid-auto-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-rows: 1fr 1fr;
+    transition: height 0.3s ease-out, width 0.3s ease-out;
+    background-color: #e7cba7;
+    border: 1px solid black;
+    left: -1px;
+}
+
+.defaultCatDropdown:hover .defaultCatDropdownContent {
+    display: grid;
+    visibility: visible;
+    height: 200%;
+    width: 400%;
+}
+
+.defaultCatDropdown:hover .defaultCatDropdownContent > .defaultCatOption {
+    display: grid;
+    width: 100%;
+    height: 100%;
+}
+
+.defaultCatOption {
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: 100%;
+    width: 100%;
+    height: 100%;
+
+    /* Removing the default CSS of a button */
+	color: inherit;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    
+    background: #e7cba7;
+    border: 1px solid black;
+
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.defaultCatOption:hover {
+    background: #c4a478;
+    
+}
+
+.defaultCatDropdownContent > .defaultCatOption {
+    display: grid;
+    width: 0%;
+    height: 0%;
+    border: 0;
+}
+
+.defaultCatImage {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.defaultCatText {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    margin-top: auto;
+    height: fit-content;
+    margin-bottom: 5%;
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+    font-size: smaller;
+}
+
+.defaultCatDropdown:hover > .defaultCatDropdownContent > .defaultCatOption > p {
+    width: 100%;
+    height: fit-content;
+    font-size: smaller;
+}
+
+.defaultCatDropdownContent > .defaultCatOption > p {
+    width: 0%;
+    height: 0%;
+    font-size: 0;
+    transition: width 0.3s ease, height 0.3s ease, font-size 0.3s ease;
+}

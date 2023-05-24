@@ -22,7 +22,7 @@ function fillScores(scores) {
         td.colSpan = 3;
         td.style.textAlign = "center";
         td.style.borderBottom = "2px solid black";
-        td.textContent = "Game "+score.gameId;
+        td.textContent = "Game " + score.gameId;
         for (let player of score.playerScores) {
             let tr = document.createElement("tr");
             t.appendChild(tr);
@@ -33,7 +33,7 @@ function fillScores(scores) {
             td.textContent = player.state;
             tr.appendChild(td);
             td = document.createElement("td");
-            td.textContent = "Points: "+player.points;
+            td.textContent = "Takedown Score: " + ((player.points / 1) * 100);
             tr.appendChild(td);
         }
         container.appendChild(elem);
