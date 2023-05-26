@@ -125,7 +125,7 @@ async function setup() {
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
     GameInfo.endturnButton.parent('game');
-    GameInfo.endturnButton.position(GameInfo.width - (150), GameInfo.height - (46 + 23));
+    GameInfo.endturnButton.position(GameInfo.width - (175), GameInfo.height - (46 + 23));
     GameInfo.endturnButton.mouseClicked(endturnAction);
     GameInfo.endturnButton.addClass('removeButtonStyle');
     GameInfo.endturnButton.addClass('defaultButtonStyle');
