@@ -2,7 +2,7 @@
 // we only have one game info so everything is static
 class GameInfo  {
     // settings variables
-    static width = window.innerWidth;
+    static width = (window.innerWidth * (1 - (0.04 * 0.9)));
     static height = window.innerHeight;
 
     static loading = true;

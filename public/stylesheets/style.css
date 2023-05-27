@@ -8,7 +8,10 @@
   position: absolute;
   left:0px;
   top:0px;
-  margin: 0px;
+  margin-left: calc(4vw * 0.9);
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   padding: 0px;
 }
 

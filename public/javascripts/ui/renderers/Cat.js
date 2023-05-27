@@ -15,10 +15,48 @@ function calculateOpacity(cat) {
     return Cat.aliveOpacity;
 }
 
+function calculateScreenPos(x, y, map) {
+    let evenOffset = isEven(x) && (-Tile.height) * 1 || 0;
+    let screenX = (Tile.width * 1.5 * x) + World.mapDrawOffsets[map][0];
+    let screenY = (-Tile.height * 2 * y) + World.mapDrawOffsets[map][1] + evenOffset;
+
+    return [screenX, screenY];
+}
+
+function moveToPos(screenX, screenY, path, pathIndex) {
+    // There is no "path"
+    if (path.length === 1 || screenX === null || screenY === null) {
+        return [path[0].screenX, path[0].screenY, 0];
+    }
+
+    // Have we reached our destination
+    if (path[pathIndex + 1] === null || path[pathIndex + 1] === undefined) {
+        // Yes
+        return [path[pathIndex].screenX, path[pathIndex].screenY, pathIndex];
+    }
+
+    // Are we close enough to it?
+    if (Math.abs(path[pathIndex + 1].screenX - screenX) < Cat.moveSpeed * 2 && Math.abs(path[pathIndex + 1].screenY - screenY) < Cat.moveSpeed * 2) {
+        // We are
+        // Set our position to the target and return the next index
+        return [path[pathIndex + 1].screenX, path[pathIndex + 1].screenY, pathIndex + 1];
+    }
+
+    // We have not reached our destination nor are we close enough to snap to it.
+    // Calculate vectors
+    let originVector = Vector2.v2new(path[pathIndex].screenX, path[pathIndex].screenY);
+    let targetVector = Vector2.v2new(path[pathIndex + 1].screenX, path[pathIndex + 1].screenY);
+    let targetDirection = Vector2.v2Normalize(Vector2.v2sub(targetVector, originVector));
+
+    // Move to the target, stay on the same index
+    return [screenX + (Cat.moveSpeed * targetDirection.x), screenY + (Cat.moveSpeed * targetDirection.y), pathIndex];
+}
+
 class Cat {
     static width = 300;
     static height = 420;
     static diameter = 100;
+    static moveSpeed = 20;
 
     static healthBarLength = 200;
     static healthBarHeight = 35;
@@ -40,9 +78,20 @@ class Cat {
     constructor(cat, image, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
+        
         this.x = cat.x;
         this.y = cat.y;
         this.map = cat.boardID - 1; // For easier handling of arrays.
+        
+        this.oldX = null;
+        this.oldY = null;
+        this.oldMap = null;
+        
+        [this.screenX, this.screenY] = calculateScreenPos(this.x, this.y, this.map);
+        
+        this.path = [{screenX:this.screenX, screenY:this.screenY}];
+        this.pathIndex = 0;
+        
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
@@ -67,20 +116,11 @@ class Cat {
 
     draw(teamColor) {
 
-        let currentX = (this.x);
-        let currentY = (this.y);
-        // More short circuiting "magic"
-        // Be careful with the order of the "||" and the 0
-        let evenOffset = isEven(currentX) && (-Tile.height) * 1 || 0;
-        let xOffset = GameInfo.world.maps[this.map].drawStartX;
-        let yOffset = GameInfo.world.maps[this.map].drawStartY;
+        [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
         
         push();
             // Outline the hexagon with the team color
-            translate(
-                (Tile.width * 1.5 * currentX) + xOffset,
-                (-Tile.height * 2 * currentY) + yOffset + evenOffset
-            );
+            translate(this.screenX, this.screenY);
             push();
             stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
             strokeWeight(24);
@@ -175,23 +215,63 @@ class Cat {
     update(cat, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
-        this.x = cat.x;
-        this.y = cat.y;
-        this.map = cat.boardID - 1; // For easier handling of arrays.
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
         this.damage = cat.damage;
         this.defense = cat.defense;
         this.speed = cat.speed;
-        this.stamina = cat.stamina;
         this.min_range = cat.min_range;
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
         this.conditions = cat.conditions;
-
         this.showDebug = showDebug
+        
+        // If the cat has moved
+        if (cat.x !== this.x || cat.y !== this.y || this.map !== cat.boardID - 1) {
+            // Save the old position
+            this.oldX = this.x;
+            this.oldY = this.y;
+            this.oldMap = this.map;
+
+            let moveRange = new RangeHighlighter(false, false, [164, 149, 255, 0], [164, 149, 255, 0], 0.5);
+            moveRange.newSource(this, 1, this.stamina);
+            console.log("Highlight Map");
+            console.log(moveRange.tilesToHighlight);
+
+            this.x = cat.x;
+            this.y = cat.y;
+            this.map = cat.boardID - 1; // For easier handling of arrays.
+
+            
+            // Generate a path
+            if (this.oldMap === this.map) {
+                // Calculate path
+                this.path = Pathfinder.getPath(
+                    GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap),
+                    GameInfo.world.getTileInMap(this.x, this.y, this.map),
+                    moveRange.tilesToHighlight);
+                this.path.unshift(GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap));
+                }
+                else {
+                    this.path = [
+                        GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap),
+                    GameInfo.world.getTileInMap(this.x, this.y, this.map)
+                ]
+            }
+            
+            this.screenX = null;
+            this.screenY = null;
+            
+            // Reset the map index
+            this.pathIndex = 0;
+            
+            console.log("Path");
+            console.log(this.path);
+        }
+
+        this.stamina = cat.stamina;
 
         this.opacity = calculateOpacity(cat);
     }
