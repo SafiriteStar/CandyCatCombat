@@ -243,10 +243,9 @@ class Cat {
             this.x = cat.x;
             this.y = cat.y;
             this.map = cat.boardID - 1; // For easier handling of arrays.
-
             
             // Generate a path
-            if (this.oldMap === this.map) {
+            if (this.oldMap === this.map && (GameInfo.game.player.state == "Playing" || GameInfo.game.player.state == "Waiting")) {
                 // Calculate path
                 this.path = Pathfinder.getPath(
                     GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap),
