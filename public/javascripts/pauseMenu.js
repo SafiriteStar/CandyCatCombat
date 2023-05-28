@@ -11,3 +11,7 @@ async function quitGame() {
         window.location.reload();
     }
 }
+
+function changeVolumeValue(volume) {
+    GameInfo.sounds.background.setVolume(volume);
+ }

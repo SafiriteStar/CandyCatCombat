@@ -1,6 +1,3 @@
-const Game = require("../../../models/gamesModel");
-
-
 async function refresh() {
     console.log (GameInfo.game)
 
@@ -92,6 +89,11 @@ function preload() {
     GameInfo.images.ui = {};
     GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
     GameInfo.images.ui.stealthed = loadImage("../../assets/StealthIcon.png");
+
+    // Sounds
+    GameInfo.sounds = {};
+    GameInfo.sounds.simpleMeleeAttack = loadSound("../../assets/Sounds/cat-screaming.wav")
+    GameInfo.sounds.background = loadSound("../../assets/Sounds/background.wav")
 }
 
 async function resizeImages() {
@@ -159,6 +161,8 @@ async function setup() {
     for (let element of document.getElementsByClassName('catBookletShowButton')) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());        
     }
+
+    GameInfo.sounds.background.loop();
 }
 
 function draw() {
