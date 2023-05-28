@@ -6,6 +6,7 @@ function togglePauseMenu() {
 }
 
 async function quitGame() {
+    GameInfo.sounds.click.play();
     if(confirm("Are you sure you want to quit?")) {
         await cancelGame();
         window.location.reload();

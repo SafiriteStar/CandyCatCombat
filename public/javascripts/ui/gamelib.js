@@ -94,6 +94,7 @@ function preload() {
     GameInfo.sounds = {};
     GameInfo.sounds.simpleMeleeAttack = loadSound("../../assets/Sounds/cat-screaming.wav")
     GameInfo.sounds.background = loadSound("../../assets/Sounds/background.wav")
+    GameInfo.sounds.click = loadSound("../../assets/Sounds/click.mp3")
 }
 
 async function resizeImages() {
