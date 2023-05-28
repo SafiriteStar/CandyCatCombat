@@ -23,10 +23,10 @@ function preload() {
 
     // Map
     GameInfo.images.tiles = {};
-    GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_Full.png");
-    GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_1_Full.png");
-    GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_Full.png");
-    GameInfo.images.tiles.caramel = loadImage("../../assets/Tiles/Caramel_web_4.png");
+    GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_160.png");
+    GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_2_160.png");
+    GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_160.png");
+    GameInfo.images.tiles.caramel = loadImage("../../assets/Tiles/Web_Tile_1_160.png");
 
     // Cats
     GameInfo.images.cats = {};
@@ -167,9 +167,11 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else if (GameInfo.game.state == "Finished") {
+    }
+    else if (GameInfo.game.state == "Finished") {
         GameInfo.scoreWindow.draw();
-    } else  {
+    }
+    else  {
         GameInfo.world.draw();
         GameInfo.scoreBoard.draw();
     }
