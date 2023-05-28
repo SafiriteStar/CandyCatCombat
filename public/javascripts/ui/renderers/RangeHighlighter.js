@@ -125,4 +125,22 @@ class RangeHighlighter {
             }
         }
     }
+
+    checkForOpponentCats() {
+        let sourceTeamIndex = GameInfo.world.getCatTeamIndex(this.sourceCat);
+        
+        let opponentCats = [];
+
+        for (let i = 0; i < this.tilesToHighlight.length; i++) {
+            let [cat] = GameInfo.world.getCatAliveAtCoord(this.tilesToHighlight[i].x, this.tilesToHighlight[i].y, this.map);
+            if (cat !== null && cat !== undefined) {
+                if (sourceTeamIndex !== GameInfo.world.getCatTeamIndex(cat)) {
+                    // We found an opponent cat
+                    opponentCats.push(cat);
+                }
+            }
+        }
+
+        return opponentCats;
+    }
 }

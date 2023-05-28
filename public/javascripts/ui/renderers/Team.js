@@ -28,6 +28,8 @@ class Team {
         for (let i = 0; i < catList.length; i++) {
             this.cats[i] = new Cat(catList[i], Team.getCatImage(catList[i].type - 1), false);
         }
+
+        this.attackRange = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 0], 1);
     }
     
     // Returns true if it finds unplaced player cats, false if not
@@ -77,7 +79,12 @@ class Team {
 
     attack() {
         for (let i = 0; i < this.cats.length; i++) {
-            this.cats[i].catAnimations.changeState("attack");
+            this.attackRange.newSource(this.cats[i], this.cats[i].min_range, this.cats[i].max_range);
+            let opponentCats = this.attackRange.checkForOpponentCats();
+            
+            if (opponentCats.length > 1) {
+                this.cats[i].catAnimations.changeState("attack");
+            }
         }
     }
 
