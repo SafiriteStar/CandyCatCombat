@@ -66,6 +66,7 @@ async function endturnAction() {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
+        GameInfo.world.playerAttack();
     }
     else {
         alert("Something went wrong when ending the turn.");
@@ -93,7 +94,6 @@ async function moveCatAction(path, catID) {
     if (result.successful) {
         await getGameInfo();
         await getBoardInfo();
-        GameInfo.prepareUI();
     }
     else {
         alert("Something went wrong when trying to move the character\n" + result.msg);

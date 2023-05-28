@@ -13,9 +13,11 @@ async function refresh() {
         await getGameInfo();
         await getBoardInfo();
 
-        if (GameInfo.game.player.state != "Waiting" || GameInfo.game.player.state != "PlacementReady") {
+        if (GameInfo.game.player.state != "Waiting" && GameInfo.game.player.state != "PlacementReady") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
+            // Have all opponents attack
+            GameInfo.world.opponentsAttack();
         }
     } 
     // Nothing to do when we are playing since we control all that happens 
@@ -30,10 +32,10 @@ function preload() {
 
     // Map
     GameInfo.images.tiles = {};
-    GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_Full.png");
-    GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_1_Full.png");
-    GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_Full.png");
-    GameInfo.images.tiles.caramel = loadImage("../../assets/Tiles/Caramel_web_4.png");
+    GameInfo.images.tiles.normal = loadImage("../../assets/Tiles/Floor_Tile_2_160.png");
+    GameInfo.images.tiles.wall = loadImage("../../assets/Tiles/Wall_Tile_2_160.png");
+    GameInfo.images.tiles.placement = loadImage("../../assets/Tiles/Floor_Tile_1_160.png");
+    GameInfo.images.tiles.caramel = loadImage("../../assets/Tiles/Web_Tile_1_160.png");
 
     // Cats
     GameInfo.images.cats = {};
@@ -44,6 +46,7 @@ function preload() {
     GameInfo.images.cats.vanillaCat.fainted = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
     GameInfo.images.cats.vanillaCat.attack = loadImage("../../assets/VanillaCat/Vanilla_Cat_Attack.png");
     GameInfo.images.cats.vanillaCat.weapon = loadImage("../../assets/VanillaCat/Candy_Cane_Sword.png");
+    GameInfo.images.cats.vanillaCat.weapon2 = loadImage("../../assets/VanillaCat/Peppermint_Shield.png");
     
     // Candy Corn Cat
     GameInfo.images.cats.candyCornCat = {};
@@ -174,9 +177,11 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else if (GameInfo.game.state == "Finished") {
+    }
+    else if (GameInfo.game.state == "Finished") {
         GameInfo.scoreWindow.draw();
-    } else  {
+    }
+    else  {
         GameInfo.world.draw();
         GameInfo.scoreBoard.draw();
     }
