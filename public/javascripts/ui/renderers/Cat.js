@@ -126,6 +126,10 @@ class Cat {
         this.damageFlashTime = 20;
         this.damageFlashTimer = 20;
         this.damageFlashTint = [255, 150, 150];
+        
+        this.healFlashTime = 20;
+        this.healFlashTimer = 20;
+        this.healFlashTint = [150, 255, 150];
 
         this.isStealth = false;
         let baseAnimState = "idle";
@@ -143,6 +147,22 @@ class Cat {
 
             if (this.damageFlashTimer % 5 == 0) {
                 tint(this.damageFlashTint[0], this.damageFlashTint[1], this.damageFlashTint[2], this.opacity);
+            }
+            else {
+                tint(255, 255, 255, this.opacity);
+            }
+        }
+        else {
+            tint(255, 255, 255, this.opacity);
+        }
+    }
+
+    flashHeal() {
+        if (this.healFlashTimer < this.healFlashTime) {
+            this.healFlashTimer += 1;
+
+            if (this.healFlashTimer % 5 == 0) {
+                tint(this.healFlashTint[0], this.healFlashTint[1], this.healFlashTint[2], this.opacity);
             }
             else {
                 tint(255, 255, 255, this.opacity);
@@ -203,6 +223,7 @@ class Cat {
                 }
                 // Get the tint
                 this.flashDamage();
+                this.flashHeal();
                 // Main Cat
                 this.catAnimations.draw();
             pop();
@@ -285,6 +306,11 @@ class Cat {
             // Yes, flash red
             this.damageFlashTimer = 0;
         }
+        else if (cat.current_health > this.current_health) {
+            // We healed
+            this.healFlashTimer = 0;
+        }
+
         if (cat.current_health <= 0) {
             this.catAnimations.state = "faint";
         }
