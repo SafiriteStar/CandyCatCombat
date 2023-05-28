@@ -23,7 +23,7 @@ function calculateScreenPos(x, y, map) {
     return [screenX, screenY];
 }
 
-function moveToPos(screenX, screenY, path, pathIndex, deltaTime) {
+function moveToPos(screenX, screenY, path, pathIndex) {
     // There is no "path"
     if (path.length === 1 || screenX === null || screenY === null) {
         return [path[0].screenX, path[0].screenY, 0];
@@ -36,7 +36,7 @@ function moveToPos(screenX, screenY, path, pathIndex, deltaTime) {
     }
 
     // Are we close enough to it?
-    if (Math.abs(path[pathIndex + 1].screenX - screenX) < 5 * 2 && Math.abs(path[pathIndex + 1].screenY - screenY) < 5 * 2) {
+    if (Math.abs(path[pathIndex + 1].screenX - screenX) < Cat.moveSpeed * 2 && Math.abs(path[pathIndex + 1].screenY - screenY) < Cat.moveSpeed * 2) {
         // We are
         // Set our position to the target and return the next index
         return [path[pathIndex + 1].screenX, path[pathIndex + 1].screenY, pathIndex + 1];
@@ -49,7 +49,7 @@ function moveToPos(screenX, screenY, path, pathIndex, deltaTime) {
     let targetDirection = Vector2.v2Normalize(Vector2.v2sub(targetVector, originVector));
 
     // Move to the target, stay on the same index
-    return [screenX + ((Cat.moveSpeed * (1 / deltaTime)) * targetDirection.x), screenY + ((Cat.moveSpeed * (1 / deltaTime)) * targetDirection.y), pathIndex];
+    return [screenX + (Cat.moveSpeed * targetDirection.x), screenY + (Cat.moveSpeed * targetDirection.y), pathIndex];
 }
 
 function checkStealth (conditions) {
@@ -66,7 +66,7 @@ class Cat {
     static width = 300;
     static height = 420;
     static diameter = 100;
-    static moveSpeed = 1000;
+    static moveSpeed = 25;
 
     static healthBarLength = 200;
     static healthBarHeight = 35;
@@ -161,7 +161,7 @@ class Cat {
         let currentX = this.screenX;
         
         if (this.catAnimations.state != "faint") {
-            [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex, deltaTime);
+            [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
             currentX = this.screenX;
     
             // If we haven't reached our destination and aren't moving
