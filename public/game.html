@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/stylesheets/score.css">
   <link rel="stylesheet" href="/stylesheets/pauseMenu.css">
   <script src="javascripts/utils/p5.min.js"></script>
-  <script src="javascripts/utils/p5.sound.min.js"></script>
+  <script src="javascripts/sounds.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
@@ -51,6 +51,11 @@
 </head>
 
 <body>
+  <audio autoplay loop>
+    <source src="assets/Sounds/background.wav" type="audio/wav" />
+    Your browser doesn't support the audio element.
+  </audio>
+  <iframe id="soundsFrame" src="sounds.html" frameborder="0"></iframe>
   <main id="game">
     <div class="pauseMenuFrame">
       <h1 class="pauseMenuTitle">Game Paused</h1>

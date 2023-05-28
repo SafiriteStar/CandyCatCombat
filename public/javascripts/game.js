@@ -3,7 +3,7 @@ window.onload = async function() {
         let result = await checkGame(true);
         if (result.err) throw result.err;
 
-        GameInfo.sounds.background.play();
+        //playBackground();
         
         // Get default team
         result = await requestDefaultTeam();

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="/stylesheets/utils.css">
   <link rel="stylesheet" href="/stylesheets/login.css">
+  <script src="./javascripts/sounds.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
@@ -43,12 +44,13 @@
           </tr>
         </table>
         <p id="msg" class="warning"></p>
-        <input class="removeButtonStyle defaultButtonStyle longButton loginButton" type="submit" value="Login">
+        <input class="removeButtonStyle defaultButtonStyle longButton loginButton" type="submit" value="Login" onclick="playClick()">
         <a class="defaultLinkStyle" href="register.html">Create new account</a>
         <a class="removeButtonStyle defaultButtonStyle longButton loginButton" href="scoreboard.html">See previous games Score Board</a>
       </form>
     </div>
   </main>
+  <iframe id="soundsFrame" src="sounds.html" frameborder="0"></iframe>
 </body>
 
 </html>
