@@ -4,9 +4,10 @@
   <title>Candy Cat Combat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Montserrat:wght@200;400&family=Amita:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Lily+Script+One&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="/stylesheets/utils.css">
+  <link rel="stylesheet" href="/stylesheets/gameModal/modal.css">
   <link rel="stylesheet" href="/stylesheets/catInfo/content.css">
   <link rel="stylesheet" href="/stylesheets/catInfo/sideBar.css">
   <link rel="stylesheet" href="/stylesheets/catBooklet.css">
@@ -52,6 +53,12 @@
 
 <body>
   <main id="game">
+    <div id="turnModal" class="modal-game">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <p class="modal-text">Opponent's Turn</p>
+      </div>
+    </div>
     <div class="pauseMenuFrame">
       <h1 class="pauseMenuTitle">Game Paused</h1>
       <button class="pauseResumeButton pauseButton pauseMenuText" onclick="togglePauseMenu()">Resume</button>
