@@ -264,7 +264,12 @@ class World {
 
     update(playerTeam, opponentTeams) {
         // Update the player team
-        this.teams[0].update(playerTeam.team.cats, playerTeam.caramelWalls)
+        this.teams[0].update(playerTeam.team.cats, playerTeam.caramelWalls);
+        if (this.teams[0].unplacedCatsCheck() !== this.unplacedCats) {
+            // We placed all cats
+            this.unplacedCats = false;
+            GameInfo.placementReadyButton.show();
+        }
 
         // Update the opponent teams
         for (let i = 0; i < opponentTeams.length; i++) {

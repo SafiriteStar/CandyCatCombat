@@ -14,6 +14,8 @@
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+    visibility: hidden;
 }
 
 /* Modal Content */
@@ -37,4 +39,21 @@
 .modal-text {
     font-family: 'Lily Script One', cursive;
     font-size: 7vw;
+}
+
+.modal-show {
+    animation-name: turnModal;
+    animation-duration: 4s;
+}
+
+@keyframes turnModal {
+    0%   {opacity: 0%; visibility: visible;}
+    10%  {opacity: 50%;}
+    20%  {opacity: 100%;}
+    30%  {opacity: 100%;}
+    40%  {opacity: 100%;}
+    45%  {opacity: 100%;}
+    55%  {opacity: 100%;}
+    65%  {opacity: 50%;}
+    75%  {opacity: 0%; visibility: hidden;}
 }

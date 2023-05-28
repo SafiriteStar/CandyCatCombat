@@ -25,10 +25,25 @@ class GameInfo  {
     static endturnButton;
     static placementReadyButton;
 
+    static showTurnModal(text) {
+        // Change the text
+        let modalTexts = document.getElementsByClassName('modal-text');
+        for (let i = 0; i < modalTexts.length; i++) {
+            modalTexts[i].innerHTML = text;            
+        }
+
+        // Show the modal
+        let turnModals = document.getElementsByClassName('modal-game');
+        for (let i = 0; i < turnModals.length; i++) {
+            turnModals[i].classList.add('modal-show');
+        }
+    }
+
     // Write your UI settings for each game state here
     // Call the method every time there is a game state change
     static prepareUI() {
         if (GameInfo.game.player.state == "Placement") {
+            GameInfo.showTurnModal("Place Your Cats");
             if (GameInfo.world.teams[0].unplacedCatsCheck()) {
                 GameInfo.placementReadyButton.hide();
             }
@@ -38,18 +53,22 @@ class GameInfo  {
             GameInfo.endturnButton.hide();
         }
         else if (GameInfo.game.player.state == "PlacementReady") {
+            GameInfo.showTurnModal("Readied Up");
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.hide();
         }
         else if (GameInfo.game.player.state == "Waiting") {
+            GameInfo.showTurnModal("Opponent's Turn");
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.hide();
         }
         else if (GameInfo.game.player.state == "Playing") {
+            GameInfo.showTurnModal("Your Turn");
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.show();
         }
         else if (GameInfo.game.player.state == "Score") {
+            GameInfo.showTurnModal("Match Over");
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.hide();
             let scoreContainers = document.getElementsByClassName('scoreContainer');

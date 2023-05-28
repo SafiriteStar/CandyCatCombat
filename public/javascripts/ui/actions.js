@@ -91,7 +91,6 @@ async function moveCatAction(path, catID) {
     if (result.successful) {
         await getGameInfo();
         await getBoardInfo();
-        GameInfo.prepareUI();
     }
     else {
         alert("Something went wrong when trying to move the character\n" + result.msg);

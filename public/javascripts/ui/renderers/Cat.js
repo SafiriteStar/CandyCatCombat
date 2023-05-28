@@ -175,12 +175,10 @@ class Cat {
 
     draw(teamColor) {
         let currentX = this.screenX;
+        
         if (this.catAnimations.state != "faint") {
             [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
-            let currentX = this.screenX;
-            if (this.map == 0) {
-                currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
-            }
+            currentX = this.screenX;
     
             // If we haven't reached our destination and aren't moving
             if (!(this.pathIndex == this.path.length - 1) && (this.catAnimations.state != "move" && this.catAnimations.state != "moveStealth")) {
@@ -200,6 +198,10 @@ class Cat {
                 // Play the idle instead
                 this.catAnimations.changeState(idleAnimState);
             }
+        }
+
+        if (this.map == 0) {
+            currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
         }
 
         push();

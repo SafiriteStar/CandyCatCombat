@@ -1,7 +1,6 @@
 class Animation {
     constructor(images, loop) {
         this.images = [];
-        console.log(images)
         for (let i = 0; i < images.length; i++) {
             if (images[i] !== null && images[i] !== undefined) {
                 this.images.push(images[i]);
