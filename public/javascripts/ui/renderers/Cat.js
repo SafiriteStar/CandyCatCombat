@@ -117,10 +117,13 @@ class Cat {
     draw(teamColor) {
 
         [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
-        
+        let currentX = this.screenX;
+        if (this.map == 0) {
+            currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
+        }
         push();
             // Outline the hexagon with the team color
-            translate(this.screenX, this.screenY);
+            translate(currentX, this.screenY);
             push();
             stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
             strokeWeight(24);
