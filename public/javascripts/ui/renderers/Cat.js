@@ -229,7 +229,8 @@ class Cat {
         this.showDebug = showDebug
         
         // If the cat has moved
-        if (cat.x !== this.x || cat.y !== this.y || this.map !== cat.boardID - 1) {
+        // And we are in the playing or waiting phase
+        if ((cat.x !== this.x || cat.y !== this.y || this.map !== cat.boardID - 1)) {
             // Save the old position
             this.oldX = this.x;
             this.oldY = this.y;
@@ -252,12 +253,9 @@ class Cat {
                     GameInfo.world.getTileInMap(this.x, this.y, this.map),
                     moveRange.tilesToHighlight);
                 this.path.unshift(GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap));
-                }
-                else {
-                    this.path = [
-                        GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap),
-                    GameInfo.world.getTileInMap(this.x, this.y, this.map)
-                ]
+            }
+            else {
+                this.path = [ GameInfo.world.getTileInMap(this.x, this.y, this.map) ]
             }
             
             this.screenX = null;
@@ -268,6 +266,9 @@ class Cat {
             
             console.log("Path");
             console.log(this.path);
+        }
+        else {
+
         }
 
         this.stamina = cat.stamina;
