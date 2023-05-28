@@ -49,7 +49,7 @@ class World {
         let playerStatusWidth = 400;
         let playerStatusHeight = 100;
         let playerStatusMargin = 25;
-        this.playerStatus = new teamStatus(playerStatusMargin, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
+        this.playerStatus = new TeamStatus(playerStatusMargin, GameInfo.height - playerStatusHeight - playerStatusMargin, playerStatusWidth, playerStatusHeight, this.teams[0].cats);
         
         // See if the player still needs to place cats
         this.unplacedCats = this.teams[0].unplacedCatsCheck();
@@ -350,6 +350,20 @@ class World {
             
             if (this.scale > 0.34) {
                 this.scale = 0.34;
+            }
+        }
+    }
+
+    playerAttack() {
+        this.teams[0].attack();
+    }
+
+    opponentsAttack() {
+        // If we have opponents
+        if (this.teams.length > 1) {
+            // Set them all to the attack state
+            for (let i = 1; i < this.teams.length; i++) {
+                this.teams[i].attack();
             }
         }
     }

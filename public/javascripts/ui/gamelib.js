@@ -6,9 +6,11 @@ async function refresh() {
         await getGameInfo();
         await getBoardInfo();
 
-        if (GameInfo.game.player.state != "Waiting" || GameInfo.game.player.state != "PlacementReady") {
+        if (GameInfo.game.player.state != "Waiting" && GameInfo.game.player.state != "PlacementReady") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
+            // Have all opponents attack
+            GameInfo.world.opponentsAttack();
         }
     } 
     // Nothing to do when we are playing since we control all that happens 

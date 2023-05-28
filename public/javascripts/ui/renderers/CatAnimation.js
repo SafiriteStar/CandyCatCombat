@@ -6,8 +6,12 @@ class Animation {
         this.yOffset = 0;
     }
 
-    draw(opacity) {
-        tint(255, 255, 255, opacity);
+    reset() {
+        this.xOffset = 0;
+        this.yOffset = 0;
+    }
+
+    draw() {
         image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
     }
 }
@@ -26,9 +30,15 @@ class IdleAnimation extends Animation {
         
     }
 
-    draw(opacity) {
+    reset() {
+        this.xOffset = 0;
+        this.yOffset = 0;
+        this.bounceWaitTimer = 0;
+        this.currentSpeed = -this.jumpSpeed;
+    }
+
+    draw() {
         if (this.yOffset > 0 && this.bounceWaitTimer > this.bounceWaitTime && this.loop) {
-            console.log("Bottom");
             // Add an impulse to go up
             this.currentSpeed = -this.jumpSpeed;
             this.yOffset = 0;
@@ -44,7 +54,6 @@ class IdleAnimation extends Animation {
             this.bounceWaitTimer += 1;
         }
 
-        tint(255, 255, 255, opacity);
         image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
     }
 }
@@ -52,9 +61,30 @@ class IdleAnimation extends Animation {
 class MoveAnimation extends IdleAnimation {
     constructor(image, loop) {
         super(image, loop);
-        this.jumpSpeed = this.jumpSpeed * 2;
-        this.gravity = this.gravity * 3;
+        this.jumpSpeed = this.jumpSpeed;
+        this.gravity = this.gravity;
         this.bounceWaitTime = 0;
+    }
+}
+
+class AttackAnimation extends Animation {
+    constructor(image, loop) {
+        super(image, loop);
+        this.durationTime = 40;
+        this.durationTimer = 0;
+        this.finishedPlaying = false;
+    }
+
+    draw() {
+        if (this.durationTimer > this.durationTime) {
+            this.finishedPlaying = true;
+        }
+        else if (!this.finishedPlaying) {
+            this.durationTimer += 1;
+        }
+
+        image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
+        
     }
 }
 
@@ -65,14 +95,31 @@ class CatAnimator {
 
         this.idleAnimation = new IdleAnimation(this.images.base, true);
         this.moveAnimation = new MoveAnimation(this.images.base, true);
+        this.attackAnimation = new AttackAnimation(this.images.attack, false);
     }
 
-    draw(opacity) {
+    changeState(newState) {
+        this.state = newState;
+
+        // Reset some variables
+        this.idleAnimation.reset();
+        this.moveAnimation.reset();
+    }
+
+    draw() {
+        push();
         if (this.state == "idle") {
-            this.idleAnimation.draw(opacity);
+            this.idleAnimation.draw();
         }
         else if (this.state == "move") {
-            this.moveAnimation.draw(opacity);
+            this.moveAnimation.draw();
         }
+        else if (this.state == "attack") {
+            this.attackAnimation.draw();
+            if (this.attackAnimation.finishedPlaying) {
+                this.state = "idle";
+            }
+        }
+        pop();
     }
 }

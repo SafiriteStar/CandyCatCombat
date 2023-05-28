@@ -75,6 +75,12 @@ class Team {
         return false;
     }
 
+    attack() {
+        for (let i = 0; i < this.cats.length; i++) {
+            this.cats[i].catAnimations.changeState("attack");
+        }
+    }
+
     draw() {        
         for (let i = 0; i < this.cats.length; i++) {
             this.cats[i].draw(this.color);

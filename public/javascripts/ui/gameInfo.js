@@ -45,7 +45,7 @@ class GameInfo  {
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.hide();
         }
-        else if (GameInfo.game.player.state == "Playing") { 
+        else if (GameInfo.game.player.state == "Playing") {
             GameInfo.placementReadyButton.hide();
             GameInfo.endturnButton.show();
         }

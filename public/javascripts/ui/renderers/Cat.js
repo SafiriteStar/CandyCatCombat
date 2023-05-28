@@ -113,7 +113,26 @@ class Cat {
         this.img = image;
         this.facingRight = false;
 
+        this.damageFlashTime = 20;
+        this.damageFlashTimer = 20;
+        this.damageFlashTint = [255, 150, 150];
         this.catAnimations = new CatAnimator(this.img);
+    }
+
+    flashDamage() {
+        if (this.damageFlashTimer < this.damageFlashTime) {
+            this.damageFlashTimer += 1;
+
+            if (this.damageFlashTimer % 5 == 0) {
+                tint(this.damageFlashTint[0], this.damageFlashTint[1], this.damageFlashTint[2], this.opacity);
+            }
+            else {
+                tint(255, 255, 255, this.opacity);
+            }
+        }
+        else {
+            tint(255, 255, 255, this.opacity);
+        }
     }
 
     draw(teamColor) {
@@ -123,12 +142,18 @@ class Cat {
         if (this.map == 0) {
             currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
         }
-        if (!(this.pathIndex == this.path.length - 1)) {
-            this.catAnimations.state = "move";
+
+        // If we haven't reached our destination and aren't moving
+        if (!(this.pathIndex == this.path.length - 1) && this.catAnimations.state != "move") {
+            // Do the move animation
+            this.catAnimations.changeState("move");
         }
-        else {
-            this.catAnimations.state = "idle";
+        // If we have reached our destination and are playing the move animation
+        else if (this.pathIndex == this.path.length - 1 && this.catAnimations.state == "move") {
+            // Play the idle instead
+            this.catAnimations.changeState("idle");
         }
+
         push();
             // Outline the hexagon with the team color
             translate(currentX, this.screenY);
@@ -148,8 +173,10 @@ class Cat {
                 if (this.facingRight) {
                     scale(-1, 1);
                 }
+                // Get the tint
+                this.flashDamage();
                 // Main Cat
-                this.catAnimations.draw(this.opacity);
+                this.catAnimations.draw();
                 // Weapon
                 image(this.img.weapon, -this.img.weapon.width * 0.5, -this.img.base.height * 0.5);
             pop();
@@ -227,6 +254,11 @@ class Cat {
         this.type = cat.type;
         this.name = cat.name;
         this.max_health = cat.max_health;
+        // Did we take damage
+        if (cat.current_health < this.current_health) {
+            // Yes, flash red
+            this.damageFlashTimer = 0;
+        }
         this.current_health = cat.current_health;
         this.damage = cat.damage;
         this.defense = cat.defense;

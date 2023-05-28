@@ -63,6 +63,7 @@ async function endturnAction() {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
+        GameInfo.world.playerAttack();
     }
     else {
         alert("Something went wrong when ending the turn.");
