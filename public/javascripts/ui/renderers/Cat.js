@@ -110,8 +110,10 @@ class Cat {
 
         this.opacity = calculateOpacity(cat);
 
-        this.img = image
+        this.img = image;
         this.facingRight = false;
+
+        this.catAnimations = new CatAnimator(this.img);
     }
 
     draw(teamColor) {
@@ -120,6 +122,12 @@ class Cat {
         let currentX = this.screenX;
         if (this.map == 0) {
             currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
+        }
+        if (!(this.pathIndex == this.path.length - 1)) {
+            this.catAnimations.state = "move";
+        }
+        else {
+            this.catAnimations.state = "idle";
         }
         push();
             // Outline the hexagon with the team color
@@ -140,9 +148,8 @@ class Cat {
                 if (this.facingRight) {
                     scale(-1, 1);
                 }
-                tint(255, 255, 255, this.opacity);
                 // Main Cat
-                image(this.img.base, -this.img.base.width * 0.5, -this.img.base.height * 0.5);
+                this.catAnimations.draw(this.opacity);
                 // Weapon
                 image(this.img.weapon, -this.img.weapon.width * 0.5, -this.img.base.height * 0.5);
             pop();
@@ -241,8 +248,6 @@ class Cat {
 
             let moveRange = new RangeHighlighter(false, false, [164, 149, 255, 0], [164, 149, 255, 0], 0.5);
             moveRange.newSource(this, 1, this.stamina);
-            console.log("Highlight Map");
-            console.log(moveRange.tilesToHighlight);
 
             this.x = cat.x;
             this.y = cat.y;
@@ -266,9 +271,6 @@ class Cat {
             
             // Reset the map index
             this.pathIndex = 0;
-            
-            console.log("Path");
-            console.log(this.path);
         }
         else {
 
