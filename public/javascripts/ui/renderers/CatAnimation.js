@@ -1,6 +1,12 @@
 class Animation {
-    constructor(image, loop) {
-        this.image = image;
+    constructor(images, loop) {
+        this.images = [];
+        console.log(images)
+        for (let i = 0; i < images.length; i++) {
+            if (images[i] !== null && images[i] !== undefined) {
+                this.images.push(images[i]);
+            }
+        }
         this.loop = loop;
         this.xOffset = 0;
         this.yOffset = 0;
@@ -12,13 +18,15 @@ class Animation {
     }
 
     draw() {
-        image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
+        for (let i = 0; i < this.images.length; i++) {
+            image(this.images[i], (-this.images[i].width * 0.5) + this.xOffset, (-this.images[i].height * 0.5) + this.yOffset);
+        }
     }
 }
 
 class IdleAnimation extends Animation {
-    constructor(image, loop) {
-        super(image, loop);
+    constructor(images, loop) {
+        super(images, loop);
         this.maxJumpHeight = 75;
         this.jumpDirection = -1;
         this.jumpSpeed = 10;
@@ -54,13 +62,15 @@ class IdleAnimation extends Animation {
             this.bounceWaitTimer += 1;
         }
 
-        image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
+        for (let i = 0; i < this.images.length; i++) {
+            image(this.images[i], (-this.images[i].width * 0.5) + this.xOffset, (-this.images[i].height * 0.5) + this.yOffset);
+        }
     }
 }
 
 class MoveAnimation extends IdleAnimation {
-    constructor(image, loop) {
-        super(image, loop);
+    constructor(images, loop) {
+        super(images, loop);
         this.jumpSpeed = this.jumpSpeed;
         this.gravity = this.gravity;
         this.bounceWaitTime = 0;
@@ -68,9 +78,16 @@ class MoveAnimation extends IdleAnimation {
 }
 
 class AttackAnimation extends Animation {
-    constructor(image, loop) {
-        super(image, loop);
+    constructor(images, loop) {
+        super(images, loop);
         this.durationTime = 40;
+        this.durationTimer = 0;
+        this.finishedPlaying = false;
+    }
+
+    reset() {
+        this.xOffset = 0;
+        this.yOffset = 0;
         this.durationTimer = 0;
         this.finishedPlaying = false;
     }
@@ -83,19 +100,32 @@ class AttackAnimation extends Animation {
             this.durationTimer += 1;
         }
 
-        image(this.image, (-this.image.width * 0.5) + this.xOffset, (-this.image.height * 0.5) + this.yOffset);
-        
+        for (let i = 0; i < this.images.length; i++) {
+            image(this.images[i], (-this.images[i].width * 0.5) + this.xOffset, (-this.images[i].height * 0.5) + this.yOffset);
+        }
+    }
+}
+
+class FaintAnimation extends Animation {
+    constructor(images, loop) {
+        super(images, loop);
+
     }
 }
 
 class CatAnimator {
-    constructor(images) {
+    constructor(images, baseState) {
         this.images = images;
-        this.state = "idle";
+        this.state = baseState;
 
-        this.idleAnimation = new IdleAnimation(this.images.base, true);
-        this.moveAnimation = new MoveAnimation(this.images.base, true);
-        this.attackAnimation = new AttackAnimation(this.images.attack, false);
+        this.idleAnimation = new IdleAnimation([this.images.weapon2, this.images.base, this.images.weapon], true);
+        this.moveAnimation = new MoveAnimation([this.images.weapon2, this.images.base, this.images.weapon], true);
+        this.attackAnimation = new AttackAnimation([this.images.weapon2, this.images.attack, this.images.weapon], false);
+        if (this.images.stealth !== null && this.images.stealth !== undefined) {
+            this.stealthIdleAnimation = new IdleAnimation([this.images.weapon2, this.images.stealth, this.images.weapon], true);
+            this.stealthMoveAnimation = new MoveAnimation([this.images.weapon2, this.images.stealth, this.images.weapon], true);
+        }
+        this.faintAnimation = new FaintAnimation([this.images.weapon2, this.images.fainted, this.images.weapon], false);
     }
 
     changeState(newState) {
@@ -104,6 +134,14 @@ class CatAnimator {
         // Reset some variables
         this.idleAnimation.reset();
         this.moveAnimation.reset();
+
+        if (this.images.stealth !== null && this.images.stealth !== undefined) {
+            this.stealthIdleAnimation.reset();
+            this.stealthMoveAnimation.reset();
+        }
+
+        this.attackAnimation.reset();
+        this.faintAnimation.reset();
     }
 
     draw() {
@@ -119,6 +157,15 @@ class CatAnimator {
             if (this.attackAnimation.finishedPlaying) {
                 this.state = "idle";
             }
+        }
+        else if (this.state == "stealthIdle") {
+            this.stealthIdleAnimation.draw();
+        }
+        else if (this.state == "stealthMove") {
+            this.stealthMoveAnimation.draw();
+        }
+        else if (this.state == "faint") {
+            this.faintAnimation.draw();
         }
         pop();
     }

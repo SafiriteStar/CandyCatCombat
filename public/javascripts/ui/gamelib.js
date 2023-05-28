@@ -39,6 +39,7 @@ function preload() {
     GameInfo.images.cats.vanillaCat.fainted = loadImage("../../assets/VanillaCat/Vanilla_Cat_Base.png");
     GameInfo.images.cats.vanillaCat.attack = loadImage("../../assets/VanillaCat/Vanilla_Cat_Attack.png");
     GameInfo.images.cats.vanillaCat.weapon = loadImage("../../assets/VanillaCat/Candy_Cane_Sword.png");
+    GameInfo.images.cats.vanillaCat.weapon2 = loadImage("../../assets/VanillaCat/Peppermint_Shield.png");
     
     // Candy Corn Cat
     GameInfo.images.cats.candyCornCat = {};

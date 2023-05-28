@@ -6,7 +6,7 @@ function calculateOpacity(cat) {
     
     for (let i = 0; i < cat.conditions.length; i++) {
         // If we are in stealth
-        if (cat.conditions[i].id == 1) {
+        if (cat.conditions[i].name == "Stealth") {
             return Cat.stealthOpacity;
         }
     }
@@ -52,6 +52,16 @@ function moveToPos(screenX, screenY, path, pathIndex) {
     return [screenX + (Cat.moveSpeed * targetDirection.x), screenY + (Cat.moveSpeed * targetDirection.y), pathIndex];
 }
 
+function checkStealth (conditions) {
+    for (let i = 0; i < conditions.length; i++) {
+        if (conditions[i].name == "Stealth") {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 class Cat {
     static width = 300;
     static height = 420;
@@ -63,7 +73,7 @@ class Cat {
 
     static aliveOpacity = 255;
     static deadOpacity = 25;
-    static stealthOpacity = 200;
+    static stealthOpacity = 150;
 
     static catColor = [
         [255, 0, 0],
@@ -116,7 +126,15 @@ class Cat {
         this.damageFlashTime = 20;
         this.damageFlashTimer = 20;
         this.damageFlashTint = [255, 150, 150];
-        this.catAnimations = new CatAnimator(this.img);
+
+        this.isStealth = false;
+        let baseAnimState = "idle";
+        this.isStealth = checkStealth(this.conditions);
+        if (this.isStealth) {
+            baseAnimState = "stealthIdle";
+        }
+
+        this.catAnimations = new CatAnimator(this.img, baseAnimState);
     }
 
     flashDamage() {
@@ -136,22 +154,32 @@ class Cat {
     }
 
     draw(teamColor) {
-
-        [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
         let currentX = this.screenX;
-        if (this.map == 0) {
-            currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
-        }
-
-        // If we haven't reached our destination and aren't moving
-        if (!(this.pathIndex == this.path.length - 1) && this.catAnimations.state != "move") {
-            // Do the move animation
-            this.catAnimations.changeState("move");
-        }
-        // If we have reached our destination and are playing the move animation
-        else if (this.pathIndex == this.path.length - 1 && this.catAnimations.state == "move") {
-            // Play the idle instead
-            this.catAnimations.changeState("idle");
+        if (this.catAnimations.state != "faint") {
+            [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
+            let currentX = this.screenX;
+            if (this.map == 0) {
+                currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
+            }
+    
+            // If we haven't reached our destination and aren't moving
+            if (!(this.pathIndex == this.path.length - 1) && (this.catAnimations.state != "move" && this.catAnimations.state != "moveStealth")) {
+                let moveAnimState = "move";
+                if (this.isStealth) {
+                    moveAnimState = "stealthMove";
+                }
+                // Do the move animation
+                this.catAnimations.changeState(moveAnimState);
+            }
+            // If we have reached our destination and are playing the move animation
+            else if (this.pathIndex == this.path.length - 1 && (this.catAnimations.state == "move" || this.catAnimations.state == "moveStealth")) {
+                let idleAnimState = "idle";
+                if (this.isStealth) {
+                    idleAnimState = "stealthIdle";
+                }
+                // Play the idle instead
+                this.catAnimations.changeState(idleAnimState);
+            }
         }
 
         push();
@@ -177,8 +205,6 @@ class Cat {
                 this.flashDamage();
                 // Main Cat
                 this.catAnimations.draw();
-                // Weapon
-                image(this.img.weapon, -this.img.weapon.width * 0.5, -this.img.base.height * 0.5);
             pop();
 
             // Condition images
@@ -259,6 +285,9 @@ class Cat {
             // Yes, flash red
             this.damageFlashTimer = 0;
         }
+        if (cat.current_health <= 0) {
+            this.catAnimations.state = "faint";
+        }
         this.current_health = cat.current_health;
         this.damage = cat.damage;
         this.defense = cat.defense;
@@ -268,6 +297,7 @@ class Cat {
         this.cost = cat.cost;
         this.state = cat.state;
         this.conditions = cat.conditions;
+        this.isStealth = checkStealth(this.conditions);
         this.showDebug = showDebug
         
         // If the cat has moved
