@@ -131,7 +131,15 @@ class MapSelector {
                             GameInfo.world.teams[this.team].cats[this.cat].map)
                         let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
                         if (GameInfo.game.player.state == "Placement") {
-                            this.path = [targetTile];
+                            if (targetTile.group !== null && targetTile.group !== undefined) {
+                                this.path = [targetTile];
+                            }
+                            else {
+                                this.path = [];
+                                this.cat = null;
+                                this.team = null;
+                                this.updateRangeIndicators(null);
+                            }
                         }
                         else {
                             this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
