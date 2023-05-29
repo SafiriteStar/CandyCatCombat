@@ -87,7 +87,7 @@ function fillMatches(matches) {
             joinButton.appendChild(document.createTextNode('Join'));
             
             joinButton.onclick = () => {
-                playMatchAccepted();
+                playClick();
                 join(matches[j].id);
             }
             

@@ -8,4 +8,3 @@ function playMatchAccepted() {
     var audio = document.getElementById("soundsFrame").contentWindow.document.getElementById("soundMatchAccepted");
     audio.play();
 }
-
