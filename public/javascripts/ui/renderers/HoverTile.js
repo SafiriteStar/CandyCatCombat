@@ -29,7 +29,7 @@ class HoverTile {
                 this.map = i;
                 
                 // We did all we came for after finding one map, so return after drawing
-                this.draw();
+                //this.draw();
                 return;
             }
             else {

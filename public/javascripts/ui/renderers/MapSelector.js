@@ -28,13 +28,15 @@ class MapSelector {
     }
     
     draw() {
-        push();
-            fill(0, 0, 0, 0);
-            strokeWeight(24);
-            stroke(255, 255, 0, 150);
-            Tile.drawSimpleTile(this.posX, this.posY);
-        pop();
-        this.drawIndicators();
+        if (this.cat !== null && this.cat !== undefined) {
+            push();
+                fill(0, 0, 0, 0);
+                strokeWeight(24);
+                stroke(255, 255, 0, 150);
+                Tile.drawSimpleTile(this.posX, this.posY);
+            pop();
+            this.drawIndicators();
+        }
     }
     
     drawIndicators() {
@@ -149,6 +151,12 @@ class MapSelector {
                             && ((this.moveIndicator.tilesToHighlight.includes(targetTile) && GameInfo.game.player.state == "Playing")
                             || GameInfo.game.player.state == "Placement")) {
                             moveCatAction(this.path, GameInfo.world.teams[this.team].cats[this.cat].id);
+                        }
+                        else {
+                            this.path = [];
+                            this.cat = null;
+                            this.team = null;
+                            this.updateRangeIndicators(null);
                         }
                     }
                     else {
