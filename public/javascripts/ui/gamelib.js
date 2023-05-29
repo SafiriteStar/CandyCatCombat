@@ -92,6 +92,7 @@ function preload() {
     GameInfo.images.ui = {};
     GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
     GameInfo.images.ui.stealthed = loadImage("../../assets/StealthIcon.png");
+    GameInfo.images.ui.attackIcon = loadImage("../../assets/UI/Stats/damageStat.png");
 }
 
 async function resizeImages() {
@@ -105,11 +106,18 @@ async function resizeImages() {
 async function setup() {
     let canvas = createCanvas(GameInfo.width, GameInfo.height);
     canvas.parent('game');
+    
+    let htmlCanvas = document.getElementById('defaultCanvas0');
+    htmlCanvas.style.width = '100%'
+    htmlCanvas.style.height = '100%'
+
     canvas.mouseWheel(changeScale); // Attach listener for when the mouse wheel is over the canvas 
     // preload  images
 
     // Resize images
     resizeImages();
+
+    frameRate(30)
     
     await getGameInfo();
     await getBoardInfo();

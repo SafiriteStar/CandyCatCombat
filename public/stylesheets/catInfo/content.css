@@ -44,7 +44,7 @@
 .catInfoStat {
     display: flex;
     position: relative;
-    height: 20%;
+    height: 16.5%;
     justify-content: center;
 }
 
@@ -115,13 +115,14 @@
 }
 
 .catInfoDescription {
-    margin: 10% 0 0 0;
+    margin: 10% 0 10% 0;
     padding-left: 10%;
     padding-right: 10%;
     width: 80%;
-    height: 90%;
+    height: 80%;
     color: #1E2532;
-    
+    font-size: 1.2vw;
+    transition: font-size 0.5s;
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */

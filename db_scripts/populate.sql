@@ -41,7 +41,9 @@ values (
     1,
     1,
     1,
-    "A versatile candy cat with average stats across the board. Fights in close melee range but can fill many different roles."
+    "<p>Your most basic and versatile candy cat.</p>
+    <p><b>The shield they carry makes them effective against Candy Corn Cats.</b></p>
+    <p>Their average stats lets them fill many different roles in the team.</p>"
 ),
 (
     'Candy Corn Cat',
@@ -52,7 +54,9 @@ values (
     3,
     6,
     1,
-    "A bow and arrow wielding candy cat with the longest strike range of all other cats. Not suitable for melee. Can attack twice if they haven't moved."
+    "<p>Your super ranged candy cat.</p>
+    <p><b>If they don't move they strike twice.</b></p>
+    <p>Their poor defensive stats means they require good protection.</p>"
 ),
 (
     'Mawbreaker Cat',
@@ -63,7 +67,9 @@ values (
     1,
     2,
     2,
-    "The hardest hitting, toughest candy cat around. Cost twice as much to have in your team but has twice the impact of your average candy cat."
+    "<p>Your powerhouse candy cat.</p>
+    <p><b>Costs 2 slots. Has twice as high stats on average.</b></p>
+    <p>They are rather slow but are bulky enough to get where they need.</p>"
 ),
 (
     'Gum Cat',
@@ -74,7 +80,10 @@ values (
     1,
     1,
     1,
-    "With cloak and dagger this candy cat is difficult to catch and loves catching opponents from a flank. Unable to be hit while in stealth mode, which is lost when attacking. Starts the game in stealth and can regain it after not attacking or being attacked for 3 turns. An attack while in stealth deals triple the damage!"
+    "<p>Your stealthy candy cat.</p>
+    <p><b>Can't be attacked while in stealth.</b></p>
+    <p><b>!OPPONENT CAN STILL SEE THE CANDY CAT!</b></p>
+    <p>They can gain stealth again after not attacking for a while. Useful for hit and runs.</p>"
 ),
 (
     'Pop Cat',
@@ -85,7 +94,10 @@ values (
     2,
     3,
     1,
-    "Fizzling with excitement at the opportunity of causing more explosions, this candy cat lobes sizzling explosives at enemies causing damage across an area. Be careful where you position this candy cat however, as they have little regard to distinguish friend from foe."
+    "<p>Your explosive candy cat.</p>
+    <p><b>Hits in a 1 hex AOE around the main target.</b></p>
+    <p><b>!BEWARE FRIENDLY FIRE!</b></p>
+    <p>Herd your enemies together for maximum effectiveness.</p>"
 ),
 (
     'Caramel Cat',
@@ -96,7 +108,10 @@ values (
     1,
     2,
     1,
-    "Bulky and cheerful, this candy cat loves to protect their allies by keeping opponents in place. Attacks at melee range deal damage and stick enemies in place. This candy cat can also throw some caramel a short distance away at opponents to keep them in place, even if they don't deal any damage doing so. Despite their vigilant attitude this candy cat cannot hold out for long while out numbered so keep them with a partner!"
+    "<p>Your utility candy cat.</p>
+    <p><b>Roots targets with attacks. Rooted targets cannot move. Attacks at 2 range deal no damage.</b></p>
+    <p><b>Can make caramel walls when near walls or ally caramel cats</b></p>
+    <p>Root lasts for 1 turn but can be chained with consecutive attacks.</p>"
 ),
 (
     'Choco Dairy Milk Cat',
@@ -107,7 +122,9 @@ values (
     1,
     2,
     1,
-    "Always ready to help, this ever affable candy cat can heal their allies at the cost of hurting themselves. While at have health their fervor drives them to keep going, healing them a small amount at the start of each turn. This candy cat otherwise cannot heal and is rather fragile, keep them safe."
+    "<p>Your lovable healer candy cat.</p>
+    <p><b>Heals everyone, including opponents. Everyone is a friend!</b></p>
+    <p>Self heals when below 50% health. Takes a small amount of damage each time they heal a friend.</p>"
 );
 
 # States

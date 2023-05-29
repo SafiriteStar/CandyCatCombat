@@ -84,6 +84,14 @@ class Team {
             if (opponentCats.length > 0) {
                 this.cats[i].catAnimations.changeState("attack");
             }
+            else {
+                if (this.cats[i].current_health > 0) {
+                    if (this.cats[i].isStealth) {
+                        this.cats[i].catAnimations.changeState("stealthIdle");
+                    }
+                    this.cats[i].catAnimations.changeState("idle");
+                }
+            }
         }
     }
 
