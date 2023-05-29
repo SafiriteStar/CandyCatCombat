@@ -121,28 +121,6 @@ async function requestChangeDefaultCat(newCatID, teamCatID) {
     }
 }
 
-async function requestAddDefaultCat(newCatID) {
-    try {
-        const response = await fetch(`/api/users/auth/adddefaultcat`, 
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({
-                newCatID: newCatID
-            })
-        });
-
-        return { successful: response.status == 200};
-    } catch (err) {
-        // Treat 500 errors here
-        console.log(err);
-        return {err: err};
-    }
-}
-
 async function requestRemoveDefaultCat(teamCatID) {
     try {
         const response = await fetch(`/api/users/auth/removedefaultcat`, 
