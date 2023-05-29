@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/stylesheets/utils.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="/stylesheets/login.css">
+  <script src="./javascripts/sounds.js"></script>
   <script src="./javascripts/utils/verifications.js"></script>
   <script src="./javascripts/requests/matchesRequests.js"></script>
   <script src="./javascripts/requests/usersRequests.js"></script>
@@ -37,12 +38,13 @@
           </tr>
         </table>
         <p id="msg" class="warning"></p>
-        <input class="removeButtonStyle defaultButtonStyle normalButton" type="submit" value="Register">
+        <input class="removeButtonStyle defaultButtonStyle normalButton" type="submit" value="Register" onclick="playClick()">
         <p></p>
-        <a class="removeButtonStyle defaultButtonStyle normalButton" href="index.html">Login page</a>
+        <a class="defaultLinkStyle" href="index.html">Login page</a>
       </form>
     </div>
   </main>
+  <iframe id="soundsFrame" src="sounds.html" frameborder="0"></iframe>
 </body>
 
 </html>
