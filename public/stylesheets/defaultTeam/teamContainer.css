@@ -237,3 +237,9 @@
     width: 150%;
     filter: invert(60%) sepia(100%) hue-rotate(20deg) saturate(3);
 }
+
+.dt-teamCostCoin {
+    height: 2.5vw;
+    width: 2.5vw;
+    filter: invert(60%) sepia(100%) hue-rotate(20deg) saturate(3);
+}

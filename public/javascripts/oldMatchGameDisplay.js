@@ -34,7 +34,7 @@ function createMatchDisplayItem(match) {
     
     contextContainer.appendChild(mapNameContainer);
 
-    // Tem Cost Container
+    // Team Cost Container
     let teamCostContainer = document.createElement('div');
     teamCostContainer.classList.add('matchInfoContainer');
     teamCostContainer.classList.add('matchTeamCostInfoContainer');

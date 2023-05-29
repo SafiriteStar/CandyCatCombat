@@ -13,6 +13,7 @@ async function register() {
 
         let res = await requestRegister(name, pass, conf);
         if (res.successful) {
+            await login();
             msgDOM.textContent = "Account created. Go to login page";
         } else {
             msgDOM.textContent = "Was not able to register";

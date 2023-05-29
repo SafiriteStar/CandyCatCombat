@@ -81,7 +81,6 @@ class Team {
         for (let i = 0; i < this.cats.length; i++) {
             this.attackRange.newSource(this.cats[i], this.cats[i].min_range, this.cats[i].max_range);
             let opponentCats = this.attackRange.checkForOpponentCats();
-            console.log(opponentCats);
             if (opponentCats.length > 0) {
                 this.cats[i].catAnimations.changeState("attack");
             }
