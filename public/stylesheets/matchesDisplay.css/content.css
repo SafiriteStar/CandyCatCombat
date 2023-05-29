@@ -38,7 +38,7 @@
 }
 
 .md-sidePanel:hover {
-    filter: saturate(3);
+    filter: invert(100);
 }
 
 .md-headerText {
@@ -208,11 +208,18 @@
 }
 
 .md-matchTableRow > td {
+    position: relative;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    height: fit-content;
+
+    top: 50%;
+    transform: translate(0%, -50%);
 }
 
 .md-matchJoinButton {
-    padding: 0.5vh 1vw 0.5vh 1vw;
+    width: 90%;
+    height: 90%;
+    padding: 0.25vh 0.5vw 0.25vh 0.5vw;
 }
