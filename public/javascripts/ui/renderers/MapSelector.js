@@ -20,32 +20,32 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 200], 1);
-        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 200], [164, 149, 255, 0], 0.5);
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 130, 120, 255], [230, 130, 120, 0], 0.1);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 75], [164, 149, 255, 0], 1);
 
         //
         this.path = null;
     }
     
     draw() {
-        this.drawIndicators();
-        if (this.cat !== null) {
+        if (this.cat !== null && this.cat !== undefined) {
             push();
                 fill(0, 0, 0, 0);
                 strokeWeight(24);
                 stroke(255, 255, 0, 150);
                 Tile.drawSimpleTile(this.posX, this.posY);
             pop();
+            this.drawIndicators();
         }
     }
     
     drawIndicators() {
-        this.rangeIndicator.draw();
         if (this.team !== null && this.team !== undefined) {
             if (!GameInfo.world.teams[this.team].cats[this.cat].isRooted()) {
                 this.moveIndicator.draw();
             }
         }
+        this.rangeIndicator.draw();
     }
 
     drawInfoBoxes() {
@@ -133,7 +133,15 @@ class MapSelector {
                             GameInfo.world.teams[this.team].cats[this.cat].map)
                         let targetTile = GameInfo.world.getTileInMap(this.coordX, this.coordY, this.map);
                         if (GameInfo.game.player.state == "Placement") {
-                            this.path = [targetTile];
+                            if (targetTile.group !== null && targetTile.group !== undefined) {
+                                this.path = [targetTile];
+                            }
+                            else {
+                                this.path = [];
+                                this.cat = null;
+                                this.team = null;
+                                this.updateRangeIndicators(null);
+                            }
                         }
                         else {
                             this.path = Pathfinder.getPath(startingTile, targetTile, this.moveIndicator.tilesToHighlight);
@@ -143,6 +151,12 @@ class MapSelector {
                             && ((this.moveIndicator.tilesToHighlight.includes(targetTile) && GameInfo.game.player.state == "Playing")
                             || GameInfo.game.player.state == "Placement")) {
                             moveCatAction(this.path, GameInfo.world.teams[this.team].cats[this.cat].id);
+                        }
+                        else {
+                            this.path = [];
+                            this.cat = null;
+                            this.team = null;
+                            this.updateRangeIndicators(null);
                         }
                     }
                     else {

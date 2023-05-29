@@ -19,13 +19,26 @@ class RangeHighlighter {
             let [redStroke, greenStroke, blueStroke, alphaStroke] = this.strokeColor;
             // For each tile in tiles, draw them
             this.tilesToHighlight.forEach(tile => {
+                let cat = GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map);
                 push();
-                if ((!this.ignoreAliveCats && GameInfo.world.getCatAliveAtCoord(tile.x, tile.y, this.map).length === 0) || this.ignoreAliveCats) {                    
+                if ((!this.ignoreAliveCats && cat.length === 0) || this.ignoreAliveCats) {                    
                     translate(World.mapDrawOffsets[this.map][0], World.mapDrawOffsets[this.map][1]);
                     fill(redFill, greenFill, blueFill, alphaFill);
                     strokeWeight(24);
                     stroke(redStroke, greenStroke, blueStroke, alphaStroke);
+                    push();
                     Tile.drawScaledTile(tile.screenX, tile.screenY, this.tileScale);
+                    pop();
+                    if (this.ignoreAliveCats) {
+                        if (cat.length > 0 && GameInfo.world.getCatTeamIndex(cat[0]) !== this.sourceCatTeamIndex) {
+                            // Found a cat of a different team
+                            push();
+                            translate(tile.screenX, tile.screenY);
+                            scale(0.25);
+                            image(GameInfo.images.ui.attackIcon, -GameInfo.images.ui.attackIcon.width * 0.5, -GameInfo.images.ui.attackIcon.height * 0.5);
+                            pop();
+                        }
+                    }
                 }
                 pop();
             });

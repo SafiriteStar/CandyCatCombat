@@ -8,8 +8,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    margin: 0;
-    padding: 0;
+    margin: 0%;
+    padding: 0%;
 }
 
 .scoreSwitch {
@@ -28,17 +28,17 @@
     margin: 1em;
     padding: 5%;
 
-    bottom:0;
-    top:0;
-    left:0;
-    right:0;
+    bottom:0%;
+    top:0%;
+    left:0%;
+    right:0%;
 
     width: auto;
     height: auto;
 }
 
 .scoreStateText {
-    margin: 0;
+    margin: 0%;
     height: 1.1em;
     text-align: center;
     font-size: 7em;
@@ -53,8 +53,8 @@
                       linear-gradient(127deg, rgba(255, 217, 135, 0.8), rgba(255, 255, 255, 0) 70.71%),
                       linear-gradient(336deg, rgba(255, 81, 81, 0.8), rgba(255, 255, 255, 0) 70.71%);
     color: transparent;
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
 
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
 }
@@ -62,6 +62,7 @@
 .scoreRow {
     display: table;
     width: 100%;
+    table-layout: fixed;
 }
 
 .scoreRow::after {
@@ -74,11 +75,12 @@
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    height: 5em;
+    height: 33%;
 }
 
 .scoreColumn.text {
     width: 20%;
+    max-width: 20%;
 }
 
 .scoreColumn.cats {
@@ -94,6 +96,12 @@
     font-size: x-large;
 }
 
+.scorePlayerName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .scoreCats {
     display: block;
     width: 100%;
@@ -102,15 +110,15 @@
 
 .scoreCats > img {
     position: relative;
-    height: 100%;
+    height: 5vw;
     width: auto;
 }
 
 .scoreCloseButton {
     position: absolute;
-    bottom: 5;
+    bottom: 5%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0%);
 
     width: 20em;
     height: 3em;
@@ -124,7 +132,7 @@
 
 .scoreCloseButtonText {
     position: absolute;
-    margin: 0;
+    margin: 0%;
     width: 100%;
 
     top: 50%;

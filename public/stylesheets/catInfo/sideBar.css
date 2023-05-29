@@ -107,7 +107,7 @@
 }
 
 .catInfoPaginationBackground:hover {
-    filter: saturate(3);
+    filter: invert(100);
 }
 
 .catInfoPaginationContainer {

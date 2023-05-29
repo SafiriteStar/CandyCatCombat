@@ -1,7 +1,9 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Candy Cat Combat</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Caveat+Brush&family=Lily+Script+One&family=Montserrat:wght@200;400&display=swap" rel="stylesheet"> 
@@ -52,12 +54,13 @@
   <script src="javascripts/ui/gamelib.js"></script>
 </head>
 
-<body>
+<body style="overflow: hidden;">
   <audio autoplay loop>
     <source src="assets/Sounds/background.wav" type="audio/wav" />
     Your browser doesn't support the audio element.
   </audio>
   <iframe id="soundsFrame" src="sounds.html" frameborder="0"></iframe>
+
   <main id="game">
     <div id="turnModal" class="modal-game">
       <div class="modal-content">
