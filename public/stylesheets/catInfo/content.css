@@ -115,11 +115,11 @@
 }
 
 .catInfoDescription {
-    margin: 10% 0 0 0;
+    margin: 10% 0 10% 0;
     padding-left: 10%;
     padding-right: 10%;
     width: 80%;
-    height: 90%;
+    height: 80%;
     color: #1E2532;
     
     overflow-y: scroll;
@@ -134,6 +134,6 @@
 }
 
 .catInfoTextAdjustable {
-    font-size: 0.9vw;
+    font-size: 1.25vw;
     transition: font-size 0.5s;
 }
