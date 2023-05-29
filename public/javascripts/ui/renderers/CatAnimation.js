@@ -151,9 +151,13 @@ class CatAnimator {
             this.moveAnimation.draw();
         }
         else if (this.state == "attack") {
-            this.attackAnimation.draw();
-            if (this.attackAnimation.finishedPlaying) {
-                this.state = "idle";
+            if (!this.attackAnimation.finishedPlaying) {
+                this.attackAnimation.draw();
+            }
+            else {
+                if (this.attackAnimation.finishedPlaying) {
+                    this.state = "idle";
+                }
             }
         }
         else if (this.state == "stealthIdle") {
