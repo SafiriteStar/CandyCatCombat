@@ -47,7 +47,7 @@ class User {
             // Add add a bunch of vanilla cats
             let fillCharacterData = [];
             for (let i = 0; i < 6; i++) {
-                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id, tmc_enabled) values (?, ?, true)', [1, teamData.tm_id]);                
+                [fillCharacterData[i]] = await pool.query('Insert into team_cat (tmc_cat_id, tmc_team_id, tmc_enabled) values (?, ?, false)', [1, teamData.tm_id]);                
             }
             return { status: 200, result: {msg:"Registered! You can now log in."}} ;
         } catch (err) {
