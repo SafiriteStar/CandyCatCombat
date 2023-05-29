@@ -81,7 +81,8 @@ values (
     1,
     1,
     "<p>Your stealthy candy cat.</p>
-    <p><b>Can't be attacked while in stealth. !OPPONENT CAN STILL SEE THE CANDY CAT!</b></p>
+    <p><b>Can't be attacked while in stealth.</b></p>
+    <p><b>!OPPONENT CAN STILL SEE THE CANDY CAT!</b></p>
     <p>They can gain stealth again after not attacking for a while. Useful for hit and runs.</p>"
 ),
 (
@@ -94,7 +95,8 @@ values (
     3,
     1,
     "<p>Your explosive candy cat.</p>
-    <p><b>Hits in a 1 hex AOE around the main target. !BEWARE FRIENDLY FIRE!</b></p>
+    <p><b>Hits in a 1 hex AOE around the main target.</b></p>
+    <p><b>!BEWARE FRIENDLY FIRE!</b></p>
     <p>Herd your enemies together for maximum effectiveness.</p>"
 ),
 (
@@ -107,7 +109,8 @@ values (
     2,
     1,
     "<p>Your utility candy cat.</p>
-    <p><b>Roots targets with attacks. Rooted targets cannot move. Attacks at 2 range deal no damage. Can make caramel walls when near walls or ally caramel cats</b></p>
+    <p><b>Roots targets with attacks. Rooted targets cannot move. Attacks at 2 range deal no damage.</b></p>
+    <p><b>Can make caramel walls when near walls or ally caramel cats</b></p>
     <p>Root lasts for 1 turn but can be chained with consecutive attacks.</p>"
 ),
 (
