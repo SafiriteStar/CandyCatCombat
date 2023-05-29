@@ -20,8 +20,8 @@ class MapSelector {
         this.catInfoBox = new CatInfoBox();
 
         // Range indicator
-        this.rangeIndicator = new RangeHighlighter(true, true, [230, 30, 30, 0], [230, 130, 120, 200], 1);
-        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 200], [164, 149, 255, 0], 0.5);
+        this.rangeIndicator = new RangeHighlighter(true, true, [230, 130, 120, 255], [230, 130, 120, 0], 0.1);
+        this.moveIndicator = new RangeHighlighter(false, false, [164, 149, 255, 75], [164, 149, 255, 0], 1);
 
         //
         this.path = null;
@@ -38,12 +38,12 @@ class MapSelector {
     }
     
     drawIndicators() {
-        this.rangeIndicator.draw();
         if (this.team !== null && this.team !== undefined) {
             if (!GameInfo.world.teams[this.team].cats[this.cat].isRooted()) {
                 this.moveIndicator.draw();
             }
         }
+        this.rangeIndicator.draw();
     }
 
     drawInfoBoxes() {

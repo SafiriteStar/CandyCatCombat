@@ -88,6 +88,7 @@ function preload() {
     GameInfo.images.ui = {};
     GameInfo.images.ui.rooted = loadImage("../../assets/RootedIcon.png");
     GameInfo.images.ui.stealthed = loadImage("../../assets/StealthIcon.png");
+    GameInfo.images.ui.attackIcon = loadImage("../../assets/UI/Stats/damageStat.png");
 }
 
 async function resizeImages() {
