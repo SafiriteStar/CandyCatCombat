@@ -66,6 +66,9 @@
     background-image: url('/assets/UI/Textures/black_and_gold.jpg');
     background-size: cover;
     background-repeat: repeat;
+    mask:
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
     -webkit-mask: 
       linear-gradient(#fff 0 0) content-box, 
       linear-gradient(#fff 0 0);

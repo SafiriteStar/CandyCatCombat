@@ -6,7 +6,7 @@ function calculateOpacity(cat) {
     
     for (let i = 0; i < cat.conditions.length; i++) {
         // If we are in stealth
-        if (cat.conditions[i].id == 1) {
+        if (cat.conditions[i].name == "Stealth") {
             return Cat.stealthOpacity;
         }
     }
@@ -15,17 +15,65 @@ function calculateOpacity(cat) {
     return Cat.aliveOpacity;
 }
 
+function calculateScreenPos(x, y, map) {
+    let evenOffset = isEven(x) && (-Tile.height) * 1 || 0;
+    let screenX = (Tile.width * 1.5 * x) + World.mapDrawOffsets[map][0];
+    let screenY = (-Tile.height * 2 * y) + World.mapDrawOffsets[map][1] + evenOffset;
+
+    return [screenX, screenY];
+}
+
+function moveToPos(screenX, screenY, path, pathIndex) {
+    // There is no "path"
+    if (path.length === 1 || screenX === null || screenY === null) {
+        return [path[0].screenX, path[0].screenY, 0];
+    }
+
+    // Have we reached our destination
+    if (path[pathIndex + 1] === null || path[pathIndex + 1] === undefined) {
+        // Yes
+        return [path[pathIndex].screenX, path[pathIndex].screenY, pathIndex];
+    }
+
+    // Are we close enough to it?
+    if (Math.abs(path[pathIndex + 1].screenX - screenX) < Cat.moveSpeed * 2 && Math.abs(path[pathIndex + 1].screenY - screenY) < Cat.moveSpeed * 2) {
+        // We are
+        // Set our position to the target and return the next index
+        return [path[pathIndex + 1].screenX, path[pathIndex + 1].screenY, pathIndex + 1];
+    }
+
+    // We have not reached our destination nor are we close enough to snap to it.
+    // Calculate vectors
+    let originVector = Vector2.v2new(path[pathIndex].screenX, path[pathIndex].screenY);
+    let targetVector = Vector2.v2new(path[pathIndex + 1].screenX, path[pathIndex + 1].screenY);
+    let targetDirection = Vector2.v2Normalize(Vector2.v2sub(targetVector, originVector));
+
+    // Move to the target, stay on the same index
+    return [screenX + (Cat.moveSpeed * targetDirection.x), screenY + (Cat.moveSpeed * targetDirection.y), pathIndex];
+}
+
+function checkStealth (conditions) {
+    for (let i = 0; i < conditions.length; i++) {
+        if (conditions[i].name == "Stealth") {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 class Cat {
     static width = 300;
     static height = 420;
     static diameter = 100;
+    static moveSpeed = 25;
 
     static healthBarLength = 200;
     static healthBarHeight = 35;
 
     static aliveOpacity = 255;
     static deadOpacity = 25;
-    static stealthOpacity = 200;
+    static stealthOpacity = 150;
 
     static catColor = [
         [255, 0, 0],
@@ -40,9 +88,20 @@ class Cat {
     constructor(cat, image, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
+        
         this.x = cat.x;
         this.y = cat.y;
         this.map = cat.boardID - 1; // For easier handling of arrays.
+        
+        this.oldX = null;
+        this.oldY = null;
+        this.oldMap = null;
+        
+        [this.screenX, this.screenY] = calculateScreenPos(this.x, this.y, this.map);
+        
+        this.path = [{screenX:this.screenX, screenY:this.screenY}];
+        this.pathIndex = 0;
+        
         this.name = cat.name;
         this.max_health = cat.max_health;
         this.current_health = cat.current_health;
@@ -61,26 +120,77 @@ class Cat {
 
         this.opacity = calculateOpacity(cat);
 
-        this.img = image
+        this.img = image;
         this.facingRight = false;
+
+        this.damageFlashTime = 20;
+        this.damageFlashTimer = 20;
+
+        this.damageFlashTint = [255, 150, 150];
+        this.healFlashTint = [150, 255, 150];
+        this.currentFlashTint = this.damageFlashTint;
+        
+
+        this.isStealth = false;
+        let baseAnimState = "idle";
+        this.isStealth = checkStealth(this.conditions);
+        if (this.isStealth) {
+            baseAnimState = "stealthIdle";
+        }
+
+        this.catAnimations = new CatAnimator(this.img, baseAnimState);
+    }
+
+    flashDamage() {
+        if (this.damageFlashTimer < this.damageFlashTime) {
+            this.damageFlashTimer += 1;
+
+            if (this.damageFlashTimer % 5 == 0) {
+                tint(this.currentFlashTint[0], this.currentFlashTint[1], this.currentFlashTint[2], this.opacity);
+            }
+            else {
+                tint(255, 255, 255, this.opacity);
+            }
+        }
+        else {
+            tint(255, 255, 255, this.opacity);
+        }
     }
 
     draw(teamColor) {
-
-        let currentX = (this.x);
-        let currentY = (this.y);
-        // More short circuiting "magic"
-        // Be careful with the order of the "||" and the 0
-        let evenOffset = isEven(currentX) && (-Tile.height) * 1 || 0;
-        let xOffset = GameInfo.world.maps[this.map].drawStartX;
-        let yOffset = GameInfo.world.maps[this.map].drawStartY;
+        let currentX = this.screenX;
         
+        if (this.catAnimations.state != "faint") {
+            [this.screenX, this.screenY, this.pathIndex] = moveToPos(this.screenX, this.screenY, this.path, this.pathIndex);
+            currentX = this.screenX;
+    
+            // If we haven't reached our destination and aren't moving
+            if (!(this.pathIndex == this.path.length - 1) && (this.catAnimations.state != "move" && this.catAnimations.state != "moveStealth")) {
+                let moveAnimState = "move";
+                if (this.isStealth) {
+                    moveAnimState = "stealthMove";
+                }
+                // Do the move animation
+                this.catAnimations.changeState(moveAnimState);
+            }
+            // If we have reached our destination and are playing the move animation
+            else if (this.pathIndex == this.path.length - 1 && (this.catAnimations.state == "move" || this.catAnimations.state == "moveStealth")) {
+                let idleAnimState = "idle";
+                if (this.isStealth) {
+                    idleAnimState = "stealthIdle";
+                }
+                // Play the idle instead
+                this.catAnimations.changeState(idleAnimState);
+            }
+        }
+
+        if (this.map == 0) {
+            currentX += GameInfo.world.maps[0].drawStartX - World.mapDrawOffsets[0][0];
+        }
+
         push();
             // Outline the hexagon with the team color
-            translate(
-                (Tile.width * 1.5 * currentX) + xOffset,
-                (-Tile.height * 2 * currentY) + yOffset + evenOffset
-            );
+            translate(currentX, this.screenY);
             push();
             stroke(teamColor[0], teamColor[1], teamColor[2], this.opacity);
             strokeWeight(24);
@@ -97,11 +207,10 @@ class Cat {
                 if (this.facingRight) {
                     scale(-1, 1);
                 }
-                tint(255, 255, 255, this.opacity);
+                // Get the tint
+                this.flashDamage();
                 // Main Cat
-                image(this.img.base, -this.img.base.width * 0.5, -this.img.base.height * 0.5);
-                // Weapon
-                image(this.img.weapon, -this.img.weapon.width * 0.5, -this.img.base.height * 0.5);
+                this.catAnimations.draw();
             pop();
 
             // Condition images
@@ -175,23 +284,74 @@ class Cat {
     update(cat, showDebug) {
         this.id = cat.id;
         this.type = cat.type;
-        this.x = cat.x;
-        this.y = cat.y;
-        this.map = cat.boardID - 1; // For easier handling of arrays.
         this.name = cat.name;
         this.max_health = cat.max_health;
+        // Did we take damage
+        if (cat.current_health < this.current_health) {
+            // Yes, flash red
+            this.damageFlashTimer = 0;
+            this.currentFlashTint = this.damageFlashTint;
+        }
+        else if (cat.current_health > this.current_health) {
+            // We healed
+            this.damageFlashTimer = 0;
+            this.currentFlashTint = this.healFlashTint;
+        }
+
+        if (cat.current_health <= 0) {
+            this.catAnimations.state = "faint";
+        }
         this.current_health = cat.current_health;
         this.damage = cat.damage;
         this.defense = cat.defense;
         this.speed = cat.speed;
-        this.stamina = cat.stamina;
         this.min_range = cat.min_range;
         this.max_range = cat.max_range;
         this.cost = cat.cost;
         this.state = cat.state;
         this.conditions = cat.conditions;
-
+        this.isStealth = checkStealth(this.conditions);
         this.showDebug = showDebug
+        
+        // If the cat has moved
+        // And we are in the playing or waiting phase
+        if ((cat.x !== this.x || cat.y !== this.y || this.map !== cat.boardID - 1)) {
+            // Save the old position
+            this.oldX = this.x;
+            this.oldY = this.y;
+            this.oldMap = this.map;
+
+            let moveRange = new RangeHighlighter(false, false, [164, 149, 255, 0], [164, 149, 255, 0], 0.5);
+            moveRange.newSource(this, 1, this.stamina);
+
+            this.x = cat.x;
+            this.y = cat.y;
+            this.map = cat.boardID - 1; // For easier handling of arrays.
+            
+            // Generate a path
+            if (this.oldMap === this.map && (GameInfo.game.player.state == "Playing" || GameInfo.game.player.state == "Waiting")) {
+                // Calculate path
+                this.path = Pathfinder.getPath(
+                    GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap),
+                    GameInfo.world.getTileInMap(this.x, this.y, this.map),
+                    moveRange.tilesToHighlight);
+                this.path.unshift(GameInfo.world.getTileInMap(this.oldX, this.oldY, this.oldMap));
+            }
+            else {
+                this.path = [ GameInfo.world.getTileInMap(this.x, this.y, this.map) ]
+            }
+            
+            this.screenX = null;
+            this.screenY = null;
+            
+            // Reset the map index
+            this.pathIndex = 0;
+        }
+        else {
+
+        }
+
+        this.stamina = cat.stamina;
 
         this.opacity = calculateOpacity(cat);
     }

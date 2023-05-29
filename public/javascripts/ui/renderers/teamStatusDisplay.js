@@ -1,11 +1,10 @@
-class teamStatus {
+class TeamStatus {
     constructor(x, y, width, height, team) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.team = team;
-        console.log(team);
         this.scaler = 0.25;
     }
 

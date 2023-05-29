@@ -56,7 +56,7 @@ function fillMatches(matches) {
         }
 
         for (let j = 0; j < matches.length; j++) {
-            if (matches[j].maxCost > maxBudget) {
+            if (matches[j].maxCost != maxBudget) {
                 continue;
             }
             let row = document.createElement('tr');

@@ -66,6 +66,7 @@ async function endturnAction() {
         await  getGameInfo();
         await getBoardInfo();
         GameInfo.prepareUI();
+        GameInfo.world.playerAttack();
     }
     else {
         console.log(result);
@@ -95,7 +96,6 @@ async function moveCatAction(path, catID) {
     if (result.successful) {
         await getGameInfo();
         await getBoardInfo();
-        GameInfo.prepareUI();
     }
     else {
         console.log(result);

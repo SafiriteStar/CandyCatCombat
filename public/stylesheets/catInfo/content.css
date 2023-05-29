@@ -115,11 +115,12 @@
 }
 
 .catInfoDescription {
-    margin: 2.5% 0 0 0;
+    margin: 10% 0 0 0;
     padding-left: 10%;
     padding-right: 10%;
     width: 80%;
-    height: 97.5%;
+    height: 90%;
+    color: #1E2532;
     
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */

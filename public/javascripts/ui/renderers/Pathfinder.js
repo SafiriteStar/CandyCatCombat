@@ -110,7 +110,6 @@ class Pathfinder {
         // Don't forget to add in the starting node
         unvisitedNodes.push(startingTile);
 
-
         let visitedNodes = [];
 
         let tableOfPaths = {};

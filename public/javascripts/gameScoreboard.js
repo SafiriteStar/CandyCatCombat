@@ -98,7 +98,6 @@ function getScoreData(name, scoresArray, teams) {
 }
 
 async function formatPlayerScores(scoresArray, playerData, opponentsData, teams) {
-    console.log(scoresArray);
     let playerScoreList = [];
     let playerScoreData = getScoreData(playerData.name, scoresArray, teams);
     playerScoreList.push(playerScoreData);

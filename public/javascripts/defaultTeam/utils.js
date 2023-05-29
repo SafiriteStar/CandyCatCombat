@@ -35,6 +35,12 @@ async function updateSelectedCats() {
     let team = result.team;
     let teamCost = calculateTeamCost(result.team, result.baseCats);
 
+    let activeContainers = document.getElementsByClassName('dt-catContainerActive');
+
+    for (let i = 0; i < activeContainers.length; i++) {
+        activeContainers[i].classList.remove('dt-catContainerActive');
+    }
+
     for (let i = 0; i < team.length; i++) {
         let teamCat = document.getElementById('teamCat' + team[i].id);
         teamCat.setAttribute('onmouseenter', `showCatOverlay(this, ${team[i].cat_id - 1})`);

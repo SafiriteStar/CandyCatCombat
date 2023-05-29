@@ -23,6 +23,12 @@ window.onload = async function() {
         for (let i = 0; i < pauseMenus.length; i++) {
             createMouseOverFunctions(pauseMenus[i]);
         }
+
+        let turnModal = document.getElementById('turnModal')
+        turnModal.addEventListener("animationend", () => {
+            turnModal.classList.remove('modal-show');
+        }, false);
+        createMouseOverFunctions(turnModal);
     } catch (err) {
         console.log(err);
     }
