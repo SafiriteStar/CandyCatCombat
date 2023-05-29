@@ -28,11 +28,11 @@ class IdleAnimation extends Animation {
         super(images, loop);
         this.maxJumpHeight = 75;
         this.jumpDirection = -1;
-        this.jumpSpeed = 700;
-        this.gravity = 4000;
+        this.jumpSpeed = 5;
+        this.gravity = 2;
         this.currentSpeed = -this.jumpSpeed;
         
-        this.bounceWaitTime = 0.25 + (Math.random() * 1);
+        this.bounceWaitTime = 10 + Math.floor(Math.random() * 10);
         this.bounceWaitTimer = 0;
         
     }
@@ -53,13 +53,14 @@ class IdleAnimation extends Animation {
         }
 
         if (this.bounceWaitTimer > this.bounceWaitTime) {
-            this.yOffset = this.yOffset + (this.currentSpeed * (1 / deltaTime));
+            this.yOffset = this.yOffset + (this.currentSpeed);
     
-            this.currentSpeed = this.currentSpeed + (this.gravity * (1 / deltaTime));
+            this.currentSpeed = this.currentSpeed + (this.gravity);
         }
         else {
-            this.bounceWaitTimer = this.bounceWaitTimer + (1 * (1 / deltaTime));
+            this.bounceWaitTimer = this.bounceWaitTimer + (1);
         }
+        
         for (let i = 0; i < this.images.length; i++) {
             image(this.images[i], (-this.images[i].width * 0.5) + this.xOffset, (-this.images[i].height * 0.5) + this.yOffset);
         }
@@ -95,7 +96,7 @@ class AttackAnimation extends Animation {
             this.finishedPlaying = true;
         }
         else if (!this.finishedPlaying) {
-            this.durationTimer = this.durationTimer + (1 / deltaTime);
+            this.durationTimer = this.durationTimer + (1);
         }
 
         for (let i = 0; i < this.images.length; i++) {

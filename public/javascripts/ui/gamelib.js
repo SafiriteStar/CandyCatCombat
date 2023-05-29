@@ -111,6 +111,8 @@ async function setup() {
 
     // Resize images
     resizeImages();
+
+    frameRate(30)
     
     await getGameInfo();
     await getBoardInfo();
