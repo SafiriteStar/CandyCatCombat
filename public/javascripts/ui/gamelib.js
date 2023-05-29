@@ -1,6 +1,4 @@
 async function refresh() {
-    console.log (GameInfo.game)
-
     if (GameInfo.game == false) {
         window.location.reload();
     }

@@ -15,5 +15,10 @@ async function quitGame() {
 }
 
 function changeVolumeValue(volume) {
-    GameInfo.sounds.background.setVolume(volume);
- }
+    console.log(volume);
+    let backgroundMusics = document.getElementsByClassName('audio');
+
+    for (let i = 0; i < backgroundMusics.length; i++) {
+        backgroundMusics[i].volume = volume * 0.01;
+    }
+}
