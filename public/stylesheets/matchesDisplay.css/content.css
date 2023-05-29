@@ -38,7 +38,7 @@
 }
 
 .md-sidePanel:hover {
-    filter: saturate(3);
+    filter: invert(100);
 }
 
 .md-headerText {
