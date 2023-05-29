@@ -2,6 +2,8 @@ window.onload = async function() {
     try {
         let result = await checkGame(true);
         if (result.err) throw result.err;
+
+        //playBackground();
         
         // Get default team
         result = await requestDefaultTeam();

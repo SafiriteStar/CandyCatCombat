@@ -138,7 +138,7 @@ function createSideContent() {
 
     let catDescription = document.createElement('p');
     catDescription.classList.add('catInfoDescription');
-    catDescription.classList.add('catInfoTextAdjustable');
+    //catDescription.classList.add('catInfoTextAdjustable');
     catDescription.appendChild(document.createTextNode('Cat Description'));
     descriptionContainer.appendChild(catDescription);
 

@@ -23,7 +23,6 @@
     
     border: none;
     padding: 0.75vw 2vw 0.75vw 2vw;
-    font-size: 0.75vw;
     
     transition: 0.05s;
 }
@@ -35,6 +34,19 @@
 
 .defaultButtonStyle > a {
     color: black;
+}
+
+.defaultLinkStyle {
+    display: inline-block;
+    font-size: 1vw;
+    cursor: pointer;
+    text-align: center;
+    outline: none;
+    
+    border: none;
+    padding: 0vw 2vw 2vw 2vw;
+    
+    transition: 0.05s;
 }
 
 .normalButton {

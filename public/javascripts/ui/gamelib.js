@@ -1,6 +1,3 @@
-const Game = require("../../../models/gamesModel");
-
-
 async function refresh() {
     console.log (GameInfo.game)
 

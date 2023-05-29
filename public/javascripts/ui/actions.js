@@ -69,6 +69,7 @@ async function endturnAction() {
         GameInfo.world.playerAttack();
     }
     else {
+        console.log(result);
         alert("Something went wrong when ending the turn.");
         GameInfo.endturnButton.show();
     }
@@ -83,6 +84,7 @@ async function placementReadyAction() {
         GameInfo.prepareUI();
     }
     else {
+        console.log(result);
         alert("Something went wrong when readying up.");
         GameInfo.placementReadyButton.show();
     }
@@ -96,6 +98,7 @@ async function moveCatAction(path, catID) {
         await getBoardInfo();
     }
     else {
+        console.log(result);
         alert("Something went wrong when trying to move the character\n" + result.msg);
     }
 }
@@ -104,5 +107,9 @@ async function closeScore() {
     let result = await requestCloseScore();
     if (result.successful) {
         await checkGame(true); // This should send the player back to matches
-    } else alert("Something went wrong when ending the turn.")
+    } 
+    else {        
+        console.log(result);
+        alert("Something went wrong when ending the turn.")
+    }
 }

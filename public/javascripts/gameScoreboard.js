@@ -209,7 +209,7 @@ function createScoreScreen() {
 
     let scoreCloseButtonText = document.createElement('p');
     scoreCloseButtonText.classList.add('scoreCloseButtonText');
-    scoreCloseButtonText.innerText = 'Close Score';
+    scoreCloseButtonText.innerText = 'Close';
     scoreCloseButton.appendChild(scoreCloseButtonText);
 
     scoreContainer.appendChild(scoreCloseButton);

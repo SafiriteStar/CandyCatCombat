@@ -86,7 +86,10 @@ function fillMatches(matches) {
             joinButton.classList.add('md-matchJoinButton');
             joinButton.appendChild(document.createTextNode('Join'));
             
-            joinButton.onclick = () => join(matches[j].id);
+            joinButton.onclick = () => {
+                playMatchAccepted();
+                join(matches[j].id);
+            }
             
             joinCell.appendChild(joinButton);
             row.appendChild(joinCell);
