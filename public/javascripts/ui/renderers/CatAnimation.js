@@ -28,7 +28,7 @@ class IdleAnimation extends Animation {
         super(images, loop);
         this.maxJumpHeight = 75;
         this.jumpDirection = -1;
-        this.jumpSpeed = 5;
+        this.jumpSpeed = 10;
         this.gravity = 2;
         this.currentSpeed = -this.jumpSpeed;
         
