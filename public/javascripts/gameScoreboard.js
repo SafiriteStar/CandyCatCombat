@@ -8,6 +8,7 @@ function createPlayerRow(playerName, scorePercentage, cats) {
     nameColumn.classList.add('scoreColumn');
     nameColumn.classList.add('text');
     nameColumn.classList.add('content');
+    nameColumn.classList.add('scorePlayerName');
 
     if (playerName !== null) {
         nameColumn.innerText = playerName;

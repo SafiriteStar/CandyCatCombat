@@ -43,8 +43,8 @@ class GumCatAttack extends CatStandardAttack {
         for (let i = 0; i < playerCat.conditions.length; i++) {
             if (playerCat.conditions[i].id == 3) {
                 // We do
-                // Is it at 3?
-                if (playerCat.conditions[i].duration === 3) {
+                // Is it at 1?
+                if (playerCat.conditions[i].duration === 1) {
                     // Yes
                     // Remove it
                     await Play.removeCondition(playerCat.conditions[i].game_id);

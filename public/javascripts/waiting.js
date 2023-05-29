@@ -9,6 +9,23 @@ window.onload = async function() {
     }
 }
 
+let totalSeconds = 0;
+// Update the count down every 1 second
+setInterval(function() {
+    function pad(val) {
+        var valString = val + "";
+        if (valString.length < 2) {
+            return "0" + valString;
+        }
+        else {
+            return valString;
+        }
+    }
+
+    ++totalSeconds;
+    document.getElementById("matchWaitTimer").innerHTML = "Time spent waiting for a worthy opponent: <b>" + pad(parseInt(totalSeconds / 60)) + " : " + pad(totalSeconds % 60) + "</b>. ";
+}, 1000);
+
 function waitingQuery() {
     return new Promise((resolve, reject) => {
         setTimeout(() => resolve(checkGameStarted(), 1000));

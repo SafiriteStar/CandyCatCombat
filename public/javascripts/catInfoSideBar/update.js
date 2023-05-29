@@ -120,10 +120,20 @@ function updateCatInfoSideBar(cat, baseCats, show) {
         }
     }
 
+    let speedStatVisuals = document.getElementsByClassName('speedVisual');
+
+    for (let i = 0; i < speedStatVisuals.length; i++) {
+        speedStatVisuals[i].innerHTML = '';
+        
+        for (let j = 0; j < cat.speed; j++) {
+            let statStar = createStatStar('/assets/UI/Stats/speedStat.png', 'Speed');
+            speedStatVisuals[i].appendChild(statStar);
+        }
+    }
+
     let catDescriptions = document.getElementsByClassName('catInfoDescription');
 
     for (let i = 0; i < catDescriptions.length; i++) {
-        catDescriptions[i].innerHTML = '';
-        catDescriptions[i].appendChild(document.createTextNode(cat.description));
+        catDescriptions[i].innerHTML = cat.description;
     }
 }

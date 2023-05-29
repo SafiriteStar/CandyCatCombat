@@ -70,7 +70,7 @@ create table cat (
     cat_min_range int not null,
     cat_max_range int not null,
     cat_cost int not null,
-    cat_description varchar(800) not null,
+    cat_description varchar(1000) not null,
     primary key (cat_id));
 
 create table game_team_cat (
