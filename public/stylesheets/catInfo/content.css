@@ -44,7 +44,7 @@
 .catInfoStat {
     display: flex;
     position: relative;
-    height: 20%;
+    height: 16.5%;
     justify-content: center;
 }
 
@@ -121,7 +121,8 @@
     width: 80%;
     height: 80%;
     color: #1E2532;
-    
+    font-size: 1.2vw;
+    transition: font-size 0.5s;
     overflow-y: scroll;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
@@ -134,6 +135,6 @@
 }
 
 .catInfoTextAdjustable {
-    font-size: 1.25vw;
+    font-size: 0.9vw;
     transition: font-size 0.5s;
 }

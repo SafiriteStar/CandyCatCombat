@@ -94,9 +94,9 @@ function createSideContent() {
     let catStatsContainer = document.createElement('div');
     catStatsContainer.classList.add('catInfoStats');
 
-    let statNames = ['Health', 'Damage', 'Defense', 'Range', 'Cost'];
+    let statNames = ['Health', 'Damage', 'Defense', 'Range', 'Cost', 'Speed'];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < statNames.length; i++) {
         let statContainer = document.createElement('div');
         statContainer.classList.add('catInfoStat');
 
@@ -138,7 +138,6 @@ function createSideContent() {
 
     let catDescription = document.createElement('p');
     catDescription.classList.add('catInfoDescription');
-    catDescription.classList.add('catInfoTextAdjustable');
     catDescription.appendChild(document.createTextNode('Cat Description'));
     descriptionContainer.appendChild(catDescription);
 

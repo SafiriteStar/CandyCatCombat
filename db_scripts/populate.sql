@@ -107,7 +107,7 @@ values (
     2,
     1,
     "<p>Your utility candy cat.</p>
-    <p><b>Roots targets with attacks. Rooted targets cannot move. Attacks at 2 range deal no damage.</b></p>
+    <p><b>Roots targets with attacks. Rooted targets cannot move. Attacks at 2 range deal no damage. Can make caramel walls when near walls or ally caramel cats</b></p>
     <p>Root lasts for 1 turn but can be chained with consecutive attacks.</p>"
 ),
 (
