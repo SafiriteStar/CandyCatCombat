@@ -62,6 +62,7 @@
 .scoreRow {
     display: table;
     width: 100%;
+    table-layout: fixed;
 }
 
 .scoreRow::after {
@@ -79,6 +80,7 @@
 
 .scoreColumn.text {
     width: 20%;
+    max-width: 20%;
 }
 
 .scoreColumn.cats {
@@ -92,6 +94,12 @@
 
 .scoreColumn.text.content {
     font-size: x-large;
+}
+
+.scorePlayerName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .scoreCats {
