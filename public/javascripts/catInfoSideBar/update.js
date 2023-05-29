@@ -123,7 +123,6 @@ function updateCatInfoSideBar(cat, baseCats, show) {
     let catDescriptions = document.getElementsByClassName('catInfoDescription');
 
     for (let i = 0; i < catDescriptions.length; i++) {
-        catDescriptions[i].innerHTML = '';
-        catDescriptions[i].appendChild(document.createTextNode(cat.description));
+        catDescriptions[i].innerHTML = cat.description;
     }
 }
