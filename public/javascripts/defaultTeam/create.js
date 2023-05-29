@@ -176,6 +176,11 @@ function createDefaultTeamDisplay(team, baseCats) {
     teamCostText.appendChild(document.createTextNode(`${calculateTeamCost(team, baseCats)}/6`));
     teamCostText.classList.add('dt-teamCostText');
     teamCostContainer.appendChild(teamCostText);
+
+    let teamCostCoin = document.createElement('img');
+    teamCostCoin.classList.add('dt-teamCostCoin');
+    teamCostCoin.src = '/assets/UI/Stats/costStat.png'
+    teamCostContainer.appendChild(teamCostCoin);
     mainContainer.appendChild(teamCostContainer);
 
     let catPositions = [
