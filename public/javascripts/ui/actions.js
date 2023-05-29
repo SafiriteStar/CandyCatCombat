@@ -104,6 +104,7 @@ async function moveCatAction(path, catID) {
 }
 
 async function closeScore() {
+    playClick();
     let result = await requestCloseScore();
     if (result.successful) {
         await checkGame(true); // This should send the player back to matches
