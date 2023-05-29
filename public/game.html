@@ -55,8 +55,8 @@
 </head>
 
 <body style="overflow: hidden;">
-  <audio autoplay loop>
-    <source src="assets/Sounds/background.wav" type="audio/wav" />
+  <audio autoplay loop class="audio" volume=0.5>
+    <source src="assets/Sounds/background.wav" type="audio/wav" class="backgroundAudio"/>
     Your browser doesn't support the audio element.
   </audio>
   <iframe id="soundsFrame" src="sounds.html" frameborder="0"></iframe>
@@ -75,7 +75,7 @@
         <div class="pauseSliderWrapper">
           <p class="pauseMenuText">Volume</p>
           <div class="pauseSliderContainer">
-            <input type="range" min="0" max="1" step="0.1" value="50" class="pauseSlider volumeSlider"  oninput="changeVolumeValue(this.value)">
+            <input type="range" min="0" max="100" step="1" value="0" class="pauseSlider volumeSlider"  oninput="changeVolumeValue(this.value)">
           </div>
         </div>
       </div>
