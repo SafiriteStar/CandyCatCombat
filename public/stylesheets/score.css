@@ -1,8 +1,8 @@
 .scoreContainer {
     display: block;
     position: absolute;
-    width: 99em;
-    height: 54em;
+    width: 75vw;
+    height: 80vh;
     
     top: 50%;
     left: 50%;
@@ -46,7 +46,7 @@
 
     letter-spacing: 0.2em;
     line-height: 100%;
-    font-family: "Amita", cursive;
+    font-family: 'Lily Script One', cursive;
     font-weight: 700;
 
     background-image: linear-gradient(217deg, rgba(255, 196, 0, 0.8), rgba(255, 255, 255, 0) 70.71%),
